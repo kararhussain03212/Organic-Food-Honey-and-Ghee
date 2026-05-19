@@ -581,3 +581,18 @@
   .bl-featured-body { padding: 1.5rem; }
   .bl-cats-grid { grid-template-columns: 1fr 1fr; }
 }
+
+@media (max-width: 480px) {
+  .bl-hero-search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bl-hero-search-input {
+    text-align: center;
+  }
+
+  .bl-cats-grid {
+    grid-template-columns: 1fr;
+  }
+}

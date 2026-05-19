@@ -218,6 +218,45 @@
   .ab-collage-main, .ab-collage-sm { border-radius: 10px; }
 }
 
+@media (max-width: 1024px) {
+  .ab-hero {
+    min-height: 70vh;
+  }
+
+  .ab-hero-quote {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .ab-hero-content {
+    padding: 2rem 1.25rem;
+  }
+
+  .ab-section-header {
+    margin-bottom: 2rem;
+  }
+
+  .ab-story {
+    padding: 4.5rem 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .ab-hero {
+    min-height: 60vh;
+  }
+
+  .ab-hero-sub {
+    font-size: 1rem;
+  }
+
+  .ab-story-badge {
+    position: static;
+    margin-top: 1rem;
+  }
+}
+
 
 
 /* Story text */

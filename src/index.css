@@ -924,6 +924,74 @@ body {
   }
 }
 
+@media (max-width: 1200px) {
+  .main-nav {
+    max-width: 1200px;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    gap: 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .info-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .info-item.info-right {
+    justify-content: flex-start;
+  }
+
+  .hero-content {
+    padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .story-inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .story-float-1,
+  .story-float-2 {
+    position: static;
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .info-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    min-height: 50vh;
+  }
+
+  .hero-content {
+    min-height: 50vh;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .location-modal-header,
+  .location-modal-body {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
 /* ============================================================
    SHARED ANIMATION UTILITIES
    ============================================================ */
