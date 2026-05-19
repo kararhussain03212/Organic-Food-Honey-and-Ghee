@@ -1,5 +1,14 @@
 import { useMemo, useState } from "react";
-import { navLinks, topLinks } from "../data/siteContent";
+import { Link } from "react-router-dom";
+import { topLinks } from "../data/siteContent";
+
+const NAV_ITEMS = [
+  { label: "Home",     path: "/" },
+  { label: "Products", path: "/products" },
+  { label: "About",    path: "/about" },
+  { label: "Blog",     path: "/blog" },
+  { label: "Contact",  path: "/contact" },
+];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,10 +76,10 @@ const Navbar = () => {
         </div>
 
         <nav className="nav-links desktop" aria-label="Main navigation">
-          {navLinks.map((link) => (
-            <a className="nav-link" href="#" key={link}>
-              {link}
-            </a>
+          {NAV_ITEMS.map((item) => (
+            <Link className="nav-link" to={item.path} key={item.label}>
+              {item.label}
+            </Link>
           ))}
         </nav>
 
@@ -170,10 +179,10 @@ const Navbar = () => {
 
       <div className={`mobile-panel ${isOpen ? "open" : ""}`}>
         <nav className="nav-links" aria-label="Mobile navigation">
-          {navLinks.map((link) => (
-            <a className="nav-link" href="#" key={link}>
-              {link}
-            </a>
+          {NAV_ITEMS.map((item) => (
+            <Link className="nav-link" to={item.path} key={`mob-${item.label}`} onClick={() => setIsOpen(false)}>
+              {item.label}
+            </Link>
           ))}
         </nav>
         <div className="mobile-top-links">

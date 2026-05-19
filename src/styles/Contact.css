@@ -1,0 +1,805 @@
+/* ═══════════════════════════════════════════════════
+   Contact Page — Arion Organic Premium UI
+   Palette tokens inherited from :root in index.css
+═══════════════════════════════════════════════════ */
+
+/* ─── Page wrapper ─────────────────────────────── */
+.cu-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: var(--ivory);
+  padding: 4rem 1.25rem 6rem;
+}
+
+/* ─── Background blob decorations ─────────────── */
+.cu-bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cu-bg-blob-1 {
+  width: 560px;
+  height: 560px;
+  top: -140px;
+  left: -160px;
+  background: radial-gradient(circle, rgba(73, 99, 72, 0.12), transparent 70%);
+}
+
+.cu-bg-blob-2 {
+  width: 480px;
+  height: 480px;
+  bottom: -100px;
+  right: -120px;
+  background: radial-gradient(circle, rgba(199, 166, 107, 0.14), transparent 70%);
+}
+
+.cu-bg-blob-3 {
+  width: 360px;
+  height: 360px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(217, 210, 199, 0.35), transparent 70%);
+}
+
+/* ─── Container ────────────────────────────────── */
+.cu-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.cu-container--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Page header ──────────────────────────────── */
+.cu-page-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.cu-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--green);
+  background: rgba(73, 99, 72, 0.08);
+  border: 1px solid rgba(73, 99, 72, 0.18);
+  border-radius: 999px;
+  padding: 0.4rem 1.1rem;
+  margin-bottom: 1.1rem;
+}
+
+.cu-eyebrow-dot {
+  font-size: 0.65rem;
+  color: var(--gold);
+}
+
+.cu-page-title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 700;
+  color: var(--brown);
+  line-height: 1.15;
+  margin-bottom: 0.85rem;
+}
+
+.cu-title-accent {
+  color: var(--green);
+  position: relative;
+}
+
+.cu-title-accent::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  border-radius: 2px;
+}
+
+.cu-page-subtitle {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ─── Two-column layout ────────────────────────── */
+.cu-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 2.25rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .cu-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Panel label ──────────────────────────────── */
+.cu-panel-label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 1.35rem;
+}
+
+.cu-panel-label svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ─── Form panel card ──────────────────────────── */
+.cu-form-panel {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 2.5rem 2.25rem;
+  box-shadow:
+    0 4px 24px rgba(73, 99, 72, 0.08),
+    0 1px 3px rgba(73, 99, 72, 0.06);
+  border: 1px solid rgba(199, 166, 107, 0.12);
+}
+
+/* ─── Form grid ────────────────────────────────── */
+.cu-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.cu-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem;
+}
+
+@media (max-width: 600px) {
+  .cu-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cu-form-panel {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+/* ─── Floating label field ─────────────────────── */
+.cu-field {
+  position: relative;
+}
+
+.cu-field-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+  z-index: 1;
+}
+
+.cu-field-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Textarea icon — align to top */
+.cu-field:has(.cu-field-textarea) .cu-field-icon {
+  top: 1.25rem;
+  transform: none;
+}
+
+.cu-field-input,
+.cu-field-select,
+.cu-field-textarea {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  background: #fafaf9;
+  padding: 1.4rem 1rem 0.65rem 2.85rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--brown);
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.cu-field-textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.55;
+}
+
+.cu-field-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235B5248' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 1rem) center;
+  padding-right: 2.4rem;
+}
+
+.cu-field-input:focus,
+.cu-field-select:focus,
+.cu-field-textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(73, 99, 72, 0.12);
+  background: #ffffff;
+}
+
+.cu-field-input:focus ~ .cu-field-icon,
+.cu-field-select:focus ~ .cu-field-icon,
+.cu-field-textarea:focus ~ .cu-field-icon {
+  color: var(--green);
+}
+
+.cu-field:focus-within .cu-field-icon {
+  color: var(--green);
+}
+
+/* Floating label */
+.cu-field-label {
+  position: absolute;
+  left: 2.9rem;
+  top: 1rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  transition:
+    top 0.18s ease,
+    font-size 0.18s ease,
+    color 0.18s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.cu-field-label--float,
+.cu-field-input:focus ~ .cu-field-label,
+.cu-field-select:focus ~ .cu-field-label,
+.cu-field-textarea:focus ~ .cu-field-label {
+  top: 0.42rem;
+  font-size: 0.72rem;
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* For textarea — label always starts at top */
+.cu-field:has(.cu-field-textarea) .cu-field-label {
+  top: 1rem;
+}
+
+.cu-field:has(.cu-field-textarea) .cu-field-textarea:focus ~ .cu-field-label,
+.cu-field:has(.cu-field-textarea) .cu-field-label--float {
+  top: 0.42rem;
+  font-size: 0.72rem;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.cu-required {
+  color: #c0392b;
+  margin-left: 0.15rem;
+}
+
+/* Error state */
+.cu-field--error .cu-field-input,
+.cu-field--error .cu-field-select,
+.cu-field--error .cu-field-textarea {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1);
+}
+
+.cu-field-error {
+  display: block;
+  margin-top: 0.35rem;
+  padding-left: 0.5rem;
+  font-size: 0.78rem;
+  color: #c0392b;
+  font-weight: 500;
+}
+
+/* Alert */
+.cu-alert-error {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background: #fff5f5;
+  border: 1px solid #fccaca;
+  color: #c0392b;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.cu-alert-error svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ─── Submit button ────────────────────────────── */
+.cu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 2rem;
+  border-radius: 14px;
+  border: none;
+  font-family: inherit;
+  font-size: 0.97rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background 0.22s ease,
+    transform 0.18s ease,
+    box-shadow 0.22s ease;
+}
+
+.cu-btn--submit {
+  width: 100%;
+  background: var(--green);
+  color: #ffffff;
+  box-shadow:
+    0 6px 20px rgba(73, 99, 72, 0.28),
+    0 2px 6px rgba(73, 99, 72, 0.15);
+}
+
+.cu-btn--submit:hover:not(:disabled) {
+  background: #3b5239;
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 28px rgba(73, 99, 72, 0.34),
+    0 3px 8px rgba(73, 99, 72, 0.18);
+}
+
+.cu-btn--submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cu-btn--submit:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.cu-btn--submit svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* Spinner */
+.cu-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: cu-spin 0.65s linear infinite;
+}
+
+@keyframes cu-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Success state ────────────────────────────── */
+.cu-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  gap: 1rem;
+  animation: cu-fade-up 0.4s ease;
+}
+
+.cu-success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), #3b5239);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(73, 99, 72, 0.3);
+}
+
+.cu-success-icon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.cu-success-title {
+  font-family: "Playfair Display", serif;
+  font-size: 1.7rem;
+  color: var(--brown);
+}
+
+.cu-success-desc {
+  font-size: 0.97rem;
+  color: var(--muted);
+  max-width: 360px;
+  line-height: 1.65;
+}
+
+.cu-success .cu-btn {
+  background: transparent;
+  color: var(--green);
+  border: 2px solid var(--green);
+  padding: 0.75rem 1.75rem;
+  margin-top: 0.5rem;
+}
+
+.cu-success .cu-btn:hover {
+  background: var(--green);
+  color: #fff;
+}
+
+/* ─── Info Card (glassmorphism) ────────────────── */
+.cu-info-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(
+    145deg,
+    rgba(73, 99, 72, 0.92) 0%,
+    rgba(59, 82, 57, 0.96) 55%,
+    rgba(46, 65, 45, 0.98) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2.25rem;
+  box-shadow:
+    0 20px 60px rgba(46, 65, 45, 0.35),
+    0 4px 16px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* Decorative inner blobs */
+.cu-info-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cu-info-blob-1 {
+  width: 280px;
+  height: 280px;
+  top: -80px;
+  right: -60px;
+  background: radial-gradient(circle, rgba(199, 166, 107, 0.18), transparent 65%);
+}
+
+.cu-info-blob-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -40px;
+  left: -40px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 65%);
+}
+
+.cu-info-card > *:not(.cu-info-blob) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Availability badge */
+.cu-info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  margin-bottom: 1.1rem;
+}
+
+.cu-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.3);
+  animation: cu-pulse 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes cu-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.1); }
+}
+
+/* Info header */
+.cu-info-header {
+  margin-bottom: 1.75rem;
+}
+
+.cu-info-title {
+  font-family: "Playfair Display", serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+  margin-bottom: 0.55rem;
+}
+
+.cu-info-subtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.65;
+}
+
+/* Contact items */
+.cu-info-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.cu-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.22s ease, transform 0.22s ease;
+}
+
+.cu-info-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(3px);
+}
+
+/* Icon bubbles */
+.cu-info-item-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cu-info-item-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.cu-info-item-icon--green {
+  background: rgba(74, 222, 128, 0.18);
+  color: #4ade80;
+}
+
+.cu-info-item-icon--gold {
+  background: rgba(199, 166, 107, 0.22);
+  color: var(--gold);
+}
+
+.cu-info-item-icon--brown {
+  background: rgba(217, 210, 199, 0.16);
+  color: var(--beige);
+}
+
+.cu-info-item-icon--sage {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Item body */
+.cu-info-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  flex: 1;
+}
+
+.cu-info-item-label {
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(199, 166, 107, 0.9);
+  margin-bottom: 0.1rem;
+}
+
+.cu-info-item-value {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.cu-info-item-secondary {
+  font-size: 0.83rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cu-info-item-link {
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.cu-info-item-link:hover {
+  color: var(--gold);
+}
+
+/* WhatsApp CTA button */
+.cu-info-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+  padding: 0.38rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.18s ease;
+  align-self: flex-start;
+}
+
+.cu-info-cta:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.cu-info-cta--green {
+  background: rgba(74, 222, 128, 0.18);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+/* Divider */
+.cu-info-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 1.5rem 0;
+}
+
+/* Social icons */
+.cu-info-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.4rem;
+}
+
+.cu-info-socials-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cu-info-socials-icons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cu-social-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.18s ease;
+}
+
+.cu-social-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.cu-social-icon:hover {
+  background: var(--gold);
+  color: var(--brown);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+/* Trust badge */
+.cu-trust-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 14px;
+  background: rgba(199, 166, 107, 0.1);
+  border: 1px solid rgba(199, 166, 107, 0.22);
+  font-size: 0.82rem;
+  color: rgba(199, 166, 107, 0.95);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.cu-trust-badge svg {
+  width: 18px;
+  height: 18px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+/* ─── Animations ───────────────────────────────── */
+@keyframes cu-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Responsive tweaks ────────────────────────── */
+@media (max-width: 480px) {
+  .cu-page {
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  .cu-page-header {
+    margin-bottom: 2rem;
+  }
+
+  .cu-info-card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .cu-info-socials {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

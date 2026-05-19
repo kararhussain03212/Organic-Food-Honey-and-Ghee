@@ -1,91 +1,12 @@
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
+import { products } from "../data/productsData";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 
-
-
-const products = [
-  {
-    id: 1,
-    name: "Pure Desi Ghee",
-    subtitle: "Traditional Clarified Butter",
-    price: "Rs 1,200",
-    originalPrice: "Rs 1,500",
-    img: "/products/ghee (1).png",
-    badges: ["Best Seller", "Organic"],
-    rating: 5,
-    reviews: 248,
-  },
-  {
-    id: 2,
-    name: "Premium Ghee",
-    subtitle: "A2 Grass-Fed Quality",
-    price: "Rs 1,400",
-    originalPrice: "Rs 1,800",
-    img: "/products/ghee (2).png",
-    badges: ["Pure"],
-    rating: 5,
-    reviews: 182,
-  },
-  {
-    id: 3,
-    name: "Artisan Ghee",
-    subtitle: "Small-Batch Crafted",
-    price: "Rs 1,100",
-    originalPrice: null,
-    img: "/products/ghee (3).png",
-    badges: ["Organic"],
-    rating: 4,
-    reviews: 96,
-  },
-  {
-    id: 4,
-    name: "Raw Honey 500g",
-    subtitle: "Unfiltered & Unheated",
-    price: "Rs 950",
-    originalPrice: "Rs 1,200",
-    img: "/products/honey 500 g.png",
-    badges: ["Best Seller", "Pure"],
-    rating: 5,
-    reviews: 312,
-  },
-  {
-    id: 5,
-    name: "Forest Honey",
-    subtitle: "Wild Mountain Harvest",
-    price: "Rs 800",
-    originalPrice: null,
-    img: "/products/honey.png",
-    badges: ["Organic", "Limited Stock"],
-    rating: 5,
-    reviews: 167,
-  },
-  {
-    id: 6,
-    name: "Shilajit 10g",
-    subtitle: "Himalayan Mineral Resin",
-    price: "Rs 2,500",
-    originalPrice: "Rs 3,000",
-    img: "/products/shilajit 10 g.png",
-    badges: ["Premium Quality"],
-    rating: 5,
-    reviews: 89,
-  },
-  {
-    id: 7,
-    name: "Shilajit 5g",
-    subtitle: "Pure Himalayan Extract",
-    price: "Rs 1,400",
-    originalPrice: "Rs 1,800",
-    img: "/products/shilajit 5g.png",
-    badges: ["Pure", "Limited Stock"],
-    rating: 4,
-    reviews: 54,
-  },
-];
+const formatPrice = (value) => `Rs ${value.toLocaleString()}`;
 
 const badgeColors = {
   "Best Seller": { background: "#c8a04a", color: "#fff" },
@@ -160,10 +81,10 @@ function ProductCard({ product }) {
           {/* <Stars rating={product.rating} /> */}
           {/* <div className="prod-review-count">({product.reviews} reviews)</div> */}
           <div className="prod-price-row">
-            <span className="prod-price">{product.price}</span>
+            <span className="prod-price">{formatPrice(product.price)}</span>
             {product.originalPrice && (
               <span className="prod-original-price">
-                {product.originalPrice}
+                {formatPrice(product.originalPrice)}
               </span>
             )}
           </div>
@@ -215,9 +136,11 @@ function ProductCard({ product }) {
               <div className="qv-sub">{product.subtitle}</div>
               <Stars rating={product.rating} />
               <div className="qv-price-row">
-                <span className="qv-price">{product.price}</span>
+                <span className="qv-price">{formatPrice(product.price)}</span>
                 {product.originalPrice && (
-                  <span className="qv-original">{product.originalPrice}</span>
+                  <span className="qv-original">
+                    {formatPrice(product.originalPrice)}
+                  </span>
                 )}
               </div>
               <p className="qv-desc">

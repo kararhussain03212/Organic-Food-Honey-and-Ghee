@@ -41,7 +41,7 @@ const Home = () => {
       <PurityPromise />
       <OurStory />
       <Products />
-      {/* <Testimonials /> */}
+      <Testimonials />
       <CTASection />
     </>
   );

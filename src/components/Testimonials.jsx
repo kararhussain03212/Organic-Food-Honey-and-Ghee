@@ -152,12 +152,12 @@ export default function Testimonials() {
           </div>
         </div>
 
-        {/* Trust badges */}
+        {/* Trust badges
         <div className={`test-trust-row ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.4s" }}>
           {["⭐ 4.9/5 Average Rating", "✅ 50,000+ Verified Buyers", "🔒 100% Authentic Reviews", "🌿 Trusted Since 2008"].map((item) => (
             <div className="test-trust-chip" key={item}>{item}</div>
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );
