@@ -24,11 +24,11 @@ export const footerContent = {
   contact: {
     heading: 'Contact Us',
     items: [
-      { label: 'WhatsApp', value: '+923008543450' },
-      { label: 'Email', value: 'Onlinesupport@swiftsign.com' },
+      { label: 'WhatsApp', value: '+92 333 8399480' },
+      { label: 'Email', value: 'info@swiftsigngeneraltrading.com' },
       {
         label: 'Address',
-        value: '123 Main Street, City, Country',
+        value: 'I-8 Markaz, Islamabad, Pakistan',
       },
     ],
     socials: ['Facebook', 'Instagram', 'LinkedIn', 'YouTube'],
@@ -47,5 +47,5 @@ export const footerContent = {
     ],
     appBadges: ['Google Play', 'App Store'],
   },
-  bottom: '© 2026 Powered by Blink',
+  bottom: 'Copyright © 2026 All Rights Reserved by SWIFT SIGN IT',
 }

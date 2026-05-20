@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   products,
@@ -29,12 +29,9 @@ function Stars({ rating }) {
 /* ─── Product Card ──────────────────────────────── */
 function ProductCard({ product }) {
   const navigate = useNavigate();
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
   const [added, setAdded] = useState(false);
-  const currentPrice =
-    product.variantPrices?.[selectedVariant] ?? product.price;
-  const currentOriginal =
-    product.variantOriginalPrices?.[selectedVariant] ?? product.originalPrice;
+  const currentPrice = product.price;
+  const currentOriginal = product.originalPrice;
   const hasOriginal = Boolean(currentOriginal);
   const priceLabel = `Rs ${currentPrice.toLocaleString()}`;
   const originalLabel = hasOriginal
@@ -80,18 +77,7 @@ function ProductCard({ product }) {
         {/* <Stars rating={product.rating} />
         <span className="prc-reviews">({product.reviews} reviews)</span> */}
 
-        {/* Variant pills */}
-        <div className="prc-variants">
-          {product.variants.map((v) => (
-            <button
-              key={v}
-              className={`prc-variant-pill${selectedVariant === v ? " active" : ""}`}
-              onClick={() => setSelectedVariant(v)}
-            >
-              {v}
-            </button>
-          ))}
-        </div>
+        <div className="prc-variants" style={{ display: "none" }} />
 
         {/* Price */}
         <div className="prc-price-row">
@@ -115,7 +101,7 @@ function ProductCard({ product }) {
                 price: currentPrice,
                 qty: 1,
                 image: product.images[0],
-                variant: selectedVariant,
+                variant: product.size,
               });
               setAdded(true);
               setTimeout(() => setAdded(false), 1600);

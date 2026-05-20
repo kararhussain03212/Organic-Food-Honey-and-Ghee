@@ -67,7 +67,7 @@ export default function CTASection() {
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </a>
-            <a href="#our-story" className="cta-secondary-btn" id="cta-our-story">
+            <a href="about" className="cta-secondary-btn" id="cta-our-story">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M10 9l5 3-5 3V9z" fill="currentColor"/>
@@ -78,15 +78,6 @@ export default function CTASection() {
 
           {/* Delivery info chips */}
           <div className="cta-delivery-row">
-            <div className="cta-delivery-chip">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="1" y="3" width="15" height="13" rx="1"/>
-                <path d="M16 8h4l3 3v4h-7V8z"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-              Free Delivery Available
-            </div>
             <div className="cta-delivery-chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>

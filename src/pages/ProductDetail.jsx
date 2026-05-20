@@ -121,7 +121,7 @@ export default function ProductDetail() {
   const related = getRelatedProducts(slug);
   const cat = productCategories.find((c) => c.id === product.category);
 
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+  const selectedVariant = product.size || product.variants[0];
   const [qty, setQty] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
   const selectedPrice =
@@ -137,7 +137,6 @@ export default function ProductDetail() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    setSelectedVariant(product.variants[0]);
     setQty(1);
     setAddedToCart(false);
   }, [slug]);
@@ -156,7 +155,7 @@ export default function ProductDetail() {
   };
 
   const waMessage = `Hi! I'd like to order *${product.name}* (${selectedVariant} × ${qty}) from Arion Organics.`;
-  const waUrl = `https://wa.me/923008543450?text=${encodeURIComponent(waMessage)}`;
+  const waUrl = `https://wa.me/923338399480?text=${encodeURIComponent(waMessage)}`;
 
   const scrollSlider = (dir) => {
     const el = document.querySelector(".pd-related-slider");
@@ -227,19 +226,10 @@ export default function ProductDetail() {
                 )}
               </div>
 
-              {/* Variants */}
               <div className="pd-field">
                 <label className="pd-field-label">Size / Weight</label>
                 <div className="pd-variant-pills">
-                  {product.variants.map((v) => (
-                    <button
-                      key={v}
-                      className={`pd-variant-pill${selectedVariant === v ? " active" : ""}`}
-                      onClick={() => setSelectedVariant(v)}
-                    >
-                      {v}
-                    </button>
-                  ))}
+                  <button className="pd-variant-pill active">{selectedVariant}</button>
                 </div>
               </div>
 
@@ -296,12 +286,6 @@ export default function ProductDetail() {
                       Add to Cart
                     </>
                   )}
-                </button>
-                <button
-                  className="pd-btn-buy"
-                  onClick={() => navigate("/contact")}
-                >
-                  Buy Now
                 </button>
               </div>
 

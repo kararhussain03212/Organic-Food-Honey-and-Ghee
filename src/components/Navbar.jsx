@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiInstagram } from "react-icons/fi";
+import { IoLogoYoutube } from "react-icons/io5";
 import { FaFacebookSquare, FaWhatsapp } from "react-icons/fa";
-import { getCartItems, removeFromCart } from "../utils/cart";
+import { AiFillTikTok } from "react-icons/ai";
+import { clearCart, getCartItems, removeFromCart } from "../utils/cart";
+
+const DELIVERY_LOCATION_STORAGE_KEY = "delivery_location";
 
 const NAV_ITEMS = [
   { label: "Home", path: "/" },
@@ -12,21 +16,30 @@ const NAV_ITEMS = [
   { label: "Contact", path: "/contact" },
 ];
 
+const TOP_LINKS = [
+  { label: "About", path: "/about" },
+  { label: "Swift", path: "/blog" },
+  { label: "Pertinent Info", path: "/blog" },
+  { label: "Recipes", path: "/blog" },
+  { label: "Contact", path: "/contact" },
+];
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [pendingCheckout, setPendingCheckout] = useState(false);
   const [cartItems, setCartItems] = useState(() => getCartItems());
-  const [useCurrentLocation, setUseCurrentLocation] = useState(true);
-  const [city, setCity] = useState("Peshawar");
-  const [area, setArea] = useState("Askari 5");
+  const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+  const [city, setCity] = useState("");
+  const [area, setArea] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const areasByCity = useMemo(
     () => ({
       Peshawar: ["Askari 5", "Hayatabad", "University Town"],
-      Islamabad: ["F-10", "G-11", "I-8", "Blue Area", "Bahria Town"],
+      Islamabad: ["I-8 Markaz", "F-10", "G-11", "Blue Area", "Bahria Town"],
       Lahore: ["Gulberg", "DHA", "Model Town", "Johar Town", "Wapda Town"],
       Karachi: ["Clifton", "DHA", "Gulshan-e-Iqbal", "North Nazimabad"],
       Rawalpindi: ["Saddar", "Bahria Town", "Chaklala", "Satellite Town"],
@@ -40,7 +53,9 @@ const Navbar = () => {
   );
 
   const cityOptions = Object.keys(areasByCity);
-  const areaOptions = areasByCity[city] || [];
+  const areaOptions = city ? areasByCity[city] || [] : [];
+  const hasSavedLocation = Boolean(city && area);
+  const canSubmitLocation = Boolean(city && area);
 
   const handleCityChange = (event) => {
     const nextCity = event.target.value;
@@ -73,11 +88,33 @@ const Navbar = () => {
     return () => window.removeEventListener("cart:updated", handleCartUpdate);
   }, []);
 
+  useEffect(() => {
+    const savedRaw = localStorage.getItem(DELIVERY_LOCATION_STORAGE_KEY);
+    if (!savedRaw) return;
+    try {
+      const saved = JSON.parse(savedRaw);
+      if (saved?.city) setCity(saved.city);
+      if (saved?.area) setArea(saved.area);
+      if (typeof saved?.useCurrentLocation === "boolean") {
+        setUseCurrentLocation(saved.useCurrentLocation);
+      }
+    } catch {
+      // Ignore malformed location values.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!city || !area) return;
+    const payload = { city, area, useCurrentLocation };
+    localStorage.setItem(DELIVERY_LOCATION_STORAGE_KEY, JSON.stringify(payload));
+    window.dispatchEvent(new CustomEvent("location:updated", { detail: payload }));
+  }, [city, area, useCurrentLocation]);
+
   const handleRemoveItem = (id, variant) => {
     removeFromCart(id, variant);
   };
 
-  const handleCheckout = () => {
+  const completeCheckout = () => {
     if (cartItems.length === 0) return;
     const lines = cartItems.map(
       (item) =>
@@ -88,24 +125,34 @@ const Navbar = () => {
       ...lines,
       `Subtotal: Rs ${subtotal.toLocaleString()}`,
     ].join("\n");
-    const url = `https://wa.me/923008543450?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/923338399480?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank", "noopener,noreferrer");
+    clearCart();
+    setIsCartOpen(false);
+  };
+
+  const handleCheckout = () => {
+    if (!hasSavedLocation) {
+      setPendingCheckout(true);
+      setIsLocationOpen(true);
+      return;
+    }
+    completeCheckout();
   };
 
   return (
     <header className="site-header">
-      {/* <div className="top-strip">
+      <div className="top-strip">
         <div className="top-inner">
           <div className="top-links">
-            {topLinks.map((link) => (
-              <a className="top-link" href="#" key={link}>
-                {link}
-              </a>
+            {TOP_LINKS.map((link) => (
+              <Link className="top-link" to={link.path} key={link.label}>
+                {link.label}
+              </Link>
             ))}
           </div>
-          <span>USA Organic Pantry</span>
         </div>
-      </div> */}
+      </div>
 
       <div className="main-nav">
         <Link className="brand" to="/" aria-label="Swift Sign home">
@@ -185,31 +232,13 @@ const Navbar = () => {
 
       <div className="info-strip">
         <div className="info-inner">
-          <button
-            className="info-item"
-            type="button"
-            onClick={() => setIsLocationOpen(true)}
-          >
-            <span className="info-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2a7 7 0 0 0-7 7c0 5.3 6.1 12.3 6.4 12.6a.8.8 0 0 0 1.2 0C12.9 21.3 19 14.3 19 9a7 7 0 0 0-7-7zm0 9.4A2.4 2.4 0 1 1 12 6a2.4 2.4 0 0 1 0 4.4z" />
-              </svg>
-            </span>
-            <div>
-              <span className="info-title">Delivery to</span>
-              <span className="info-subtitle">
-                {area} , {city}
-              </span>
-            </div>
-          </button>
-
           <div className="info-item">
             <span className="info-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
                 <path d="M19.2 15.4c-1-.1-2 .1-3 .4-.7.2-1.6 0-2.1-.6l-3-3c-.5-.5-.7-1.4-.6-2.1.3-1 .5-2 .4-3A2.9 2.9 0 0 0 8 4.4c-1.9-.4-3.4 1.1-3 3C6 12 12 18 16.6 19c1.9.4 3.4-1.1 3-3.6a2.9 2.9 0 0 0-.4-.1z" />
               </svg>
             </span>
-            <span className="info-text">+923008543450</span>
+            <span className="info-text">+92 333 8399480</span>
           </div>
 
           <div className="info-item">
@@ -219,7 +248,7 @@ const Navbar = () => {
               </svg>
             </span>
             <span className="info-text">
-              Onlinesupport@swiftsignorganicfood.com
+              info@swiftsigngeneraltrading.com
             </span>
           </div>
 
@@ -299,14 +328,37 @@ const Navbar = () => {
         </div>
 
         <div className="mobile-socials" aria-label="Social links">
-          <a href="#" aria-label="Instagram">
+          <a
+            href="https://www.facebook.com/SSgeneraltradinguae"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
             <FiInstagram />
           </a>
-          <a href="#" aria-label="Facebook">
+          <a
+            href="https://www.facebook.com/SSgeneraltradinguae"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+          >
             <FaFacebookSquare />
           </a>
-          <a href="#" aria-label="WhatsApp">
-            <FaWhatsapp />
+          <a
+            href="https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+          >
+            <IoLogoYoutube />
+          </a>
+          <a
+            href="https://www.tiktok.com/@ssarionorganicfood"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok"
+          >
+            <AiFillTikTok />
           </a>
         </div>
       </div>
@@ -380,18 +432,21 @@ const Navbar = () => {
               className="location-modal-close btn-ripple"
               type="button"
               aria-label="Close"
-              onClick={() => setIsLocationOpen(false)}
+              onClick={() => {
+                if (hasSavedLocation) setIsLocationOpen(false);
+              }}
             >
               ×
             </button>
 
             <div className="location-modal-header">
               <div className="location-modal-brand">
-                <img
-                  src="/src/assets/logo/General trading storke.png"
-                  alt="logo"
-                  className="h-20"
-                />
+                <div className="location-modal-logo">
+                  <img
+                    src="/logo/General trading storke.png"
+                    alt="Swift Sign logo"
+                  />
+                </div>
                 <div>
                   <p className="location-modal-kicker">Swift Sign</p>
                   <h3 className="location-modal-title">
@@ -428,30 +483,12 @@ const Navbar = () => {
                     Great! Delivery is available in your area
                   </p>
                   <p className="location-modal-success-note">
-                    {useCurrentLocation
-                      ? "Using current location for near shop availability."
-                      : `Near shop is available for ${area}, ${city}.`}
+                    {hasSavedLocation
+                      ? `Near shop is available for ${area}, ${city}.`
+                      : "Please select city and area to continue."}
                   </p>
                 </div>
               </div>
-
-              <button
-                className={`location-modal-current btn-ripple ${
-                  useCurrentLocation ? "is-active" : ""
-                }`}
-                type="button"
-                onClick={() => setUseCurrentLocation(true)}
-              >
-                <span
-                  className="location-modal-current-icon"
-                  aria-hidden="true"
-                >
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 2a7 7 0 0 0-7 7c0 5.3 6.1 12.3 6.4 12.6a.8.8 0 0 0 1.2 0C12.9 21.3 19 14.3 19 9a7 7 0 0 0-7-7zm0 9.4A2.4 2.4 0 1 1 12 6a2.4 2.4 0 0 1 0 4.4z" />
-                  </svg>
-                </span>
-                Use Current Location
-              </button>
 
               <div className="location-modal-fields">
                 <label className="field">
@@ -465,6 +502,7 @@ const Navbar = () => {
                     value={city}
                     onChange={handleCityChange}
                   >
+                    <option value="">Select city</option>
                     {cityOptions.map((option) => (
                       <option key={option} value={option}>
                         {option}
@@ -484,7 +522,9 @@ const Navbar = () => {
                     className="field-select"
                     value={area}
                     onChange={handleAreaChange}
+                    disabled={!city}
                   >
+                    <option value="">Select area</option>
                     {areaOptions.map((option) => (
                       <option key={option} value={option}>
                         {option}
@@ -498,7 +538,16 @@ const Navbar = () => {
               <button
                 className="location-modal-submit btn-ripple"
                 type="button"
-                onClick={() => setIsLocationOpen(false)}
+                disabled={!canSubmitLocation}
+                onClick={() => {
+                  if (!canSubmitLocation) return;
+                  setUseCurrentLocation(false);
+                  setIsLocationOpen(false);
+                  if (pendingCheckout) {
+                    setPendingCheckout(false);
+                    completeCheckout();
+                  }
+                }}
               >
                 Select
               </button>

@@ -1,6 +1,6 @@
 const WhatsAppFloat = () => (
   <a
-    href="https://wa.me/923008543450?text=Hi!%20I'd%20like%20to%20order%20from%20Arion%20Organics."
+    href="https://wa.me/923338399480?text=Hi!%20I'd%20like%20to%20order%20from%20Arion%20Organics."
     target="_blank"
     rel="noopener noreferrer"
     className="wa-float"

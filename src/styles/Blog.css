@@ -570,6 +570,22 @@
   cursor: pointer; font-family: inherit; transition: background .2s, transform .18s;
 }
 .bl-newsletter-btn:hover { background: #3b5239; transform: translateY(-1px); }
+.bl-newsletter-success {
+  font-size: 0.82rem;
+  color: #2e6b4f;
+  background: rgba(73, 99, 72, 0.12);
+  border: 1px solid rgba(73, 99, 72, 0.25);
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+}
+.bl-newsletter-error {
+  font-size: 0.82rem;
+  color: #c0392b;
+  background: rgba(192, 57, 43, 0.12);
+  border: 1px solid rgba(192, 57, 43, 0.25);
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+}
 
 /* --- Responsive ---------------------- */
 @media (max-width: 768px) {

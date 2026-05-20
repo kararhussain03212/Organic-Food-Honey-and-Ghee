@@ -75,22 +75,13 @@ function FloatingInput({
 /* ─────────────────────────────────────────
    Subject options
 ───────────────────────────────────────── */
-const SUBJECTS = [
-  { value: "order", label: "Order Inquiry" },
-  { value: "product", label: "Product Question" },
-  { value: "wholesale", label: "Wholesale / Bulk" },
-  { value: "complaint", label: "Complaint" },
-  { value: "feedback", label: "Feedback" },
-  { value: "other", label: "Other" },
-];
-
 /* ─────────────────────────────────────────
    Social Icons
 ───────────────────────────────────────── */
 const socials = [
   {
     key: "facebook",
-    href: "https://facebook.com",
+    href: "https://www.facebook.com/SSgeneraltradinguae",
     label: "Facebook",
     svg: (
       <svg viewBox="0 0 24 24" fill="currentColor">
@@ -100,7 +91,7 @@ const socials = [
   },
   {
     key: "instagram",
-    href: "https://instagram.com",
+    href: "https://www.facebook.com/SSgeneraltradinguae",
     label: "Instagram",
     svg: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -112,7 +103,7 @@ const socials = [
   },
   {
     key: "whatsapp",
-    href: "https://wa.me/923001234567",
+    href: "https://wa.me/923338399480",
     label: "WhatsApp",
     svg: (
       <svg viewBox="0 0 24 24" fill="currentColor">
@@ -153,7 +144,7 @@ function ContactForm() {
     if (form.phone && !/^[+\d\s\-()]{7,20}$/.test(form.phone)) {
       errs.phone = "Please enter a valid phone number.";
     }
-    if (!form.subject) errs.subject = "Please choose a subject.";
+    if (!form.subject.trim()) errs.subject = "Subject is required.";
     if (!form.message.trim()) {
       errs.message = "Message cannot be empty.";
     } else if (form.message.trim().length < 10) {
@@ -267,12 +258,11 @@ function ContactForm() {
         <FloatingInput
           id="cu-subject"
           label="Subject"
-          as="select"
+          type="text"
           value={form.subject}
           onChange={set("subject")}
           error={errors.subject}
           required
-          options={SUBJECTS}
           icon={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <line x1="8" y1="6" x2="21" y2="6" />
@@ -372,9 +362,9 @@ function InfoCard() {
           </div>
           <div className="cu-info-item-body">
             <span className="cu-info-item-label">WhatsApp</span>
-            <span className="cu-info-item-value">+92 300 123 4567</span>
+            <span className="cu-info-item-value">+92 333 8399480</span>
             <a
-              href="https://wa.me/923001234567"
+              href="https://wa.me/923338399480"
               target="_blank"
               rel="noopener noreferrer"
               className="cu-info-cta cu-info-cta--green"
@@ -397,11 +387,8 @@ function InfoCard() {
           </div>
           <div className="cu-info-item-body">
             <span className="cu-info-item-label">Phone</span>
-            <a href="tel:+923001234567" className="cu-info-item-value cu-info-item-link">
-              +92 300 123 4567
-            </a>
-            <a href="tel:+924235678901" className="cu-info-item-value cu-info-item-link cu-info-item-secondary">
-              +92 42 3567 8901
+            <a href="tel:+923338399480" className="cu-info-item-value cu-info-item-link">
+              +92 333 8399480
             </a>
           </div>
         </div>
@@ -416,11 +403,8 @@ function InfoCard() {
           </div>
           <div className="cu-info-item-body">
             <span className="cu-info-item-label">Email</span>
-            <a href="mailto:support@arionorganic.com" className="cu-info-item-value cu-info-item-link">
-              support@arionorganic.com
-            </a>
-            <a href="mailto:info@arionorganic.com" className="cu-info-item-value cu-info-item-link cu-info-item-secondary">
-              info@arionorganic.com
+            <a href="mailto:info@swiftsigngeneraltrading.com" className="cu-info-item-value cu-info-item-link">
+              info@swiftsigngeneraltrading.com
             </a>
           </div>
         </div>
@@ -435,11 +419,9 @@ function InfoCard() {
           </div>
           <div className="cu-info-item-body">
             <span className="cu-info-item-label">Address</span>
-            <span className="cu-info-item-value">
-              12-B Commercial Area, DHA Phase 5
-            </span>
+            <span className="cu-info-item-value">I-8 Markaz</span>
             <span className="cu-info-item-value cu-info-item-secondary">
-              Lahore, Punjab 54792, Pakistan
+              Islamabad, Pakistan
             </span>
           </div>
         </div>

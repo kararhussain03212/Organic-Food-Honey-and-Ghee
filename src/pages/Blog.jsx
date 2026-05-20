@@ -31,7 +31,7 @@ function BlogCard({ post, featured }) {
         <div className="bl-card-img-overlay" />
       </div>
       <div className="bl-card-body">
-        <CategoryBadge categoryId={post.category} />
+        {/* <CategoryBadge categoryId={post.category} /> */}
         <h3 className="bl-card-title">{post.title}</h3>
         <p className="bl-card-excerpt">{post.excerpt}</p>
         <div className="bl-card-meta">
@@ -70,7 +70,7 @@ function SidePostRow({ post }) {
     <div className="bl-side-post">
       <img src={post.image} alt={post.title} className="bl-side-post-img" loading="lazy" />
       <div className="bl-side-post-body">
-        <span className="bl-side-post-cat">{categories.find(c => c.id === post.category)?.icon} {categories.find(c => c.id === post.category)?.label}</span>
+        {/* <span className="bl-side-post-cat">{categories.find(c => c.id === post.category)?.icon} {categories.find(c => c.id === post.category)?.label}</span> */}
         <p className="bl-side-post-title">{post.title}</p>
         <span className="bl-side-post-meta">{post.date} · {post.readTime}</span>
       </div>
@@ -83,6 +83,19 @@ function Sidebar({ activeCategory, setActiveCategory, searchQuery, setSearchQuer
   const [openSection, setOpenSection] = useState(null);
   const toggleSection = (key) => setOpenSection((p) => (p === key ? null : key));
   const [email, setEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState("idle");
+  const newsletterRecipient = "emailinfo@swiftsigngeneraltrading.com";
+
+  const handleNewsletterSubmit = (event) => {
+    event.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed) {
+      setNewsletterStatus("error");
+      return;
+    }
+    setNewsletterStatus("success");
+    setEmail("");
+  };
 
   const sections = [
     { key: "recent", label: "Recent Posts" },
@@ -162,17 +175,31 @@ function Sidebar({ activeCategory, setActiveCategory, searchQuery, setSearchQuer
               </div>
             )}
             {sec.key === "newsletter" && (
-              <div className="bl-newsletter">
-                <p className="bl-newsletter-desc">Get weekly wellness tips and organic living guides delivered to your inbox.</p>
+              <form className="bl-newsletter" onSubmit={handleNewsletterSubmit}>
+                <p className="bl-newsletter-desc">
+                  Get weekly wellness tips and organic living guides delivered to your inbox.
+                  Updates are sent from {newsletterRecipient}.
+                </p>
                 <input
                   type="email"
                   placeholder="Your email address"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (newsletterStatus !== "idle") setNewsletterStatus("idle");
+                  }}
                   className="bl-newsletter-input"
                 />
-                <button className="bl-newsletter-btn">Subscribe →</button>
-              </div>
+                <button className="bl-newsletter-btn" type="submit">Subscribe →</button>
+                {newsletterStatus === "success" && (
+                  <p className="bl-newsletter-success">
+                    Thank you for subscribing. We will be in touch soon.
+                  </p>
+                )}
+                {newsletterStatus === "error" && (
+                  <p className="bl-newsletter-error">Please enter your email address.</p>
+                )}
+              </form>
             )}
           </div>
         </div>

@@ -100,7 +100,7 @@ function HeroSection() {
   useEffect(() => { setTimeout(() => setVisible(true), 80); }, []);
   return (
     <section className="ab-hero">
-      <img src="https://placehold.co/1400x700/2e4131/ffffff?text=Arion+Organic" alt="Arion fields" className="ab-hero-img" />
+      <img src="/slide5.jpg" alt="Hero background" className="ab-hero-img" />
       <div className="ab-hero-overlay" />
       {/* Floating organic shapes */}
       <div className="ab-shape ab-shape-1" />
@@ -139,7 +139,7 @@ function StorySection() {
             {/* LEFT — large full-height image */}
             <div className="ab-collage-main">
               <img
-                src="https://placehold.co/520x500/496348/ffffff?text=Pure+Products"
+                src="/story_honey.png"
                 alt="Our pure organic products"
                 className="ab-collage-img"
               />
@@ -148,14 +148,14 @@ function StorySection() {
             <div className="ab-collage-stack">
               <div className="ab-collage-sm">
                 <img
-                  src="https://placehold.co/380x240/C7A66B/ffffff?text=Natural+Sourcing"
+                  src="/hex_beekeeper.png"
                   alt="Natural sourcing"
                   className="ab-collage-img"
                 />
               </div>
               <div className="ab-collage-sm">
                 <img
-                  src="https://placehold.co/380x240/5B5248/ffffff?text=Organic+Honey"
+                  src="/story_founder.png"
                   alt="Organic honey"
                   className="ab-collage-img"
                 />
@@ -314,7 +314,6 @@ function CTASection() {
   const navigate = useNavigate();
   return (
     <section className="ab-cta" ref={ref}>
-      <img src="https://placehold.co/1400x500/1a2e1a/ffffff?text=Pure+Nature" alt="CTA background" className="ab-cta-img" />
       <div className="ab-cta-overlay" />
       <div className="ab-cta-grain" />
       {/* Floating particles */}
@@ -325,7 +324,7 @@ function CTASection() {
         <div className="ab-eyebrow ab-eyebrow--light">✦ Join the Arion Family</div>
         <h2 className="ab-cta-title">Experience the Arion Difference</h2>
         <p className="ab-cta-sub">Pure ingredients. Honest sourcing. Real wellness.</p>
-        <button className="ab-cta-btn" onClick={() => navigate("/")}>
+        <button className="ab-cta-btn" onClick={() => navigate("/products")}>
           Explore Our Products
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>

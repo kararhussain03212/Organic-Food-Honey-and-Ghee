@@ -31,7 +31,7 @@ const Home = () => {
             </p>
             <div className="hero-actions">
               <a href="#products" className="hero-btn-primary">Shop Now</a>
-              <a href="#our-story" className="hero-btn-secondary">Our Story</a>
+              <a href="about" className="hero-btn-secondary">Our Story</a>
             </div>
           </div>
         </div>

@@ -1,4 +1,9 @@
 import { footerContent } from "../data/siteContent";
+import { FiInstagram } from "react-icons/fi";
+import { FaFacebookSquare, FaWhatsapp } from "react-icons/fa";
+import { AiFillTikTok } from "react-icons/ai";
+import { IoLogoYoutube } from "react-icons/io5";
+
 
 const Footer = () => {
   const { brand, contact, timings, bottom } = footerContent;
@@ -25,13 +30,40 @@ const Footer = () => {
             </p>
           ))}
           <p className="follow-label">Follow Us:</p>
-          {/* <div className="socials" aria-label="Social links">
-            {contact.socials.map((social) => (
-              <a href="#" key={social} aria-label={social}>
-                {social[0]}
-              </a>
-            ))}
-          </div> */}
+          <div className="socials" aria-label="Social links">
+            <a
+              href="https://www.facebook.com/SSgeneraltradinguae"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <FiInstagram />
+            </a>
+            <a
+              href="https://www.facebook.com/SSgeneraltradinguae"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <FaFacebookSquare />
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+            >
+              <IoLogoYoutube />
+            </a>
+            <a
+              href="https://www.tiktok.com/@ssarionorganicfood"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="TikTok"
+            >
+              <AiFillTikTok />
+            </a>
+          </div>
         </div>
 
         <div className="footer-timings">

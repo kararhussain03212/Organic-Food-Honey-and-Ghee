@@ -204,7 +204,7 @@ export default function Products() {
           freeMode={true}
           loop={true}
           autoplay={{
-            delay: 4000,
+            delay: 3000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
           }}
@@ -227,7 +227,7 @@ export default function Products() {
 
         {/* View all */}
         <div className="products-view-all" style={{ marginTop: "2.5rem" }}>
-          <a href="#" className="view-all-btn">
+          <a href="products" className="view-all-btn">
             View All Products
             <svg
               viewBox="0 0 24 24"
