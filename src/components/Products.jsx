@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
 import { products } from "../data/productsData";
+import { addToCart } from "../utils/cart";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
@@ -35,6 +36,20 @@ function Stars({ rating }) {
 function ProductCard({ product }) {
   const [inCart, setInCart] = useState(false);
   const [quickView, setQuickView] = useState(false);
+
+  const handleAdd = () => {
+    const defaultVariant = product.variants?.[0] ?? product.subtitle;
+    const price = product.variantPrices?.[defaultVariant] ?? product.price;
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price,
+      qty: 1,
+      image: product.img,
+      variant: defaultVariant,
+    });
+    setInCart(true);
+  };
 
   return (
     <>
@@ -90,7 +105,7 @@ function ProductCard({ product }) {
           </div>
           <button
             className={`prod-cart-btn ${inCart ? "prod-cart-added" : ""}`}
-            onClick={() => setInCart(!inCart)}
+            onClick={handleAdd}
           >
             {inCart ? (
               <>
@@ -151,7 +166,7 @@ function ProductCard({ product }) {
               <button
                 className="qv-cart-btn"
                 onClick={() => {
-                  setInCart(true);
+                  handleAdd();
                   setQuickView(false);
                 }}
               >

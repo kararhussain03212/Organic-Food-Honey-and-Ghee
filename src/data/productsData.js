@@ -22,6 +22,16 @@ export const products = [
     stock: true,
     featured: true,
     variants: ["500g", "1kg", "2kg"],
+    variantPrices: {
+      "500g": 1200,
+      "1kg": 2200,
+      "2kg": 4000,
+    },
+    variantOriginalPrices: {
+      "500g": 1500,
+      "1kg": 2600,
+      "2kg": 4700,
+    },
     images: [
       "/products/ghee (1).png",
       "/products/ghee (2).png",
@@ -66,6 +76,14 @@ export const products = [
     stock: true,
     featured: false,
     variants: ["500g", "1kg"],
+    variantPrices: {
+      "500g": 1400,
+      "1kg": 2500,
+    },
+    variantOriginalPrices: {
+      "500g": 1800,
+      "1kg": 3100,
+    },
     images: ["/products/ghee (2).png", "/products/ghee (1).png"],
     img: "/products/ghee (2).png",
     badges: ["Pure"],
@@ -101,6 +119,10 @@ export const products = [
     stock: true,
     featured: false,
     variants: ["500g", "1kg"],
+    variantPrices: {
+      "500g": 1100,
+      "1kg": 2000,
+    },
     images: ["/products/ghee (3).png", "/products/ghee (1).png"],
     img: "/products/ghee (3).png",
     badges: ["Organic"],
@@ -136,6 +158,16 @@ export const products = [
     stock: true,
     featured: true,
     variants: ["250g", "500g", "1kg"],
+    variantPrices: {
+      "250g": 550,
+      "500g": 950,
+      "1kg": 1700,
+    },
+    variantOriginalPrices: {
+      "250g": 700,
+      "500g": 1200,
+      "1kg": 2100,
+    },
     images: ["/products/honey 500 g.png", "/products/honey.png"],
     img: "/products/honey 500 g.png",
     badges: ["Best Seller", "Pure"],
@@ -172,6 +204,10 @@ export const products = [
     stock: true,
     featured: false,
     variants: ["250g", "500g"],
+    variantPrices: {
+      "250g": 480,
+      "500g": 800,
+    },
     images: ["/products/honey.png", "/products/honey 500 g.png"],
     img: "/products/honey.png",
     badges: ["Organic", "Limited Stock"],
@@ -207,6 +243,12 @@ export const products = [
     stock: true,
     featured: false,
     variants: ["10g"],
+    variantPrices: {
+      "10g": 2500,
+    },
+    variantOriginalPrices: {
+      "10g": 3000,
+    },
     images: ["/products/shilajit 10 g.png"],
     img: "/products/shilajit 10 g.png",
     badges: ["Premium Quality"],
@@ -242,6 +284,12 @@ export const products = [
     stock: true,
     featured: false,
     variants: ["5g"],
+    variantPrices: {
+      "5g": 1400,
+    },
+    variantOriginalPrices: {
+      "5g": 1800,
+    },
     images: ["/products/shilajit 5g.png"],
     img: "/products/shilajit 5g.png",
     badges: ["Pure", "Limited Stock"],

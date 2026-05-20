@@ -5,6 +5,7 @@ import {
   getRelatedProducts,
   productCategories,
 } from "../data/productsData";
+import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
 
 /* ─── Image Gallery ─────────────────────────────── */
@@ -112,24 +113,6 @@ function RelatedCard({ product, navigate }) {
   );
 }
 
-/* ─── WhatsApp Float ────────────────────────────── */
-function WhatsAppFloat() {
-  return (
-    <a
-      href="https://wa.me/923008543450?text=Hi! I'd like to order from Arion Organics."
-      target="_blank"
-      rel="noopener noreferrer"
-      className="pd-wa-float"
-      aria-label="Order on WhatsApp"
-    >
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.958 9.958 0 0 1-5.084-1.383L2 22l1.414-4.836A9.958 9.958 0 0 1 2 12 10 10 0 0 1 12 2zm0 2a8 8 0 1 0 0 16A8 8 0 0 0 12 4z" />
-      </svg>
-      <span>Need Help? Chat with us</span>
-    </a>
-  );
-}
-
 /* ─── Main Page ─────────────────────────────────── */
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -141,11 +124,15 @@ export default function ProductDetail() {
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
   const [qty, setQty] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
-  const hasOriginal = Boolean(product.originalPrice);
-  const totalPrice = product.price * qty;
-  const totalOriginal = hasOriginal ? product.originalPrice * qty : 0;
+  const selectedPrice =
+    product.variantPrices?.[selectedVariant] ?? product.price;
+  const selectedOriginal =
+    product.variantOriginalPrices?.[selectedVariant] ?? product.originalPrice;
+  const hasOriginal = Boolean(selectedOriginal);
+  const totalPrice = selectedPrice * qty;
+  const totalOriginal = hasOriginal ? selectedOriginal * qty : 0;
   const totalSavings = hasOriginal
-    ? (product.originalPrice - product.price) * qty
+    ? (selectedOriginal - selectedPrice) * qty
     : 0;
 
   useEffect(() => {
@@ -156,6 +143,14 @@ export default function ProductDetail() {
   }, [slug]);
 
   const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: selectedPrice,
+      qty,
+      image: product.images[0],
+      variant: selectedVariant,
+    });
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2200);
   };
@@ -170,8 +165,6 @@ export default function ProductDetail() {
 
   return (
     <main className="pd-page">
-      <WhatsAppFloat />
-
       {/* ── Breadcrumb ──────────────────────────── */}
       <nav className="pd-breadcrumb">
         <div className="pd-container">

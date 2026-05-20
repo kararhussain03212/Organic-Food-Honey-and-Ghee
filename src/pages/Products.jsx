@@ -5,6 +5,7 @@ import {
   productCategories,
   PRODUCTS_PER_PAGE,
 } from "../data/productsData";
+import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
 
 /* ─── Star rating ───────────────────────────────── */
@@ -29,10 +30,15 @@ function Stars({ rating }) {
 function ProductCard({ product }) {
   const navigate = useNavigate();
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
-  const hasOriginal = Boolean(product.originalPrice);
-  const priceLabel = `Rs ${product.price.toLocaleString()}`;
+  const [added, setAdded] = useState(false);
+  const currentPrice =
+    product.variantPrices?.[selectedVariant] ?? product.price;
+  const currentOriginal =
+    product.variantOriginalPrices?.[selectedVariant] ?? product.originalPrice;
+  const hasOriginal = Boolean(currentOriginal);
+  const priceLabel = `Rs ${currentPrice.toLocaleString()}`;
   const originalLabel = hasOriginal
-    ? `Rs ${product.originalPrice.toLocaleString()}`
+    ? `Rs ${currentOriginal.toLocaleString()}`
     : null;
   const cat = productCategories.find((c) => c.id === product.category);
 
@@ -100,7 +106,21 @@ function ProductCard({ product }) {
           >
             View Details
           </button>
-          <button className="prc-btn-cart">
+          <button
+            className="prc-btn-cart"
+            onClick={() => {
+              addToCart({
+                id: product.id,
+                name: product.name,
+                price: currentPrice,
+                qty: 1,
+                image: product.images[0],
+                variant: selectedVariant,
+              });
+              setAdded(true);
+              setTimeout(() => setAdded(false), 1600);
+            }}
+          >
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -111,7 +131,7 @@ function ProductCard({ product }) {
               <line x1="3" y1="6" x2="21" y2="6" />
               <path d="M16 10a4 4 0 0 1-8 0" />
             </svg>
-            Add to Cart
+            {added ? "Added" : "Add to Cart"}
           </button>
         </div>
       </div>
