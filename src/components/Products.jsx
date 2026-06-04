@@ -23,7 +23,7 @@ function ProductCard({ product }) {
   const price = product.variantPrices?.[variant] ?? product.price;
 
   const handleShopNow = () => {
-    const message = `Hi! I'd like to order *${product.name}* (${variant}) — Rs ${price.toLocaleString()}`;
+    const message = `🛍️ *ORDER REQUEST*\n\n*Product:* ${product.name}\n*Variant:* ${variant}\n*Price:* Rs ${price.toLocaleString()}`;
     window.dispatchEvent(new CustomEvent("shop:requestLocation", { detail: { message } }));
   };
 

@@ -97,12 +97,15 @@ const Navbar = () => {
   const completeCheckout = () => {
     if (cartItems.length === 0) return;
     const lines = cartItems.map(
-      (item) => `- ${item.name} x${item.qty} (Rs ${item.price.toLocaleString()})`,
+      (item) => `  • ${item.name} × ${item.qty} (Rs ${item.price.toLocaleString()})`,
     );
     const message = [
-      "Hi! I want to order:",
+      "🛒 *ORDER REQUEST*",
+      "",
+      "Items:",
       ...lines,
-      `Subtotal: Rs ${subtotal.toLocaleString()}`,
+      "",
+      `💰 Subtotal: Rs ${subtotal.toLocaleString()}`,
       buildDeliveryBlock(),
     ].join("\n");
     window.open(

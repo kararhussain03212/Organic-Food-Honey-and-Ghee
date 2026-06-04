@@ -97,7 +97,7 @@ export default function ProductDetail() {
   };
 
   const handleShopNow = () => {
-    const message = `Hi! I'd like to order *${product.name}* (${selectedVariant} × ${qty}) — Rs ${totalPrice.toLocaleString()}`;
+    const message = `🛍️ *ORDER REQUEST*\n\n*Product:* ${product.name}\n*Size:* ${selectedVariant}\n*Quantity:* ${qty}\n*Price:* Rs ${totalPrice.toLocaleString()}`;
     window.dispatchEvent(new CustomEvent("shop:requestLocation", { detail: { message } }));
   };
 
