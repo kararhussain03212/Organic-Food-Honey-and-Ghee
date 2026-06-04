@@ -1,30 +1,12 @@
-import { useState, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   products,
   productCategories,
   PRODUCTS_PER_PAGE,
 } from "../data/productsData";
-import { addToCart, getCartItems } from "../utils/cart";
+import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
-
-/* ─── Star rating ───────────────────────────────── */
-function Stars({ rating }) {
-  return (
-    <div className="pr-stars" aria-label={`${rating} out of 5`}>
-      {[1, 2, 3, 4, 5].map((s) => (
-        <svg
-          key={s}
-          viewBox="0 0 24 24"
-          className={s <= Math.round(rating) ? "pr-star filled" : "pr-star"}
-        >
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-      ))}
-      <span className="pr-rating-num">{rating}</span>
-    </div>
-  );
-}
 
 /* ─── Product Card ──────────────────────────────── */
 function ProductCard({ product }) {
@@ -34,23 +16,14 @@ function ProductCard({ product }) {
   const currentOriginal = product.originalPrice;
   const hasOriginal = Boolean(currentOriginal);
   const priceLabel = `Rs ${currentPrice.toLocaleString()}`;
-  const originalLabel = hasOriginal
-    ? `Rs ${currentOriginal.toLocaleString()}`
-    : null;
-  const cat = productCategories.find((c) => c.id === product.category);
+  const originalLabel = hasOriginal ? `Rs ${currentOriginal.toLocaleString()}` : null;
   const variant = product.size;
 
-  useEffect(() => {
-    const syncAddedState = () => {
-      const existsInCart = getCartItems().some(
-        (item) => item.id === product.id && item.variant === variant,
-      );
-      setAdded(existsInCart);
-    };
-    syncAddedState();
-    window.addEventListener("cart:updated", syncAddedState);
-    return () => window.removeEventListener("cart:updated", syncAddedState);
-  }, [product.id, variant]);
+  const handleAddToCart = () => {
+    addToCart({ id: product.id, name: product.name, price: currentPrice, qty: 1, image: product.images[0], variant });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
 
   return (
     <article className="prc-card">
@@ -63,72 +36,35 @@ function ProductCard({ product }) {
 
       <div
         className="prc-img-wrap"
+        style={{ cursor: "pointer" }}
         onClick={() => navigate(`/products/${product.slug}`)}
       >
-        <img
-          src={product.images[0]}
-          alt={product.name}
-          className="prc-img"
-          loading="lazy"
-        />
+        <img src={product.images[0]} alt={product.name} className="prc-img" loading="lazy" />
         <div className="prc-img-overlay" />
-        <button className="prc-quick-view">Quick View</button>
       </div>
 
       <div className="prc-body">
-        {/* <span className="prc-cat-badge">
-          {cat?.icon} {cat?.label}
-        </span> */}
-        <h3
-          className="prc-name"
-          onClick={() => navigate(`/products/${product.slug}`)}
-        >
+        <h3 className="prc-name" onClick={() => navigate(`/products/${product.slug}`)}>
           {product.name}
         </h3>
         <p className="prc-desc">{product.shortDesc}</p>
 
-        {/* <Stars rating={product.rating} />
-        <span className="prc-reviews">({product.reviews} reviews)</span> */}
-
-        <div className="prc-variants" style={{ display: "none" }} />
-
-        {/* Price */}
         <div className="prc-price-row">
           <span className="prc-price">{priceLabel}</span>
           {hasOriginal && <span className="prc-original">{originalLabel}</span>}
         </div>
 
         <div className="prc-actions">
-          <button
-            className="prc-btn-detail"
-            onClick={() => navigate(`/products/${product.slug}`)}
-          >
+          <button className="prc-btn-detail" onClick={() => navigate(`/products/${product.slug}`)}>
             View Details
           </button>
-          <button
-            className="prc-btn-cart"
-            onClick={() => {
-              addToCart({
-                id: product.id,
-                name: product.name,
-                price: currentPrice,
-                qty: 1,
-                image: product.images[0],
-                variant,
-              });
-            }}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
+          <button className="prc-btn-cart" onClick={handleAddToCart}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
               <line x1="3" y1="6" x2="21" y2="6" />
               <path d="M16 10a4 4 0 0 1-8 0" />
             </svg>
-            {added ? "Added" : "Add to Cart"}
+            {added ? "Added!" : "Add to Cart"}
           </button>
         </div>
       </div>
@@ -136,45 +72,17 @@ function ProductCard({ product }) {
   );
 }
 
-/* ─── Category Cards ────────────────────────────── */
-function CategoryCards({ onSelect }) {
-  const cats = productCategories.filter((c) => c.id !== "all");
-  return (
-    <section className="prl-cats">
-      <div className="prl-container">
-        <div className="prl-section-label">Browse by Category</div>
-        <h2 className="prl-section-title">Explore Our Collections</h2>
-        <div className="prl-cats-grid">
-          {cats.map((cat, i) => (
-            <button
-              key={cat.id}
-              className="prl-cat-card"
-              onClick={() => onSelect(cat.id)}
-              style={{ animationDelay: `${i * 0.08}s` }}
-            >
-              <div className="prl-cat-icon">{cat.icon}</div>
-              <div className="prl-cat-name">{cat.label}</div>
-              <div className="prl-cat-count">{cat.count} items</div>
-              <div className="prl-cat-arrow">→</div>
-            </button>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ─── Main Page ─────────────────────────────────── */
 export default function Products() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
   const [activeCategory, setActiveCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
 
   const filtered = useMemo(() => {
     let result = products.filter((p) => {
-      const matchCat =
-        activeCategory === "all" || p.category === activeCategory;
+      const matchCat = activeCategory === "all" || p.category === activeCategory;
       const q = searchQuery.toLowerCase();
       const matchSearch =
         !q ||
@@ -183,12 +91,9 @@ export default function Products() {
         p.tags.some((t) => t.includes(q));
       return matchCat && matchSearch;
     });
-    if (sortBy === "price-asc")
-      result = [...result].sort((a, b) => a.price - b.price);
-    if (sortBy === "price-desc")
-      result = [...result].sort((a, b) => b.price - a.price);
-    if (sortBy === "rating")
-      result = [...result].sort((a, b) => b.rating - a.rating);
+    if (sortBy === "price-asc") result = [...result].sort((a, b) => a.price - b.price);
+    if (sortBy === "price-desc") result = [...result].sort((a, b) => b.price - a.price);
+    if (sortBy === "rating") result = [...result].sort((a, b) => b.rating - a.rating);
     return result;
   }, [activeCategory, searchQuery, sortBy]);
 
@@ -198,15 +103,14 @@ export default function Products() {
     currentPage * PRODUCTS_PER_PAGE,
   );
 
-  const handleCategorySelect = (id) => {
-    setActiveCategory(id);
+  const clearFilters = () => {
+    setActiveCategory("all");
+    setSearchParams({});
     setCurrentPage(1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <main className="prl-page">
-      {/* Decorative blobs */}
       <div className="prl-blob prl-blob-1" />
       <div className="prl-blob prl-blob-2" />
 
@@ -223,60 +127,32 @@ export default function Products() {
               your everyday life.
             </p>
           </div>
-
-          {/* Search */}
-          {/* <div className="prl-search-wrap">
-            <div className="prl-search-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input
-                type="text"
-                placeholder="Search products, ingredients, benefits…"
-                value={searchQuery}
-                onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                className="prl-search-input"
-              />
-              {searchQuery && <button className="prl-search-clear" onClick={() => setSearchQuery("")}>✕</button>}
-            </div>
-          </div> */}
-
-          {/* Category pills */}
-          {/* <div className="prl-pills">
-            {productCategories.map(cat => (
-              <button
-                key={cat.id}
-                className={`prl-pill${activeCategory === cat.id ? " active" : ""}`}
-                onClick={() => handleCategorySelect(cat.id)}
-              >
-                {cat.icon} {cat.label}
-                <span className="prl-pill-count">{cat.count}</span>
+          {searchQuery && (
+            <div className="prl-search-result-banner">
+              Showing results for: <strong>"{searchQuery}"</strong>
+              <button className="prl-search-clear-link" onClick={clearFilters}>
+                ✕ Clear
               </button>
-            ))}
-          </div> */}
+            </div>
+          )}
         </div>
       </section>
-
-      {/* ── Category Cards ───────────────────────── */}
-      {/* {activeCategory === "all" && !searchQuery && <CategoryCards onSelect={handleCategorySelect} />} */}
 
       {/* ── Product Grid ─────────────────────────── */}
       <section className="prl-grid-section">
         <div className="prl-container">
           <div className="prl-grid-header">
             <div className="prl-grid-heading">
-              {activeCategory === "all"
+              {searchQuery
+                ? `Search: "${searchQuery}"`
+                : activeCategory === "all"
                 ? "All Products"
                 : productCategories.find((c) => c.id === activeCategory)?.label}
               <span className="prl-count"> ({filtered.length})</span>
             </div>
             <div className="prl-grid-controls">
               {(searchQuery || activeCategory !== "all") && (
-                <button
-                  className="prl-clear-btn"
-                  onClick={() => {
-                    setActiveCategory("all");
-                    setSearchQuery("");
-                  }}
-                >
+                <button className="prl-clear-btn" onClick={clearFilters}>
                   ✕ Clear filters
                 </button>
               )}
@@ -298,13 +174,7 @@ export default function Products() {
               <div className="prl-empty-icon">🔍</div>
               <h3>No products found</h3>
               <p>Try a different search or category.</p>
-              <button
-                className="prl-clear-btn"
-                onClick={() => {
-                  setActiveCategory("all");
-                  setSearchQuery("");
-                }}
-              >
+              <button className="prl-clear-btn" onClick={clearFilters}>
                 Clear filters
               </button>
             </div>
@@ -316,7 +186,6 @@ export default function Products() {
             </div>
           )}
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="prl-pagination">
               <button

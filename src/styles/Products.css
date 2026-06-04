@@ -78,6 +78,30 @@
   line-height: 1.7;
 }
 
+/* Search result banner */
+.prl-search-result-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #f0f5f1;
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  color: var(--brown);
+  margin-bottom: 1rem;
+}
+
+.prl-search-clear-link {
+  background: none;
+  border: none;
+  color: var(--green);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
 /* Search */
 .prl-search-wrap {
   max-width: 600px;
@@ -841,6 +865,36 @@
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
+
+.pd-btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 2px solid var(--green);
+  background: #fff;
+  color: var(--green);
+  cursor: pointer;
+  transition: all 0.24s;
+}
+.pd-btn-secondary svg {
+  width: 18px;
+  height: 18px;
+}
+.pd-btn-secondary:hover {
+  background: var(--green);
+  color: #fff;
+}
+.pd-btn-secondary.added {
+  border-color: #22c55e;
+  background: #22c55e;
+  color: #fff;
+}
+
 .pd-btn-cart {
   display: flex;
   align-items: center;
