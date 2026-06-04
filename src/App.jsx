@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -10,6 +10,10 @@ import BlogDetail from './pages/BlogDetail'
 import About from './pages/About'
 import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import OnlineOrderPolicy from "./pages/OnlineOrderPolicy";
 import "./styles/Responsive.css";
 
 function ScrollToTop() {
@@ -37,7 +41,10 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:slug" element={<ProductDetail />} />
-          {/* Add more routes here as you build more pages */}
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/return-policy" element={<ReturnPolicy />} />
+          <Route path="/online-order-policy" element={<OnlineOrderPolicy />} />
         </Routes>
         <Footer />
       </div>
@@ -46,3 +53,4 @@ function App() {
 }
 
 export default App
+

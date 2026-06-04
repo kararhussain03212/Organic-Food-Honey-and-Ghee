@@ -99,7 +99,7 @@ export default function Testimonials() {
           </p>
         </div>
 
-        <div className={`test-carousel-wrap ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.2s" }}>
+        <div className={`test-carousel-wrap ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.4s" }}>
           {/* Main featured testimonial */}
           <div className="test-featured">
             {testimonials.map((t, i) => (

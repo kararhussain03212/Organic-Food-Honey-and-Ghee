@@ -1,26 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiInstagram } from "react-icons/fi";
-import { IoLogoYoutube } from "react-icons/io5";
 import { FaFacebookSquare, FaWhatsapp } from "react-icons/fa";
 import { AiFillTikTok } from "react-icons/ai";
+import { IoLogoYoutube } from "react-icons/io5";
 import { clearCart, getCartItems, removeFromCart } from "../utils/cart";
+import Marquee from "./Marquee";
+import { IoCall } from "react-icons/io5";
+import { MdEmail } from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6";
+import { IoSearch } from "react-icons/io5";
 
 const DELIVERY_LOCATION_STORAGE_KEY = "delivery_location";
 
 const NAV_ITEMS = [
   { label: "Home", path: "/" },
+  { label: "About", path: "/about" },
   { label: "Products", path: "/products" },
-  { label: "About", path: "/about" },
   { label: "Blog", path: "/blog" },
-  { label: "Contact", path: "/contact" },
-];
-
-const TOP_LINKS = [
-  { label: "About", path: "/about" },
-  { label: "Swift", path: "/blog" },
-  { label: "Pertinent Info", path: "/blog" },
-  { label: "Recipes", path: "/blog" },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -106,8 +103,13 @@ const Navbar = () => {
   useEffect(() => {
     if (!city || !area) return;
     const payload = { city, area, useCurrentLocation };
-    localStorage.setItem(DELIVERY_LOCATION_STORAGE_KEY, JSON.stringify(payload));
-    window.dispatchEvent(new CustomEvent("location:updated", { detail: payload }));
+    localStorage.setItem(
+      DELIVERY_LOCATION_STORAGE_KEY,
+      JSON.stringify(payload),
+    );
+    window.dispatchEvent(
+      new CustomEvent("location:updated", { detail: payload }),
+    );
   }, [city, area, useCurrentLocation]);
 
   const handleRemoveItem = (id, variant) => {
@@ -142,17 +144,7 @@ const Navbar = () => {
 
   return (
     <header className="site-header">
-      <div className="top-strip">
-        <div className="top-inner">
-          <div className="top-links">
-            {TOP_LINKS.map((link) => (
-              <Link className="top-link" to={link.path} key={link.label}>
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
+      <Marquee />
 
       <div className="main-nav">
         <Link className="brand" to="/" aria-label="Swift Sign home">
@@ -188,9 +180,7 @@ const Navbar = () => {
               onChange={(event) => setSearchTerm(event.target.value)}
             />
             <button type="submit" aria-label="Search">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M15.5 14h-.8l-.3-.3a6 6 0 1 0-.9.9l.3.3v.8l4.7 4.7 1.4-1.4-4.4-4.7zM10 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
-              </svg>
+              <IoSearch />
             </button>
           </form>
 
@@ -232,30 +222,30 @@ const Navbar = () => {
 
       <div className="info-strip">
         <div className="info-inner">
-          <div className="info-item">
-            <span className="info-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M19.2 15.4c-1-.1-2 .1-3 .4-.7.2-1.6 0-2.1-.6l-3-3c-.5-.5-.7-1.4-.6-2.1.3-1 .5-2 .4-3A2.9 2.9 0 0 0 8 4.4c-1.9-.4-3.4 1.1-3 3C6 12 12 18 16.6 19c1.9.4 3.4-1.1 3-3.6a2.9 2.9 0 0 0-.4-.1z" />
-              </svg>
-            </span>
-            <span className="info-text">+92 333 8399480</span>
+          <div className="info-left">
+            <div className="info-item">
+              <span className="info-icon " aria-hidden="true">
+                <IoCall />
+              </span>
+              <span className="info-text">+92 333 8399480</span>
+            </div>
+
+            <div className="info-item">
+              <span className="info-icon " aria-hidden="true">
+                <MdEmail />
+              </span>
+              <span className="info-text">
+                info@swiftsigngeneraltrading.com
+              </span>
+            </div>
           </div>
 
-          <div className="info-item">
-            <span className="info-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6zm2.2 0L12 10.2 17.8 6H6.2z" />
-              </svg>
-            </span>
-            <span className="info-text">
-              info@swiftsigngeneraltrading.com
-            </span>
-          </div>
-
-          <div className="info-item info-right">
-            <span className="info-text">
-              Welcome to Swift sign organic food
-            </span>
+          <div className="info-left">
+            <div className="info-item info-right">
+              <span className="info-text">
+                Welcome to Swift Sign Arion Organic Food
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -309,17 +299,13 @@ const Navbar = () => {
         </nav>
         <div className="mobile-contact">
           <div>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2a7 7 0 0 0-7 7c0 5.3 6.1 12.3 6.4 12.6a.8.8 0 0 0 1.2 0C12.9 21.3 19 14.3 19 9a7 7 0 0 0-7-7zm0 9.4A2.4 2.4 0 1 1 12 6a2.4 2.4 0 0 1 0 4.4z" />
-            </svg>
+            <FaLocationDot />
             <div>
-              <span>I-8 Markaz, Islamabad, Pakistan</span>
+              <span>Office 22, 4th Floor, Pakland City Center, I-8 Markaz, Islamabad, Pakistan.</span>
             </div>
           </div>
           <div>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M19.2 15.4c-1-.1-2 .1-3 .4-.7.2-1.6 0-2.1-.6l-3-3c-.5-.5-.7-1.4-.6-2.1.3-1 .5-2 .4-3A2.9 2.9 0 0 0 8 4.4c-1.9-.4-3.4 1.1-3 3C6 12 12 18 16.6 19c1.9.4 3.4-1.1 3-3.6a2.9 2.9 0 0 0-.4-.1z" />
-            </svg>
+            <IoCall />
             <div>
               <span>+92 333 8399480</span>
               <small>Call support</small>
@@ -329,7 +315,7 @@ const Navbar = () => {
 
         <div className="mobile-socials" aria-label="Social links">
           <a
-            href="https://www.facebook.com/SSgeneraltradinguae"
+            href="https://www.instagram.com/ssarionorganicfood/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"

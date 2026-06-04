@@ -71,10 +71,46 @@ html {
   align-items: center;
 }
 
+.marquee-inner {
+  max-width: none;
+  width: 100%;
+  padding: 0.28rem 0;
+}
+
 .top-links {
   display: flex;
   gap: 1.35rem;
   flex-wrap: wrap;
+}
+
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: flex;
+  width: 100%;
+  will-change: transform;
+  animation: marquee-scroll 25s linear infinite;
+}
+
+.marquee-item {
+  flex: 0 0 100%;
+  display: block;
+  text-align: center;
+  padding-right: 0;
+  font-weight: 600;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .top-link {
@@ -118,6 +154,7 @@ html {
   font-family: "Playfair Display", serif;
   font-size: 1.45rem;
   letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
 .brand-subtitle {
@@ -125,6 +162,7 @@ html {
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.18em;
+  font-weight: 700;
 }
 
 .nav-links {
@@ -137,7 +175,7 @@ html {
 
 .hero {
   position: relative;
-  min-height: 60vh;
+  min-height: 68vh;
   width: 100%;
   overflow: hidden;
 }
@@ -160,7 +198,7 @@ html {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 60vh;
+  min-height: 68vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,7 +244,7 @@ html {
 .nav-link {
   text-decoration: none;
   color: #5B5248;
-  font-weight: 600;
+  font-weight: 700;
   position: relative;
   padding-bottom: 0.2rem;
   transition: color 0.2s ease;
@@ -508,11 +546,16 @@ html {
 .info-inner {
   max-width: 1360px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
   font-size: 0.95rem;
+}
+
+.info-left{
+  display: flex;
+  gap: 10rem;
 }
 
 .info-item {
@@ -646,6 +689,7 @@ html {
   font-family: "Playfair Display", serif;
   font-size: 1.05rem;
   color: var(--brown);
+  font-weight: 700;
 }
 
 .mobile-brand-subtitle {
@@ -654,6 +698,7 @@ html {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
+  font-weight: 700;
 }
 
 .mobile-cart {
@@ -775,7 +820,7 @@ html {
 }
 
 .footer-grid {
-  grid-template-columns: 260px 1fr 1.2fr;
+  grid-template-columns: minmax(220px, 260px) minmax(320px, 1.5fr) minmax(180px, 1fr) minmax(150px, 0.8fr);
   align-items: start;
 }
 
@@ -812,6 +857,8 @@ html {
 .footer-timings p {
   margin-bottom: 0.4rem;
   color: rgba(232, 230, 226, 0.75);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .follow-label {
@@ -848,6 +895,7 @@ html {
   margin: 0.8rem 0 1.2rem;
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -879,13 +927,64 @@ html {
 
 .timing-row {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1.5rem;
 }
 
-.timing-time {
-  font-weight: 600;
+.date-time-row {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.footer-poli {
+  justify-self: end;
+}
+
+@media (max-width: 1180px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 1.8rem 2rem;
+  }
+
+  .footer-poli {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 820px) {
+  .site-footer {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+
+  .footer-brand-block {
+    align-items: center;
+  }
+
+  .footer-logo {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+  }
+
+  .footer-title {
+    font-size: 1.15rem;
+    line-height: 1.2;
+  }
+
+  .footer-links {
+    margin: 0.35rem 0 0.5rem;
+  }
+
+  .date-time-row {
+    gap: 0.45rem 1rem;
+  }
 }
 
 .location-modal-overlay {
@@ -1266,7 +1365,7 @@ html {
 }
 
 @media (max-width: 720px) {
-  .top-inner {
+  .top-inner:not(.marquee-inner) {
     flex-direction: column;
     text-align: center;
   }
@@ -1281,10 +1380,6 @@ html {
 
   .footer-bottom {
     text-align: center;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr;
   }
 
   .timing-row {
@@ -3280,4 +3375,57 @@ html {
   width: 28px;
   border-radius: 999px;
   background: #496348;
+}
+
+.policy-page {
+  background: #f7f5f1;
+  padding: 3rem 1rem 4rem;
+}
+
+.policy-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem 1.4rem;
+  box-shadow: 0 8px 24px rgba(73, 99, 72, 0.08);
+}
+
+.policy-kicker {
+  color: var(--green);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.policy-title {
+  margin-top: 0.45rem;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+  color: var(--brown);
+}
+
+.policy-updated {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.policy-content {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.policy-section h2 {
+  font-size: 1.15rem;
+  color: var(--green);
+  margin-bottom: 0.45rem;
+}
+
+.policy-section p {
+  color: var(--brown);
+  line-height: 1.75;
 }

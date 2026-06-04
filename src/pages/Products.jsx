@@ -5,7 +5,7 @@ import {
   productCategories,
   PRODUCTS_PER_PAGE,
 } from "../data/productsData";
-import { addToCart } from "../utils/cart";
+import { addToCart, getCartItems } from "../utils/cart";
 import "../styles/Products.css";
 
 /* ─── Star rating ───────────────────────────────── */
@@ -38,6 +38,19 @@ function ProductCard({ product }) {
     ? `Rs ${currentOriginal.toLocaleString()}`
     : null;
   const cat = productCategories.find((c) => c.id === product.category);
+  const variant = product.size;
+
+  useEffect(() => {
+    const syncAddedState = () => {
+      const existsInCart = getCartItems().some(
+        (item) => item.id === product.id && item.variant === variant,
+      );
+      setAdded(existsInCart);
+    };
+    syncAddedState();
+    window.addEventListener("cart:updated", syncAddedState);
+    return () => window.removeEventListener("cart:updated", syncAddedState);
+  }, [product.id, variant]);
 
   return (
     <article className="prc-card">
@@ -101,10 +114,8 @@ function ProductCard({ product }) {
                 price: currentPrice,
                 qty: 1,
                 image: product.images[0],
-                variant: product.size,
+                variant,
               });
-              setAdded(true);
-              setTimeout(() => setAdded(false), 1600);
             }}
           >
             <svg

@@ -1,9 +1,9 @@
+﻿import { Link } from "react-router-dom";
 import { footerContent } from "../data/siteContent";
 import { FiInstagram } from "react-icons/fi";
 import { FaFacebookSquare, FaWhatsapp } from "react-icons/fa";
 import { AiFillTikTok } from "react-icons/ai";
 import { IoLogoYoutube } from "react-icons/io5";
-
 
 const Footer = () => {
   const { brand, contact, timings, bottom } = footerContent;
@@ -14,7 +14,7 @@ const Footer = () => {
         <div className="footer-brand-block">
           <div className="footer-logo" aria-hidden="true">
             {/* {brand.initials} */}
-            <img src="/logo/General trading storke.png" alt="logo" />
+            <img src="/logo/General trading white storke.png" alt="logo" />
           </div>
           <div>
             <div className="footer-title">{brand.title}</div>
@@ -32,7 +32,7 @@ const Footer = () => {
           <p className="follow-label">Follow Us:</p>
           <div className="socials" aria-label="Social links">
             <a
-              href="https://www.facebook.com/SSgeneraltradinguae"
+              href="https://www.instagram.com/ssarionorganicfood/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -68,19 +68,13 @@ const Footer = () => {
 
         <div className="footer-timings">
           <div className="timing-row">
-            <div>
-              <h3>{timings.heading}</h3>
+            <h3>{timings.heading}</h3>
+            <div className="date-time-row">
               <p>{timings.days}</p>
+              <p>{timings.time}</p>
             </div>
-            <p className="timing-time">{timings.time}</p>
           </div>
-          <div className="footer-links">
-            {timings.links.map((link) => (
-              <a href="#" key={link}>
-                {link}
-              </a>
-            ))}
-          </div>
+
           {/* <div className="app-badges">
             {timings.appBadges.map((badge) => (
               <button type="button" key={badge}>
@@ -88,6 +82,15 @@ const Footer = () => {
               </button>
             ))}
           </div> */}
+        </div>
+        <div className="footer-poli">
+          <div className="footer-links">
+            {timings.links.map((link) => (
+              <Link to={link.path} key={link.label}>
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 

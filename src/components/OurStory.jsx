@@ -36,7 +36,7 @@ export default function OurStory() {
           </h2>
 
           <p className="story2-desc">
-            For over 15 years, our family has been dedicated to bringing you the
+            Our family has been dedicated to bringing you the
             purest, most authentic organic products. From hand-harvested mountain
             honey to traditionally made desi ghee — every product carries our
             promise of purity, quality, and generational craftsmanship.
@@ -49,7 +49,7 @@ export default function OurStory() {
             </li>
             <li>
               <span className="story2-bullet-dot" />
-              Sourced directly from trusted organic farms
+              Sourced directly from trusted organic sourcess
             </li>
             <li>
               <span className="story2-bullet-dot" />

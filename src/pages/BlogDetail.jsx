@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { blogs, categories, recentPosts, allTags, defaultContent, getRelatedPosts } from "../data/blogData";
+import { blogs, categories, recentPosts, allTags, getPostContent, getRelatedPosts } from "../data/blogData";
 import "../styles/BlogDetail.css";
 
 /* ─── Reading progress bar ─────────────────────── */
@@ -293,6 +293,7 @@ export default function BlogDetail() {
   const [visible, setVisible] = useState(false);
 
   const post = blogs.find((b) => b.slug === slug) || blogs[0];
+  const postContent = getPostContent(post.slug);
   const related = getRelatedPosts(post.slug);
   const postTags = post.tags?.length ? post.tags : allTags.slice(0, 8);
 
@@ -308,7 +309,7 @@ export default function BlogDetail() {
 
       {/* ── Hero banner ──────────────────────────── */}
       <header className={`bd-hero${visible ? " visible" : ""}`}>
-        <img src="https://placehold.co/1200x700/496348/ffffff?text=Wellness+Journal" alt={post.title} className="bd-hero-img" />
+        <img src={post.image} alt={post.title} className="bd-hero-img" />
         <div className="bd-hero-overlay" />
         <div className="bd-hero-content">
           <div className="bd-hero-inner">
@@ -348,7 +349,7 @@ export default function BlogDetail() {
           {/* Article */}
           <article className="bd-article">
             <div className="bd-article-content">
-              {defaultContent.map((block, i) => (
+              {postContent.map((block, i) => (
                 <ContentBlock key={i} block={block} />
               ))}
             </div>

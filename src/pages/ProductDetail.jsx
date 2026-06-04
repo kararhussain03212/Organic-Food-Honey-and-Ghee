@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   getProductBySlug,
   getRelatedProducts,
-  productCategories,
 } from "../data/productsData";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
@@ -16,7 +15,7 @@ function ImageGallery({ images, name }) {
       <div className="pd-gallery-main">
         <img src={images[active]} alt={name} className="pd-gallery-img" />
       </div>
-      {images.length > 1 && (
+      {/* {images.length > 1 && (
         <div className="pd-gallery-thumbs">
           {images.map((img, i) => (
             <button
@@ -28,7 +27,7 @@ function ImageGallery({ images, name }) {
             </button>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }
@@ -119,7 +118,6 @@ export default function ProductDetail() {
   const navigate = useNavigate();
   const product = getProductBySlug(slug);
   const related = getRelatedProducts(slug);
-  const cat = productCategories.find((c) => c.id === product.category);
 
   const selectedVariant = product.size || product.variants[0];
   const [qty, setQty] = useState(1);
@@ -185,7 +183,7 @@ export default function ProductDetail() {
             {/* Right: Product info */}
             <div className="pd-info">
               <span className="pd-cat-badge">
-                {cat?.icon} {cat?.label}
+                Health & Wellness Arion Organic Food
               </span>
               {product.discount > 0 && (
                 <span className="pd-discount-badge">
@@ -195,12 +193,12 @@ export default function ProductDetail() {
 
               <h1 className="pd-name">{product.name}</h1>
 
-              <div className="pd-rating-row">
+              {/* <div className="pd-rating-row">
                 <Stars rating={product.rating} />
                 <span className="pd-reviews">
                   {product.reviews} verified reviews
                 </span>
-              </div>
+              </div> */}
 
               <div className="pd-stock">
                 <span
@@ -229,7 +227,9 @@ export default function ProductDetail() {
               <div className="pd-field">
                 <label className="pd-field-label">Size / Weight</label>
                 <div className="pd-variant-pills">
-                  <button className="pd-variant-pill active">{selectedVariant}</button>
+                  <button className="pd-variant-pill active">
+                    {selectedVariant}
+                  </button>
                 </div>
               </div>
 

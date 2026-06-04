@@ -8,7 +8,7 @@ const aboutData = {
     headline: "How It All Began",
     paragraphs: [
       "Arion was founded by a family who watched the food they trusted slowly disappear from shelves, replaced by colourful packaging and invisible chemicals. What once grew in the family's ancestral orchard — pure, slow, honest — had been replaced by industrial mimicry.",
-      "We set out to change that. Not loudly, not with slogans, but quietly — the way good food has always worked. One pure product, one trusted farmer, one honest jar at a time.",
+      "We set out to change that. Not loudly, not with slogans, but quietly — the way good food has always worked. One pure product, one trusted sourceser, one honest jar at a time.",
       "Today, every Arion product carries that same original conviction: that the best food is the least interfered with, and that the wisdom of our grandmothers was never something to improve upon — only to protect.",
     ],
     keywords: ["pure", "honest", "traditional", "trusted"],
@@ -18,7 +18,7 @@ const aboutData = {
       step: "01",
       icon: "🌾",
       title: "Loss of Natural Food Quality",
-      desc: "Industrial farming and mass production eroded the nutritional depth of everyday foods across generations.",
+      desc: "Industrial sourcesing and mass production eroded the nutritional depth of everyday foods across generations.",
     },
     {
       step: "02",
@@ -67,7 +67,6 @@ const aboutData = {
   ],
   traditional: [
     "Desi cooking methods passed down through generations",
-    "Natural sourcing from verified organic farms",
     "Heritage practices without shortcuts",
     "Slow processes that preserve nutritional integrity",
   ],
@@ -133,7 +132,6 @@ function StorySection() {
     <section className="ab-story" ref={ref}>
       <div className="ab-container">
         <div className={`ab-story-grid${inView ? " visible" : ""}`}>
-
           {/* ── Collage: 1 large left + 2 stacked right ── */}
           <div className="ab-story-collage">
             {/* LEFT — large full-height image */}
@@ -148,7 +146,7 @@ function StorySection() {
             <div className="ab-collage-stack">
               <div className="ab-collage-sm">
                 <img
-                  src="/hex_beekeeper.png"
+                  src="/ghee.jpeg "
                   alt="Natural sourcing"
                   className="ab-collage-img"
                 />
@@ -161,16 +159,18 @@ function StorySection() {
                 />
               </div>
             </div>
-            <div className="ab-story-badge">Est. 2010</div>
           </div>
-
 
           {/* ── Story text ── */}
           <div className="ab-story-text">
             <div className="ab-section-label">Our Story</div>
             <h2 className="ab-section-title">{aboutData.story.headline}</h2>
             {aboutData.story.paragraphs.map((p, i) => (
-              <p key={i} className="ab-story-para" style={{ transitionDelay: `${i * 0.15}s` }}>
+              <p
+                key={i}
+                className="ab-story-para"
+                style={{ transitionDelay: `${i * 0.15}s` }}
+              >
                 {highlightText(p)}
               </p>
             ))}

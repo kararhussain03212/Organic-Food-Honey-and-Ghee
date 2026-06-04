@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
 import { products } from "../data/productsData";
-import { addToCart } from "../utils/cart";
+import { addToCart, getCartItems } from "../utils/cart";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
@@ -36,16 +36,29 @@ function Stars({ rating }) {
 function ProductCard({ product }) {
   const [inCart, setInCart] = useState(false);
   const [quickView, setQuickView] = useState(false);
+  const productImage = product.images?.[0] || product.img || "/product-images/cow-ghee-500g.png";
+  const defaultVariant = product.variants?.[0] ?? product.subtitle;
+
+  useEffect(() => {
+    const syncInCartState = () => {
+      const existsInCart = getCartItems().some(
+        (item) => item.id === product.id && item.variant === defaultVariant,
+      );
+      setInCart(existsInCart);
+    };
+    syncInCartState();
+    window.addEventListener("cart:updated", syncInCartState);
+    return () => window.removeEventListener("cart:updated", syncInCartState);
+  }, [product.id, defaultVariant]);
 
   const handleAdd = () => {
-    const defaultVariant = product.variants?.[0] ?? product.subtitle;
     const price = product.variantPrices?.[defaultVariant] ?? product.price;
     addToCart({
       id: product.id,
       name: product.name,
       price,
       qty: 1,
-      image: product.img,
+      image: productImage,
       variant: defaultVariant,
     });
     setInCart(true);
@@ -56,7 +69,7 @@ function ProductCard({ product }) {
       <div className="swiper-prod-card">
         {/* Image area */}
         <div className="prod-img-wrap">
-          <img src={product.img} alt={product.name} className="prod-img" />
+          <img src={productImage} alt={product.name} className="prod-img" />
 
           {/* Hover overlay — Quick View */}
           <div className="prod-img-overlay">
@@ -145,7 +158,7 @@ function ProductCard({ product }) {
             <button className="qv-close" onClick={() => setQuickView(false)}>
               ✕
             </button>
-            <img src={product.img} alt={product.name} className="qv-img" />
+            <img src={productImage} alt={product.name} className="qv-img" />
             <div className="qv-info">
               <div className="qv-name">{product.name}</div>
               <div className="qv-sub">{product.subtitle}</div>

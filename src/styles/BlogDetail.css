@@ -56,7 +56,9 @@
 }
 .bd-hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(20,35,20,.88) 0%, rgba(20,35,20,.45) 55%, rgba(20,35,20,.15) 100%);
+  background:
+    linear-gradient(to top, rgba(12,22,12,.9) 0%, rgba(12,22,12,.58) 52%, rgba(12,22,12,.32) 100%),
+    linear-gradient(to right, rgba(0,0,0,.36) 0%, rgba(0,0,0,.12) 45%, rgba(0,0,0,.18) 100%);
 }
 .bd-hero-content {
   position: relative; z-index: 1;
@@ -81,10 +83,12 @@
   font-size: clamp(1.75rem, 4.5vw, 3rem);
   color: #fff; line-height: 1.2;
   margin-bottom: .9rem;
+  text-shadow: 0 3px 14px rgba(0,0,0,.58);
 }
 .bd-hero-excerpt {
   font-size: 1.05rem; color: rgba(255,255,255,.8);
   line-height: 1.7; max-width: 680px; margin-bottom: 1.5rem;
+  text-shadow: 0 2px 10px rgba(0,0,0,.52);
 }
 .bd-hero-meta {
   display: flex; align-items: center; gap: 1.5rem;
@@ -99,13 +103,14 @@
   border: 2px solid rgba(255,255,255,.25);
 }
 .bd-author-name { font-weight: 700; font-size: .9rem; color: #fff; }
-.bd-author-role { font-size: .78rem; color: rgba(255,255,255,.65); }
+.bd-author-role { font-size: .78rem; color: rgba(255,255,255,.72); }
 .bd-hero-info {
   display: flex; gap: 1rem;
 }
 .bd-hero-info span {
   display: flex; align-items: center; gap: .35rem;
   font-size: .82rem; color: rgba(255,255,255,.75); font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0,0,0,.45);
 }
 .bd-hero-info svg { width: 14px; height: 14px; }
 

@@ -242,6 +242,7 @@ function Pagination({ currentPage, totalPages, onChange }) {
 
 /* ─── Main Page ────────────────────────────────── */
 export default function Blog() {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);

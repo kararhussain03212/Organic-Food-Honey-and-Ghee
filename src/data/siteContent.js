@@ -1,4 +1,4 @@
-export const navLinks = [
+﻿export const navLinks = [
   'Home',
   'Products',
   'About',
@@ -19,7 +19,7 @@ export const promoMessage = 'Family-run since 1968  Pantry staples made with car
 export const footerContent = {
   brand: {
     title: 'Swift Sign',
-    subtitle: 'Fresh. Fast. Friendly.',
+    subtitle: 'ORGANIC FOODS',
   },
   contact: {
     heading: 'Contact Us',
@@ -28,24 +28,22 @@ export const footerContent = {
       { label: 'Email', value: 'info@swiftsigngeneraltrading.com' },
       {
         label: 'Address',
-        value: 'I-8 Markaz, Islamabad, Pakistan',
+        value: 'Office 22, 4th Floor, Pakland City Center, I-8 Markaz, Islamabad, Pakistan.',
       },
     ],
     socials: ['Facebook', 'Instagram', 'LinkedIn', 'YouTube'],
   },
   timings: {
     heading: 'Our Timings',
-    days: 'Monday - Sunday',
-    time: '10:00 AM - 07:00 PM',
+    days: 'Mon-Sun',
+    time: '10am - 7pm',
     links: [
-      'Terms & Conditions',
-      'Privacy Policy',
-      'About Us',
-      'Return Policy',
-      'Online Order Policy',
-      'Gold Card Policy',
+      { label: 'Terms & Conditions', path: '/terms-and-conditions' },
+      { label: 'Privacy Policy', path: '/privacy-policy' },
+      { label: 'Return Policy', path: '/return-policy' },
+      { label: 'Shipping Policy', path: '/online-order-policy' },
     ],
     appBadges: ['Google Play', 'App Store'],
   },
-  bottom: 'Copyright © 2026 All Rights Reserved by SWIFT SIGN IT',
+  bottom: '© 2026 Arion Organic Food · Effective May 2025 · All rights reserved',
 }

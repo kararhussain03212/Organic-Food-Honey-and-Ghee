@@ -21,7 +21,7 @@ const promises = [
         <path d="M9 22V12h6v10"/>
       </svg>
     ),
-    tag: "Farm Fresh",
+    tag: "sources Fresh",
     title: "Traditional Purity",
     desc: "Rooted in generations of artisan knowledge, our methods honor the land. Time-tested traditions preserve the natural goodness in every jar.",
     color: "#b8860b",
@@ -54,7 +54,7 @@ const promises = [
   },
 ];
 
-const badges = ["100% Natural", "Chemical Free", "Farm Fresh", "Premium Quality"];
+const badges = ["100% Natural", "Chemical Free", "sources Fresh", "Premium Quality"];
 
 export default function PurityPromise() {
   const sectionRef = useRef(null);

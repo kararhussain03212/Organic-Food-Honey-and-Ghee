@@ -12,7 +12,7 @@ const Home = () => {
       <section className="hero" id="home">
         <video
           className="hero-video"
-          src={heroVideo}
+          src="/Banner_Hero.mp4"
           autoPlay
           muted
           loop
@@ -21,17 +21,18 @@ const Home = () => {
         <div className="hero-overlay" />
         <div className="hero-content">
           <div className="hero-copy">
-            <p className="hero-kicker">Fresh market favorites</p>
-            <h1 className="hero-title">
-              Organic essentials delivered to your door.
-            </h1>
+            <p className="hero-kicker">Arion Organic Food</p>
+            <h1 className="hero-title">Pure by Nature Proven by Integrity.</h1>
             <p className="hero-text">
-              Discover pantry staples, grains, and snacks curated for everyday
-              wellness.
+              Discover Natural Arion Honey, Ghee, and Shilajit.
             </p>
             <div className="hero-actions">
-              <a href="#products" className="hero-btn-primary">Shop Now</a>
-              <a href="about" className="hero-btn-secondary">Our Story</a>
+              <a href="#products" className="hero-btn-primary">
+                Shop Now
+              </a>
+              <a href="about" className="hero-btn-secondary">
+                Our Story
+              </a>
             </div>
           </div>
         </div>
