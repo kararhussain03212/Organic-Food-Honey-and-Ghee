@@ -1,5 +1,6 @@
 ﻿import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import WhatsAppFloat from "./components/WhatsAppFloat";
@@ -30,29 +31,31 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <WhatsAppFloat />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogDetail />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:slug" element={<ProductDetail />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/return-policy" element={<ReturnPolicy />} />
-          <Route path="/online-order-policy" element={<OnlineOrderPolicy />} />
-          <Route path="/certification" element={<Certification />} />
-          <Route path="/certification/:qrCode" element={<CertificationReport />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <ScrollToTop />
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <WhatsAppFloat />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:slug" element={<ProductDetail />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/return-policy" element={<ReturnPolicy />} />
+            <Route path="/online-order-policy" element={<OnlineOrderPolicy />} />
+            <Route path="/certification" element={<Certification />} />
+            <Route path="/certification/:qrCode" element={<CertificationReport />} />
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </HelmetProvider>
   );
 }
 

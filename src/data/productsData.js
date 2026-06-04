@@ -7,7 +7,7 @@ export const productCategories = [
 export const products = [
   {
     id: 11,
-    slug: "pure-himalayan-shilajit-5g",
+    slug: "pure-himalayan-shilajit-5gm",
     name: "Pure Himalayan Shilajit 5GM",
     subtitle: "Premium Golden Grade Resin",
     category: "herbal",
@@ -51,7 +51,7 @@ export const products = [
   },
   {
     id: 6,
-    slug: "pure-himalayan-shilajit-10g",
+    slug: "pure-himalayan-shilajit-10gm",
     name: "Pure Himalayan Shilajit-10GM",
     subtitle: "Premium Golden Grade Resin",
     category: "herbal",
@@ -101,7 +101,7 @@ export const products = [
   
   {
     id: 1,
-    slug: "pure-desi-cow-ghee-500g",
+    slug: "arion-cow-desi-ghee-500gm",
     name: "Arion Cow Desi Ghee 500GM",
     subtitle: "Traditional Clarified Butter",
     category: "ghee",
@@ -151,7 +151,7 @@ export const products = [
   },
   {
     id: 2,
-    slug: "pure-desi-cow-ghee-1kg",
+    slug: "arion-cow-desi-ghee-1kg",
     name: "Arion Cow Desi Ghee 1KG",
     subtitle: "Traditional Clarified Butter",
     category: "ghee",
@@ -201,7 +201,7 @@ export const products = [
   },
   {
     id: 5,
-    slug: "raw-honey-500g",
+    slug: "arion-honey-500gm",
     name: "Arion Honey 500GM",
     subtitle: "Unfiltered & Unheated",
     category: "honey",
@@ -249,7 +249,7 @@ export const products = [
   },
   {
     id: 10,
-    slug: "raw-honey-1kg",
+    slug: "arion-honey-1kg",
     name: "Arion Honey 1KG",
     subtitle: "Unfiltered & Unheated",
     category: "honey",
@@ -297,7 +297,7 @@ export const products = [
   
   {
     id: 3,
-    slug: "pure-desi-goat-ghee-500g",
+    slug: "arion-goat-desi-ghee-500gm",
     name: "Arion Goat Desi Ghee 500GM",
     subtitle: "Traditional Clarified Butter",
     category: "ghee",
@@ -340,7 +340,7 @@ export const products = [
   },
   {
     id: 4,
-    slug: "pure-desi-goat-ghee-1kg",
+    slug: "arion-goat-desi-ghee-1kg",
     name: "Arion Goat Desi Ghee 1KG",
     subtitle: "Traditional Clarified Butter",
     category: "ghee",
@@ -383,7 +383,7 @@ export const products = [
   
   {
     id: 12,
-    slug: "arion-buffalo-desi-ghee-500g",
+    slug: "arion-buffalo-desi-ghee-500gm",
     name: "Arion Buffalo Desi Ghee-500GM",
     subtitle: "Rich & Premium Clarified Butter",
     category: "ghee",

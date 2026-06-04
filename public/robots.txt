@@ -1,0 +1,29 @@
+# Robots.txt for Arion Organic Food
+# Allow all crawlers to access the website
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /*?*
+Disallow: /*utm_
+
+# Specific crawlers
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Avoid crawling duplicate content
+User-agent: *
+Disallow: /admin/
+Disallow: /temp/
+Disallow: /cache/
+
+# Sitemap
+Sitemap: https://arionorganicfood.com/sitemap.xml
+Sitemap: https://arionorganicfood.com/sitemap-products.xml
+Sitemap: https://arionorganicfood.com/sitemap-blog.xml
