@@ -1,0 +1,589 @@
+/* ═══════════════════════════════════════════════════════════════
+   CERTIFICATION REPORT PAGE — cloned from reference layout
+   ═══════════════════════════════════════════════════════════════ */
+
+.rp-page {
+  background-color: #fff;
+}
+
+/* ── Page Title ──────────────────────────────────────────────── */
+.rp-page-title {
+  padding: 3rem 1.5rem 2rem;
+  text-align: center;
+  background-color: #fff;
+}
+
+.rp-page-title-inner {
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
+.rp-page-heading {
+  font-size: clamp(1.75rem, 4vw, 2.6rem);
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  color: #1a1a1a;
+  margin: 0 0 1rem 0;
+  line-height: 1.25;
+}
+
+.rp-page-intro {
+  font-size: 0.95rem;
+  color: #5a5a5a;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.rp-page-intro strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* ── Main Two-Column ─────────────────────────────────────────── */
+.rp-main {
+  padding: 0 1.5rem 4rem;
+  background-color: #fff;
+}
+
+.rp-container {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 0;
+  align-items: stretch;
+  border: 1px solid #e0ddd8;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 900px) {
+  .rp-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Left — Certificate Document ─────────────────────────────── */
+.rp-left {
+  background-color: #fff;
+  border-right: 1px solid #e0ddd8;
+}
+
+.rp-cert-doc {
+  height: 100%;
+}
+
+.rp-cert-img {
+  display: none; /* hide fallback product image, show mock only */
+}
+
+.rp-cert-mock {
+  padding: 2.5rem 2rem;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 0.82rem;
+  color: #222;
+  line-height: 1.5;
+  min-height: 100%;
+}
+
+/* Government Header */
+.rp-cert-mock-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 2px solid #333;
+  padding-bottom: 0.75rem;
+}
+
+.rp-cert-mock-logo {
+  font-size: 2.8rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.rp-cert-mock-gov {
+  flex: 1;
+  text-align: center;
+}
+
+.rp-gov-line1 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a3a5c;
+  margin: 0;
+}
+
+.rp-gov-line2 {
+  font-size: 0.85rem;
+  color: #1a3a5c;
+  margin: 0.1rem 0;
+}
+
+.rp-gov-line3 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #c0392b;
+  margin: 0.1rem 0;
+}
+
+.rp-gov-line4 {
+  font-size: 0.82rem;
+  color: #1a3a5c;
+  margin: 0.1rem 0;
+}
+
+.rp-gov-line5 {
+  font-size: 0.75rem;
+  color: #555;
+  margin: 0.1rem 0;
+}
+
+.rp-cert-mock-unicef {
+  flex-shrink: 0;
+}
+
+.rp-unicef-badge {
+  width: 56px;
+  height: 56px;
+  background-color: #1a3a5c;
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 4px;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+}
+
+/* Serial Number */
+.rp-cert-mock-serial {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.rp-cert-mock-serial span {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* Test Report Title */
+.rp-cert-mock-title {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: underline;
+  margin: 0.5rem 0 1rem;
+  letter-spacing: 0.05em;
+}
+
+/* Meta rows */
+.rp-cert-mock-meta {
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.75rem;
+}
+
+.rp-cert-meta-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr;
+  gap: 0.25rem 0.75rem;
+  padding: 0.2rem 0;
+  font-size: 0.78rem;
+  border-bottom: 1px solid #eee;
+}
+
+.rp-cert-meta-row:last-child {
+  border-bottom: none;
+  grid-template-columns: auto 1fr;
+}
+
+.rp-cert-meta-row span:nth-child(odd) {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.rp-cert-meta-row span:nth-child(even) {
+  color: #555;
+}
+
+/* Results Section */
+.rp-cert-results-title {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: underline;
+  margin: 0.75rem 0 0.25rem;
+  letter-spacing: 0.05em;
+}
+
+.rp-cert-results-sub {
+  font-size: 0.78rem;
+  margin: 0 0 0.5rem 0;
+  color: #444;
+}
+
+/* Table */
+.rp-cert-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin-bottom: 0.5rem;
+}
+
+.rp-cert-table th {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.6rem;
+  font-weight: 700;
+  text-align: left;
+  color: #222;
+}
+
+.rp-cert-table td {
+  border: 1px solid #ddd;
+  padding: 0.35rem 0.6rem;
+  color: #444;
+}
+
+.rp-cert-table tr:nth-child(even) td {
+  background-color: #fafafa;
+}
+
+/* Footer Notes */
+.rp-cert-scope {
+  font-size: 0.72rem;
+  color: #777;
+  margin: 0.25rem 0;
+  font-style: italic;
+}
+
+.rp-cert-end {
+  text-align: center;
+  font-weight: 700;
+  margin: 0.75rem 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+}
+
+/* Signatures */
+.rp-cert-signatures {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.rp-cert-sig {
+  text-align: center;
+  font-size: 0.72rem;
+  color: #444;
+}
+
+.rp-cert-sig-line {
+  height: 40px;
+  border-bottom: 1px solid #888;
+  margin-bottom: 0.4rem;
+}
+
+.rp-cert-sig p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.rp-cert-sig-role {
+  font-weight: 600;
+  color: #333;
+}
+
+.rp-cert-sig-date {
+  font-weight: 600;
+}
+
+/* Stamp */
+.rp-cert-stamp {
+  position: relative;
+  margin: -4rem 0 1rem 0;
+}
+
+.rp-stamp-circle {
+  width: 70px;
+  height: 70px;
+  border: 4px solid #C7A66B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #C7A66B;
+  font-size: 1.5rem;
+  box-shadow: inset 0 0 0 3px rgba(199, 166, 107, 0.3);
+}
+
+/* Footer */
+.rp-cert-footer-note {
+  font-size: 0.68rem;
+  color: #777;
+  text-align: center;
+  margin: 0.5rem 0 0.1rem;
+  line-height: 1.5;
+  border-top: 1px solid #ddd;
+  padding-top: 0.5rem;
+}
+
+.rp-cert-page,
+.rp-cert-computer {
+  font-size: 0.68rem;
+  text-align: center;
+  color: #888;
+  margin: 0;
+}
+
+/* ── Right — Info Card ───────────────────────────────────────── */
+.rp-right {
+  background-color: #496348;
+}
+
+.rp-info-card {
+  padding: 2.5rem 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rp-info-title {
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  color: #fff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.rp-info-text {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.75;
+  margin: 0;
+}
+
+.rp-info-text strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Badges */
+.rp-badges {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.rp-badge {
+  display: inline-block;
+  padding: 0.45rem 1.1rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: transparent;
+  transition: all 0.25s;
+}
+
+.rp-badge:hover {
+  border-color: #C7A66B;
+  color: #C7A66B;
+}
+
+/* View Full Report Button */
+.rp-view-btn {
+  display: inline-block;
+  padding: 0.75rem 1.8rem;
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: fit-content;
+  letter-spacing: 0.03em;
+}
+
+.rp-view-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #C7A66B;
+  color: #C7A66B;
+}
+
+/* Product Gallery — 3 images in a row */
+.rp-product-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.rp-gallery-item {
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.05);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rp-gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.rp-gallery-item:hover .rp-gallery-img {
+  transform: scale(1.05);
+}
+
+/* Product Description */
+.rp-product-desc {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.75;
+  margin: 0;
+  flex: 1;
+}
+
+.rp-product-desc strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Back Button */
+.rp-back-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #496348;
+  border: none;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s;
+  width: fit-content;
+  margin-top: auto;
+}
+
+.rp-back-btn:hover {
+  background-color: #3a5039;
+  transform: translateY(-2px);
+}
+
+/* ── Not Found ───────────────────────────────────────────────── */
+.rp-not-found {
+  padding: 6rem 1.5rem;
+  text-align: center;
+  background-color: #f9f8f6;
+}
+
+.rp-not-found h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #496348;
+  margin-bottom: 1rem;
+}
+
+.rp-not-found p {
+  color: #8a7d76;
+  margin-bottom: 2rem;
+}
+
+.rp-btn-back {
+  padding: 0.75rem 1.8rem;
+  background-color: #496348;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.rp-btn-back:hover {
+  background-color: #3a5039;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .rp-main {
+    padding: 0 1rem 3rem;
+  }
+
+  .rp-left {
+    border-right: none;
+    border-bottom: 1px solid #e0ddd8;
+  }
+
+  .rp-info-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .rp-cert-mock {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .rp-page-title {
+    padding: 2rem 1rem 1.5rem;
+  }
+
+  .rp-main {
+    padding: 0 0.75rem 2.5rem;
+  }
+
+  .rp-info-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .rp-cert-mock {
+    padding: 1.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .rp-cert-mock-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .rp-cert-meta-row {
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+  }
+
+  .rp-product-gallery {
+    gap: 0.5rem;
+  }
+
+  .rp-badges {
+    gap: 0.5rem;
+  }
+
+  .rp-badge {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.78rem;
+  }
+}

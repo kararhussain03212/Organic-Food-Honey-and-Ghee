@@ -14,6 +14,8 @@ import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ReturnPolicy from "./pages/ReturnPolicy";
 import OnlineOrderPolicy from "./pages/OnlineOrderPolicy";
+import Certification from "./pages/Certification";
+import CertificationReport from "./pages/CertificationReport";
 import "./styles/Responsive.css";
 
 function ScrollToTop() {
@@ -45,6 +47,8 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/return-policy" element={<ReturnPolicy />} />
           <Route path="/online-order-policy" element={<OnlineOrderPolicy />} />
+          <Route path="/certification" element={<Certification />} />
+          <Route path="/certification/:qrCode" element={<CertificationReport />} />
         </Routes>
         <Footer />
       </div>

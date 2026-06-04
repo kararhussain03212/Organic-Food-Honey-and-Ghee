@@ -1,0 +1,443 @@
+/* ═══════════════════════════════════════════════════════════════
+   CERTIFICATION PAGE STYLES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Hero ────────────────────────────────────────────────────── */
+.cert-hero {
+  padding: 5rem 1.5rem;
+  background: #f9f8f6;
+  text-align: center;
+}
+
+.cert-hero-inner {
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
+.cert-eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #C7A66B;
+  margin-bottom: 1rem;
+}
+
+.cert-hero-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  color: #496348;
+  margin-bottom: 1.25rem;
+  line-height: 1.2;
+}
+
+.cert-hero-text {
+  font-size: 1.05rem;
+  color: #8a7d76;
+  margin-bottom: 2rem;
+  line-height: 1.75;
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cert-btn {
+  display: inline-block;
+  padding: 0.85rem 2.2rem;
+  background-color: #496348;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s, transform 0.2s;
+}
+
+.cert-btn:hover {
+  background-color: #3a5039;
+  transform: translateY(-2px);
+}
+
+/* ── Feature Cards ───────────────────────────────────────────── */
+.cert-features {
+  padding: 4rem 1.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.cert-features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .cert-features-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 580px) {
+  .cert-features-grid { grid-template-columns: 1fr; }
+}
+
+.cert-feature-card {
+  background-color: #496348;
+  color: white;
+  padding: 2.2rem 1.8rem;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  border: 1px solid rgba(199, 166, 107, 0.15);
+}
+
+.cert-feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(73, 99, 72, 0.22);
+  border-color: #C7A66B;
+}
+
+.cert-feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1.1rem;
+  display: block;
+}
+
+.cert-feature-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.cert-feature-desc {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.65;
+}
+
+/* ── Why Section ─────────────────────────────────────────────── */
+.cert-why {
+  padding: 4rem 1.5rem;
+  background-color: #fff;
+}
+
+.cert-why-inner {
+  max-width: 52rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cert-section-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  color: #496348;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.cert-section-text {
+  font-size: 1.05rem;
+  color: #8a7d76;
+  line-height: 1.75;
+}
+
+/* ── Certified Products ──────────────────────────────────────── */
+.cert-products {
+  padding: 4rem 1.5rem;
+  background-color: #f9f8f6;
+}
+
+.cert-products-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.cert-products-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem;
+  margin-top: 3rem;
+}
+
+@media (max-width: 1024px) {
+  .cert-products-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .cert-products-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.cert-product-card {
+  background-color: #496348;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.25s, box-shadow 0.25s;
+  border: 1px solid rgba(199, 166, 107, 0.15);
+}
+
+.cert-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(73, 99, 72, 0.2);
+}
+
+.cert-product-image {
+  background-color: rgba(255, 255, 255, 0.1);
+  height: 7rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.cert-product-name {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.cert-product-qr {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 0.75rem;
+}
+
+.cert-product-btn {
+  background: none;
+  border: 1px solid rgba(199, 166, 107, 0.6);
+  color: #C7A66B;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.cert-product-btn:hover {
+  background-color: #C7A66B;
+  color: white;
+  border-color: #C7A66B;
+}
+
+/* ── Verification Steps ──────────────────────────────────────── */
+.cert-verify {
+  padding: 4rem 1.5rem;
+  background-color: #fff;
+}
+
+.cert-verify-inner {
+  max-width: 68rem;
+  margin: 0 auto;
+}
+
+.cert-verify-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  .cert-verify-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.cert-verify-step { text-align: center; }
+
+.cert-verify-number {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: #C7A66B;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.cert-verify-step-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: #496348;
+}
+
+.cert-verify-step-desc {
+  color: #8a7d76;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* ── Transparency (dark brand) ───────────────────────────────── */
+.cert-transparency {
+  padding: 4.5rem 1.5rem;
+  background-color: #496348;
+  color: white;
+  text-align: center;
+}
+
+.cert-transparency-inner {
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+.cert-transparency-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  margin-bottom: 1.1rem;
+  color: white;
+}
+
+.cert-transparency-text {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.75;
+}
+
+/* ── FAQ Section ─────────────────────────────────────────────── */
+.cert-faq {
+  padding: 4.5rem 1.5rem;
+  background-color: #5B5248;
+  color: white;
+}
+
+.cert-faq-inner {
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.cert-faq-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  color: white;
+}
+
+.cert-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.cert-faq-item {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cert-faq-btn {
+  width: 100%;
+  padding: 1rem 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.25s;
+  text-align: left;
+  gap: 1rem;
+}
+
+.cert-faq-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.cert-faq-question {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.cert-faq-toggle {
+  color: #C7A66B;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.cert-faq-answer {
+  padding: 1rem 1.4rem;
+  background-color: rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  font-size: 0.93rem;
+}
+
+.cert-faq-footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.cert-faq-email {
+  color: #C7A66B;
+  text-decoration: none;
+}
+
+.cert-faq-email:hover {
+  text-decoration: underline;
+}
+
+/* ── CTA Section ─────────────────────────────────────────────── */
+.cert-cta {
+  padding: 4.5rem 1.5rem;
+  text-align: center;
+  background-color: #3a4e39;
+  color: white;
+  border-top: 1px solid rgba(199, 166, 107, 0.2);
+}
+
+.cert-cta-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.cert-btn-gold {
+  display: inline-block;
+  padding: 0.85rem 2.2rem;
+  background-color: #C7A66B;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s, transform 0.2s;
+}
+
+.cert-btn-gold:hover {
+  background-color: #b8945f;
+  transform: translateY(-2px);
+}
+
+/* ── Responsive Mobile ───────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cert-hero,
+  .cert-features,
+  .cert-why,
+  .cert-products,
+  .cert-verify,
+  .cert-transparency,
+  .cert-faq,
+  .cert-cta {
+    padding: 2.5rem 1rem;
+  }
+}

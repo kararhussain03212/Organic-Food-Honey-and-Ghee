@@ -42,6 +42,7 @@ export const footerContent = {
       { label: 'Privacy Policy', path: '/privacy-policy' },
       { label: 'Return Policy', path: '/return-policy' },
       { label: 'Shipping Policy', path: '/online-order-policy' },
+      { label: 'Certification', path: '/certification' },
     ],
     appBadges: ['Google Play', 'App Store'],
   },
