@@ -19,9 +19,12 @@ const badgeColors = {
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
-  const productImage = product.images?.[0] || "/product-images/cow-ghee-500g.png";
-  const variant = product.variants?.[0] ?? product.subtitle;
-  const price = product.variantPrices?.[variant] ?? product.variant_prices?.[variant] ?? product.price;
+  const images = typeof product.images === "string" ? JSON.parse(product.images || "[]") : (product.images || []);
+  const productImage = images[0] || "/product-images/cow-ghee-500g.png";
+  const variants = typeof product.variants === "string" ? JSON.parse(product.variants || "[]") : (product.variants || []);
+  const variant = variants[0] ?? product.subtitle;
+  const variantPrices = typeof product.variant_prices === "string" ? JSON.parse(product.variant_prices || "{}") : (product.variantPrices || {});
+  const price = variantPrices[variant] ?? product.price;
 
   const handleShopNow = () => {
     const message = `🛍️ *ORDER REQUEST*\n\n*Product:* ${product.name}\n*Variant:* ${variant}\n*Price:* Rs ${Number(price).toLocaleString()}`;
@@ -30,7 +33,7 @@ function ProductCard({ product }) {
 
   const goToProduct = () => navigate(`/products/${product.slug}`);
 
-  const badges = Array.isArray(product.badges) ? product.badges : [];
+  const badges = typeof product.badges === "string" ? JSON.parse(product.badges || "[]") : (Array.isArray(product.badges) ? product.badges : []);
 
   return (
     <div className="swiper-prod-card">
