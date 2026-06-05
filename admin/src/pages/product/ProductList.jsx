@@ -17,6 +17,15 @@ function parseJsonField(value) {
   return [];
 }
 
+function decodeHtml(str) {
+  return String(str || "")
+    .replace(/&amp;/g, "&")
+    .replace(/&#039;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
 export default function ProductList() {
   const navigate  = useNavigate();
   const { user }  = useAuth();
@@ -40,19 +49,17 @@ export default function ProductList() {
 
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
+  // Derive public root from apiRoot: replace /backend with /public
+  const publicRoot = apiRoot.replace(/\/backend$/, "/public");
+
   const resolveImage = (images) => {
     const arr = parseJsonField(images);
     const raw = arr[0];
     if (!raw) return FALLBACK_IMG;
     if (raw.startsWith("http")) return raw;
-    // For /product-images/ paths, construct full URL to public directory
-    if (raw.startsWith("/product-images/")) {
-      const origin = window.location.origin;
-      const projectPath = '/Organic%20Food/public';
-      return `${origin}${projectPath}${raw}`;
-    }
+    if (raw.startsWith("/product-images/")) return publicRoot + raw;
     if (raw.startsWith("/uploads/")) return apiRoot + raw;
-    if (raw.startsWith("/")) return raw;
+    if (raw.startsWith("/")) return publicRoot + raw;
     return `${apiRoot}/uploads/${raw}`;
   };
 
@@ -161,7 +168,7 @@ export default function ProductList() {
                           <p className="mt-0.5 text-sm text-white/50">{item.subtitle}</p>
                         )}
                         <p className="mt-2 line-clamp-2 text-sm text-white/70">
-                          {item.short_desc || item.description || "No description"}
+                          {decodeHtml(item.short_desc || item.description || "No description")}
                         </p>
                         <div className="mt-2 flex flex-wrap gap-2 text-xs">
                           <span className="rounded-md bg-white/10 px-2 py-1 text-white/80">
