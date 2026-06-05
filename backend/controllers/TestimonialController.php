@@ -23,7 +23,7 @@ final class TestimonialController extends BaseCrudController
 {
     protected string $modelClass = Testimonial::class;
     protected string $resourceName = 'testimonials';
-    protected array $requiredCreateFields = ['name', 'review'];
+    protected array $requiredCreateFields = ['name', 'quote'];
 
     public function store(array $params = []): void
     {
