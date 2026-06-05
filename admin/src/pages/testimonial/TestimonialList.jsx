@@ -40,7 +40,7 @@ export default function TestimonialList() {
     if (!value) return FALLBACK_AVATAR;
     if (value.startsWith("http")) return value;
     if (value.startsWith("/uploads/")) return apiRoot + value;
-    if (value.startsWith("/")) return value;
+    if (value.startsWith("/")) return apiRoot.replace(/\/backend$/, "") + value;
     return apiRoot + "/uploads/" + value;
   };
 

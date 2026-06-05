@@ -59,7 +59,7 @@ foreach ($testimonials as $t) {
     $stmt = $conn->prepare('INSERT INTO testimonials (name, role, avatar, rating, quote, product, verified, sort_order, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
     $stmt->bind_param(
-        'sssiisiib',
+        'sssissiii',
         $t['name'], $t['role'], $t['avatar'], $t['rating'], $t['quote'],
         $t['product'], $t['verified'], $t['sort_order'], $t['is_active']
     );

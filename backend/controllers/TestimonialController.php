@@ -69,13 +69,10 @@ final class TestimonialController extends BaseCrudController
         }
 
         try {
-            $ok = $model->update($id, $payload);
+            $model->update($id, $payload);
         } catch (\Throwable $e) {
             $message = $this->toClientError($e);
             Response::error($message, 422);
-        }
-        if (!$ok) {
-            Response::error('No changes were applied', 422);
         }
 
         ActivityLogger::log($this->currentAdminId(), 'update', $this->resourceName, $id);
