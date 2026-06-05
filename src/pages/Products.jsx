@@ -16,7 +16,9 @@ function ProductCard({ product }) {
   const priceLabel = `Rs ${currentPrice.toLocaleString()}`;
   const originalLabel = hasOriginal ? `Rs ${currentOriginal.toLocaleString()}` : null;
   const variant = product.size;
-  const images = Array.isArray(product.images) ? product.images : [];
+  const images = typeof product.images === "string"
+    ? (() => { try { return JSON.parse(product.images); } catch { return []; } })()
+    : (Array.isArray(product.images) ? product.images : []);
 
   const handleAddToCart = () => {
     addToCart({ id: product.id, name: product.name, price: currentPrice, qty: 1, image: images[0], variant });

@@ -305,7 +305,10 @@ abstract class BaseModel
             }
 
             if ($value !== '' && ($value[0] === '[' || $value[0] === '{')) {
-                $row[$key] = UploadPath::normalizeJsonUploadPaths($value);
+                $decoded = json_decode($value, true);
+                if (is_array($decoded)) {
+                    $row[$key] = UploadPath::normalizeMixed($decoded);
+                }
             }
         }
 

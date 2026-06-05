@@ -10,7 +10,7 @@ final class Response
     {
         self::send([
             'success' => true,
-            'data' => self::sanitizeForOutput($data),
+            'data' => $data,
             'message' => $message,
         ], $status);
     }
@@ -26,7 +26,7 @@ final class Response
 
     public static function json(array $payload, int $status = 200): void
     {
-        self::send(self::sanitizeForOutput($payload), $status);
+        self::send($payload, $status);
     }
 
     private static function sanitizeForOutput($value)
