@@ -12,6 +12,6 @@ final class BlogPost extends BaseModel
     protected array $fillable = [
         'title', 'slug', 'category', 'excerpt',
         'content', 'image', 'author', 'tags',
-        'is_published', 'published_at', 'sort_order',
+        'is_published', 'published_at', 'read_time', 'sort_order',
     ];
 }

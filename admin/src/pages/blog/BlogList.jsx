@@ -105,6 +105,9 @@ export default function BlogList() {
                       <p className="mt-2 line-clamp-2 text-sm text-white/70">
                         {item.excerpt || "No excerpt"}
                       </p>
+                      <p className="mt-1 text-xs text-white/60">
+                        {item.read_time ? `${item.read_time} min read` : "Read time not set"}
+                      </p>
                     </div>
                   </div>
 

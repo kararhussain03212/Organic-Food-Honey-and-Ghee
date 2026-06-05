@@ -15,6 +15,7 @@ const initialForm = {
   content: "",
   author: "Arion Wellness Team",
   publishedAt: null,
+  readTime: null,
   sortOrder: 1,
   isPublished: true,
   imageFile: null,
@@ -88,6 +89,7 @@ export default function BlogForm() {
           content:     decodeHtmlEntities(item.content  || ""),
           author:      decodeHtmlEntities(item.author   || "Arion Wellness Team"),
           publishedAt: toDateValue(item.published_at),
+          readTime:    item.read_time ? Number(item.read_time) : null,
           sortOrder:   Number(item.sort_order ?? 1),
           isPublished: item.is_published === 1 || item.is_published === true,
           imageFile:   null,
@@ -130,6 +132,7 @@ export default function BlogForm() {
         image:        imagePath,
         author:       form.author.trim(),
         published_at: toSqlDateTime(form.publishedAt),
+        read_time:    form.readTime ? Number(form.readTime) : null,
         sort_order:   Number(form.sortOrder || 1),
         is_published: form.isPublished ? 1 : 0,
       };
@@ -206,12 +209,38 @@ export default function BlogForm() {
           helperText="This image will appear in home blog section and blog detail header."
         />
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm text-white/80">Sort Order</label>
-            <input type="number" min="1" value={form.sortOrder} onChange={(e) => setField("sortOrder", Number(e.target.value))} className="w-full rounded-lg border border-white/20 bg-[var(--admin-card)] px-3 py-2 text-white" />
+            <label className="mb-1 block text-sm text-white/80">Read Time (minutes)</label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                min="1"
+                value={form.readTime || ""}
+                onChange={(e) => setField("readTime", e.target.value ? Number(e.target.value) : null)}
+                placeholder="Leave empty to calculate from content"
+                className="flex-1 rounded-lg border border-white/20 bg-[var(--admin-card)] px-3 py-2 text-white"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const plainText = form.content.replace(/<[^>]*>/g, "").trim();
+                  const words = plainText.split(/\s+/).filter(w => w.length > 0).length;
+                  const minutes = Math.ceil(words / 200) || 1;
+                  setField("readTime", minutes);
+                }}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                title="Calculate read time from content"
+              >
+                Auto
+              </button>
+            </div>
           </div>
-          <div className="flex items-end">
+          <div className="flex items-end gap-4">
+            <div className="flex-1">
+              <label className="mb-1 block text-sm text-white/80">Sort Order</label>
+              <input type="number" min="1" value={form.sortOrder} onChange={(e) => setField("sortOrder", Number(e.target.value))} className="w-full rounded-lg border border-white/20 bg-[var(--admin-card)] px-3 py-2 text-white" />
+            </div>
             <label className="flex cursor-pointer items-center gap-2 text-sm text-white/85">
               <input
                 type="checkbox"
@@ -219,7 +248,7 @@ export default function BlogForm() {
                 onChange={(e) => setField("isPublished", e.target.checked)}
                 className="h-4 w-4"
               />
-              Publish (visible on frontend)
+              Publish
             </label>
           </div>
         </div>

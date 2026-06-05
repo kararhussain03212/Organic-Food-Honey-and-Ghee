@@ -45,6 +45,12 @@ export default function ProductList() {
     const raw = arr[0];
     if (!raw) return FALLBACK_IMG;
     if (raw.startsWith("http")) return raw;
+    // For /product-images/ paths, construct full URL to public directory
+    if (raw.startsWith("/product-images/")) {
+      const origin = window.location.origin;
+      const projectPath = '/Organic%20Food/public';
+      return `${origin}${projectPath}${raw}`;
+    }
     if (raw.startsWith("/uploads/")) return apiRoot + raw;
     if (raw.startsWith("/")) return raw;
     return `${apiRoot}/uploads/${raw}`;

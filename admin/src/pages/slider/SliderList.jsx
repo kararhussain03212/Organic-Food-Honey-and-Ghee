@@ -164,7 +164,10 @@ export default function SliderList() {
                           Status: {item.is_active ? "Active" : "Inactive"}
                         </span>
                         <span className="rounded-md bg-white/10 px-2 py-1 text-white/80">
-                          Button: {item.button_text || "-"}
+                          Primary: {item.button_text || "Shop Now"}
+                        </span>
+                        <span className="rounded-md bg-white/10 px-2 py-1 text-white/80">
+                          Secondary: {item.secondary_button_text || "Our Story"}
                         </span>
                         <span className="rounded-md bg-white/10 px-2 py-1 text-white/80">
                           Order: {Number(item.sort_order || 0)}

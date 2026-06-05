@@ -10,6 +10,15 @@ function decodeHtml(html) {
   return txt.value;
 }
 
+/* ─── Calculate read time (200 words per minute) ── */
+function calculateReadTime(htmlContent) {
+  const decoded = decodeHtml(htmlContent || "");
+  const plainText = decoded.replace(/<[^>]*>/g, "").trim();
+  const words = plainText.split(/\s+/).filter(w => w.length > 0).length;
+  const minutes = Math.ceil(words / 200);
+  return Math.max(1, minutes);
+}
+
 /* ─── Reading progress bar ─────────────────────── */
 function ProgressBar() {
   const [pct, setPct] = useState(0);
@@ -155,15 +164,19 @@ function Sidebar({ tags, recentPosts, navigate, allPosts }) {
         <div className="bd-side-widget">
           <h4 className="bd-side-title">Recent Posts</h4>
           <div className="bd-side-posts">
-            {recentPosts.slice(0, 5).map((p) => (
-              <div key={p.id} className="bd-side-post" onClick={() => navigate(`/blog/${p.slug}`)}>
-                {p.image && <img src={p.image} alt={p.title} className="bd-side-post-img" />}
-                <div className="bd-side-post-body">
-                  <p className="bd-side-post-title">{p.title}</p>
-                  <span className="bd-side-post-meta">{p.date || (p.published_at ? new Date(p.published_at).toLocaleDateString() : "")}</span>
+            {recentPosts.slice(0, 5).map((p) => {
+              const pReadTime = p.read_time || calculateReadTime(p.content);
+              const pDate = p.date || (p.published_at ? new Date(p.published_at).toLocaleDateString() : "");
+              return (
+                <div key={p.id} className="bd-side-post" onClick={() => navigate(`/blog/${p.slug}`)}>
+                  {p.image && <img src={p.image} alt={p.title} className="bd-side-post-img" />}
+                  <div className="bd-side-post-body">
+                    <p className="bd-side-post-title">{p.title}</p>
+                    <span className="bd-side-post-meta">{pDate} • {pReadTime} min</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -252,6 +265,7 @@ export default function BlogDetail() {
   const allTags = [...new Set(allPosts.flatMap((b) => parseJsonField(b.tags, [])))];
   const recentPosts = allPosts.filter((b) => b.slug !== post.slug).slice(0, 5);
   const publishDate = post.date || (post.published_at ? new Date(post.published_at).toLocaleDateString("en-PK", { year: "numeric", month: "long", day: "numeric" }) : "");
+  const readTime = post.read_time || calculateReadTime(post.content);
 
   return (
     <main className="bd-page">
@@ -285,6 +299,12 @@ export default function BlogDetail() {
                   </span>
                 </div>
               )}
+              <div className="bd-hero-info">
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  {readTime} min read
+                </span>
+              </div>
             </div>
           </div>
         </div>

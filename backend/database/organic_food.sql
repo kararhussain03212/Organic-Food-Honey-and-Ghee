@@ -60,16 +60,20 @@ CREATE TABLE IF NOT EXISTS `activity_logs` (
 -- hero_slides
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hero_slides` (
-  `id`           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `title`        VARCHAR(255) DEFAULT NULL,
-  `subtitle`     VARCHAR(500) DEFAULT NULL,
-  `button_text`  VARCHAR(120) DEFAULT NULL,
-  `button_link`  VARCHAR(500) DEFAULT NULL,
-  `image`        VARCHAR(500) DEFAULT NULL,
-  `sort_order`   SMALLINT NOT NULL DEFAULT 0,
-  `is_active`    TINYINT(1) NOT NULL DEFAULT 1,
-  `created_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id`                      INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `kicker`                  VARCHAR(255) DEFAULT NULL,
+  `title`                   VARCHAR(255) DEFAULT NULL,
+  `subtitle`                VARCHAR(500) DEFAULT NULL,
+  `button_text`             VARCHAR(120) DEFAULT NULL,
+  `button_link`             VARCHAR(500) DEFAULT NULL,
+  `secondary_button_text`   VARCHAR(120) DEFAULT NULL,
+  `secondary_button_link`   VARCHAR(500) DEFAULT NULL,
+  `image`                   VARCHAR(500) DEFAULT NULL,
+  `video_url`               VARCHAR(500) DEFAULT NULL,
+  `sort_order`              SMALLINT NOT NULL DEFAULT 0,
+  `is_active`               TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at`              DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`              DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------
@@ -140,6 +144,7 @@ CREATE TABLE IF NOT EXISTS `blog_posts` (
   `tags`         JSON DEFAULT NULL,
   `is_published` TINYINT(1) NOT NULL DEFAULT 0,
   `published_at` DATETIME DEFAULT NULL,
+  `read_time`    SMALLINT DEFAULT NULL,
   `sort_order`   SMALLINT NOT NULL DEFAULT 0,
   `created_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

@@ -6,10 +6,13 @@ import { uploadImage } from "../../api/uploadApi";
 import { getBackendRoot } from "../../api/runtimeApi";
 
 const getInitialForm = () => ({
+  kicker: "Arion Organic Food",
   title: "",
   subtitle: "",
   button_text: "Shop Now",
   button_link: "/products",
+  secondary_button_text: "Our Story",
+  secondary_button_link: "/about",
   sort_order: 1,
   is_active: true,
   media_type: "image",   // "image" | "video"
@@ -47,16 +50,19 @@ export default function SliderForm() {
         const res = await getSlider(id);
         const item = res.data?.data ?? {};
         setForm({
-          title:        item.title        || "",
-          subtitle:     item.subtitle     || "",
-          button_text:  item.button_text  || "Shop Now",
-          button_link:  item.button_link  || "/products",
-          sort_order:   Number(item.sort_order ?? 1),
-          is_active:    item.is_active === 1 || item.is_active === true,
-          media_type:   item.video_url ? "video" : "image",
-          imageFile:    null,
-          imagePreview: toImageUrl(item.image || ""),
-          video_url:    item.video_url || "",
+          kicker:                item.kicker               || "Arion Organic Food",
+          title:                 item.title                || "",
+          subtitle:              item.subtitle             || "",
+          button_text:           item.button_text          || "Shop Now",
+          button_link:           item.button_link          || "/products",
+          secondary_button_text: item.secondary_button_text || "Our Story",
+          secondary_button_link: item.secondary_button_link || "/about",
+          sort_order:            Number(item.sort_order ?? 1),
+          is_active:             item.is_active === 1 || item.is_active === true,
+          media_type:            item.video_url ? "video" : "image",
+          imageFile:             null,
+          imagePreview:          toImageUrl(item.image || ""),
+          video_url:             item.video_url || "",
         });
       } catch {
         setError("Failed to load slider.");
@@ -78,13 +84,16 @@ export default function SliderForm() {
       setSaving(true);
 
       const payload = {
-        title:       form.title.trim(),
-        subtitle:    form.subtitle.trim(),
-        button_text: form.button_text.trim() || "Shop Now",
-        button_link: form.button_link.trim() || "/products",
-        sort_order:  Number(form.sort_order || 1),
-        is_active:   form.is_active ? 1 : 0,
-        video_url:   form.media_type === "video" ? form.video_url.trim() : "",
+        kicker:                form.kicker.trim() || "Arion Organic Food",
+        title:                 form.title.trim(),
+        subtitle:              form.subtitle.trim(),
+        button_text:           form.button_text.trim() || "Shop Now",
+        button_link:           form.button_link.trim() || "/products",
+        secondary_button_text: form.secondary_button_text.trim() || "Our Story",
+        secondary_button_link: form.secondary_button_link.trim() || "/about",
+        sort_order:            Number(form.sort_order || 1),
+        is_active:             form.is_active ? 1 : 0,
+        video_url:             form.media_type === "video" ? form.video_url.trim() : "",
       };
 
       if (form.media_type === "image") {
@@ -125,6 +134,12 @@ export default function SliderForm() {
 
       <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-white/10 bg-[var(--admin-bg)] p-6">
 
+        {/* Kicker */}
+        <div>
+          <label className={labelCls}>Label / Kicker</label>
+          <input value={form.kicker} onChange={(e) => setField("kicker", e.target.value)} className={inputCls} placeholder="Arion Organic Food" />
+        </div>
+
         {/* Title */}
         <div>
           <label className={labelCls}>Title *</label>
@@ -137,15 +152,27 @@ export default function SliderForm() {
           <textarea rows={3} value={form.subtitle} onChange={(e) => setField("subtitle", e.target.value)} className={inputCls} placeholder="Discover Natural Arion Honey, Ghee, and Shilajit." />
         </div>
 
-        {/* Button */}
+        {/* Primary Button */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className={labelCls}>Button Text</label>
-            <input value={form.button_text} onChange={(e) => setField("button_text", e.target.value)} className={inputCls} />
+            <label className={labelCls}>Primary Button Text</label>
+            <input value={form.button_text} onChange={(e) => setField("button_text", e.target.value)} className={inputCls} placeholder="Shop Now" />
           </div>
           <div>
-            <label className={labelCls}>Button Link</label>
-            <input value={form.button_link} onChange={(e) => setField("button_link", e.target.value)} className={inputCls} />
+            <label className={labelCls}>Primary Button Link</label>
+            <input value={form.button_link} onChange={(e) => setField("button_link", e.target.value)} className={inputCls} placeholder="/products" />
+          </div>
+        </div>
+
+        {/* Secondary Button */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <label className={labelCls}>Secondary Button Text</label>
+            <input value={form.secondary_button_text} onChange={(e) => setField("secondary_button_text", e.target.value)} className={inputCls} placeholder="Our Story" />
+          </div>
+          <div>
+            <label className={labelCls}>Secondary Button Link</label>
+            <input value={form.secondary_button_link} onChange={(e) => setField("secondary_button_link", e.target.value)} className={inputCls} placeholder="/about" />
           </div>
         </div>
 

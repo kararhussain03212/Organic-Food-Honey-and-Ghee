@@ -136,22 +136,39 @@
 /* Typography */
 .bd-article-content { max-width: 720px; }
 
+.bd-article-content p {
+  font-size: 1.05rem; line-height: 1.85;
+  color: var(--brown); margin-bottom: 1.4rem;
+}
+
+.bd-article-content h2,
+.bd-h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.65rem; color: var(--brown);
+  margin: 2.5rem 0 1rem 0;
+  padding-bottom: .5rem;
+  border-bottom: 2px solid var(--beige);
+}
+
+.bd-article-content h3,
+.bd-h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.25rem; color: var(--brown);
+  margin: 2rem 0 .75rem 0;
+}
+
+.bd-article-content h4 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem; color: var(--brown);
+  margin: 1.5rem 0 .5rem 0;
+  font-weight: 700;
+}
+
 .bd-paragraph {
   font-size: 1.05rem; line-height: 1.85;
   color: var(--brown); margin-bottom: 1.4rem;
 }
-.bd-h2 {
-  font-family: "Playfair Display", serif;
-  font-size: 1.65rem; color: var(--brown);
-  margin: 2.5rem 0 1rem;
-  padding-bottom: .5rem;
-  border-bottom: 2px solid var(--beige);
-}
-.bd-h3 {
-  font-family: "Playfair Display", serif;
-  font-size: 1.25rem; color: var(--brown);
-  margin: 2rem 0 .75rem;
-}
+.bd-article-content blockquote,
 .bd-quote {
   border-left: 4px solid var(--gold);
   background: linear-gradient(135deg, rgba(199,166,107,.08), rgba(199,166,107,.04));
@@ -161,13 +178,52 @@
   font-size: 1.1rem; font-style: italic;
   color: var(--brown); line-height: 1.7;
 }
+
+.bd-article-content ul,
+.bd-article-content ol,
 .bd-list {
   margin: 1rem 0 1.5rem 1.25rem;
   display: flex; flex-direction: column; gap: .55rem;
 }
-.bd-list li { font-size: 1rem; color: var(--brown); line-height: 1.65; }
+
+.bd-article-content li,
+.bd-list li {
+  font-size: 1rem; color: var(--brown); line-height: 1.65;
+}
+
+.bd-article-content ul li::marker,
 .bd-list--ul li::marker { color: var(--green); }
+
+.bd-article-content ol li::marker,
 .bd-list--ol li::marker { color: var(--gold); font-weight: 700; }
+
+/* Styled boxes in article content */
+.bd-article-content > div[style*="background"]
+{
+  border-radius: 8px !important;
+  padding: 1rem 1.25rem !important;
+  margin: 1.75rem 0 !important;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.bd-article-content > div[style*="background"] p {
+  margin: 0 0 0.5rem 0;
+}
+
+.bd-article-content > div[style*="background"] p:last-child {
+  margin-bottom: 0;
+}
+
+.bd-article-content > div[style*="background"] ul,
+.bd-article-content > div[style*="background"] ol {
+  margin: 0.5rem 0 0 1.25rem;
+}
+
+.bd-article-content > div[style*="background"] p[style*="font-weight"] {
+  font-weight: 700 !important;
+  margin-bottom: 0.5rem !important;
+}
 
 /* Info card */
 .bd-info-card {

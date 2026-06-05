@@ -6,9 +6,18 @@ import "../styles/Blog.css";
 
 const POSTS_PER_PAGE = 6;
 
+/* ─── Calculate read time (200 words per minute) ── */
+function calculateReadTime(htmlContent) {
+  const plainText = String(htmlContent || "").replace(/<[^>]*>/g, "").trim();
+  const words = plainText.split(/\s+/).filter(w => w.length > 0).length;
+  const minutes = Math.ceil(words / 200);
+  return Math.max(1, minutes);
+}
+
 /* ─── tiny helpers ─────────────────────────────── */
 function BlogCard({ post, featured }) {
   const navigate = useNavigate();
+  const readTime = post.read_time || calculateReadTime(post.content);
   return (
     <article className={`bl-card${featured ? " bl-card--featured" : ""}`}>
       <div className="bl-card-img-wrap">
@@ -34,12 +43,10 @@ function BlogCard({ post, featured }) {
                 {post.date || new Date(post.published_at).toLocaleDateString("en-PK", { year: "numeric", month: "short", day: "numeric" })}
               </span>
             ) : null}
-            {post.readTime && (
-              <span className="bl-card-time">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                {post.readTime}
-              </span>
-            )}
+            <span className="bl-card-time">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              {readTime} min read
+            </span>
           </div>
         </div>
         <button className="bl-read-more" onClick={() => navigate(`/blog/${post.slug}`)}>
@@ -53,13 +60,15 @@ function BlogCard({ post, featured }) {
 
 /* ─── Sidebar Post Row ─────────────────────────── */
 function SidePostRow({ post }) {
+  const readTime = post.read_time || calculateReadTime(post.content);
+  const postDate = post.date || (post.published_at ? new Date(post.published_at).toLocaleDateString() : "");
   return (
     <div className="bl-side-post">
       <img src={post.image} alt={post.title} className="bl-side-post-img" loading="lazy" />
       <div className="bl-side-post-body">
         <p className="bl-side-post-title">{post.title}</p>
         <span className="bl-side-post-meta">
-          {post.date || (post.published_at ? new Date(post.published_at).toLocaleDateString() : "")}
+          {postDate} • {readTime} min
         </span>
       </div>
     </div>
