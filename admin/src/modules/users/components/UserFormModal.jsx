@@ -1,0 +1,153 @@
+import { useEffect, useState } from "react";
+
+const PERMISSION_OPTIONS = [
+  { key: "add_data", label: "Add Data" },
+  { key: "edit_data", label: "Edit Data" },
+  { key: "delete_data", label: "Delete Data" },
+  { key: "publish_data", label: "Publish / Active" },
+];
+
+const INITIAL = {
+  name: "",
+  email: "",
+  designation: "",
+  phone: "",
+  location: "",
+  password: "",
+  role: "editor",
+  status: "active",
+  permissions: [],
+};
+
+export default function UserFormModal({ open, mode, initialData, onClose, onSubmit, submitting }) {
+  const [form, setForm] = useState(INITIAL);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!open) return;
+    if (mode === "edit" && initialData) {
+      setForm({
+        name: initialData.name || "",
+        email: initialData.email || "",
+        designation: initialData.designation || "",
+        phone: initialData.phone || "",
+        location: initialData.location || "",
+        password: "",
+        role: initialData.role || "editor",
+        status: initialData.status || "active",
+        permissions: Array.isArray(initialData.permissions) ? initialData.permissions : [],
+      });
+      setError("");
+      return;
+    }
+    setForm(INITIAL);
+    setError("");
+  }, [open, mode, initialData]);
+
+  if (!open) return null;
+
+  const submit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      name: form.name,
+      email: form.email,
+      role: form.role,
+      status: form.status,
+      designation: form.designation,
+      phone: form.phone,
+      location: form.location,
+      permissions: form.permissions,
+    };
+    if (form.password.trim()) payload.password = form.password;
+
+    const result = await onSubmit(payload);
+    if (!result?.success) {
+      setError(result?.message || "Failed to save user.");
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[120] overflow-y-auto bg-black/60 p-4">
+      <form onSubmit={submit} className="mx-auto my-4 w-full max-w-3xl rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-card)] p-5 md:my-8 md:p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-3xl font-semibold text-white">{mode === "create" ? "Add User" : "Edit User"}</h3>
+            <p className="mt-1 text-lg text-white/65">{mode === "create" ? "Create a new account and assign its role permissions." : "Update profile, access role and account status."}</p>
+          </div>
+          <button type="button" onClick={onClose} className="rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-1.5 text-white/80">Close</button>
+        </div>
+        <div className="mt-4 grid max-h-[65vh] grid-cols-1 gap-3 overflow-y-auto pr-1 md:max-h-[70vh]">
+          <label className="space-y-2">
+            <span className="text-sm font-semibold text-white/80">Full Name</span>
+            <input value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} placeholder="Jane Doe" className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-white" required />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm font-semibold text-white/80">Email</span>
+            <input value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} placeholder="admin@example.com" type="email" className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-white" required />
+          </label>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <label className="space-y-2">
+              <span className="text-sm font-semibold text-white/80">Designation</span>
+              <input value={form.designation} onChange={(e) => setForm((p) => ({ ...p, designation: e.target.value }))} placeholder="Senior Editor" className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-white" />
+            </label>
+            <label className="space-y-2">
+              <span className="text-sm font-semibold text-white/80">Phone</span>
+              <input value={form.phone} onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))} placeholder="+92 300 1234567" className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-white" />
+            </label>
+          </div>
+          <label className="space-y-2">
+            <span className="text-sm font-semibold text-white/80">Location</span>
+            <input value={form.location} onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))} placeholder="Lahore, Pakistan" className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-white" />
+          </label>
+          <label className="space-y-2">
+            <span className="text-sm font-semibold text-white/80">{mode === "create" ? "Password" : "Password (optional)"}</span>
+            <input value={form.password} onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))} placeholder={mode === "create" ? "Enter password" : "Leave blank to keep existing password"} type="password" className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-white" required={mode === "create"} />
+          </label>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <label className="space-y-2">
+              <span className="text-sm font-semibold text-white/80">Role</span>
+              <select value={form.role} onChange={(e) => setForm((p) => ({ ...p, role: e.target.value }))} className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-white">
+            <option value="admin">Admin</option>
+            <option value="editor">Editor</option>
+              </select>
+            </label>
+            <label className="space-y-2">
+              <span className="text-sm font-semibold text-white/80">Status</span>
+              <select value={form.status} onChange={(e) => setForm((p) => ({ ...p, status: e.target.value }))} className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-white">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+              </select>
+            </label>
+          </div>
+          <div className="space-y-3 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] p-4">
+            <p className="text-sm font-semibold text-white/80">Permissions</p>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              {PERMISSION_OPTIONS.map((option) => (
+                <label key={option.key} className="inline-flex items-center gap-2 text-white/90">
+                  <input
+                    type="checkbox"
+                    checked={form.permissions.includes(option.key)}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        permissions: e.target.checked
+                          ? [...prev.permissions, option.key]
+                          : prev.permissions.filter((item) => item !== option.key),
+                      }))
+                    }
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+        {error ? <p className="mt-3 text-sm text-red-300">{error}</p> : null}
+        <div className="mt-4 flex justify-end gap-2">
+          <button type="button" onClick={onClose} className="rounded-lg border border-[var(--admin-border)] px-4 py-2 text-white">Cancel</button>
+          <button type="submit" disabled={submitting} className="rounded-lg bg-[var(--admin-primary)] px-4 py-2 text-black disabled:opacity-50">{submitting ? "Saving..." : "Save"}</button>
+        </div>
+      </form>
+    </div>
+  );
+}

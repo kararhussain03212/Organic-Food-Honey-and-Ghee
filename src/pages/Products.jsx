@@ -1,26 +1,25 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import {
-  products,
-  productCategories,
-  PRODUCTS_PER_PAGE,
-} from "../data/productsData";
+import { getProducts } from "../api/apiClient";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
+
+const PRODUCTS_PER_PAGE = 9;
 
 /* ─── Product Card ──────────────────────────────── */
 function ProductCard({ product }) {
   const navigate = useNavigate();
   const [added, setAdded] = useState(false);
-  const currentPrice = product.price;
-  const currentOriginal = product.originalPrice;
+  const currentPrice = Number(product.price);
+  const currentOriginal = product.original_price ? Number(product.original_price) : null;
   const hasOriginal = Boolean(currentOriginal);
   const priceLabel = `Rs ${currentPrice.toLocaleString()}`;
   const originalLabel = hasOriginal ? `Rs ${currentOriginal.toLocaleString()}` : null;
   const variant = product.size;
+  const images = Array.isArray(product.images) ? product.images : [];
 
   const handleAddToCart = () => {
-    addToCart({ id: product.id, name: product.name, price: currentPrice, qty: 1, image: product.images[0], variant });
+    addToCart({ id: product.id, name: product.name, price: currentPrice, qty: 1, image: images[0], variant });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -30,16 +29,16 @@ function ProductCard({ product }) {
       {product.discount > 0 && (
         <span className="prc-discount-badge">{product.discount}% OFF</span>
       )}
-      {product.featured && (
+      {product.featured === 1 || product.featured === true ? (
         <span className="prc-featured-badge">⭐ Featured</span>
-      )}
+      ) : null}
 
       <div
         className="prc-img-wrap"
         style={{ cursor: "pointer" }}
         onClick={() => navigate(`/products/${product.slug}`)}
       >
-        <img src={product.images[0]} alt={product.name} className="prc-img" loading="lazy" />
+        <img src={images[0] || "/product-images/cow-ghee-500g.png"} alt={product.name} className="prc-img" loading="lazy" />
         <div className="prc-img-overlay" />
       </div>
 
@@ -47,7 +46,7 @@ function ProductCard({ product }) {
         <h3 className="prc-name" onClick={() => navigate(`/products/${product.slug}`)}>
           {product.name}
         </h3>
-        <p className="prc-desc">{product.shortDesc}</p>
+        <p className="prc-desc">{product.short_desc || product.shortDesc}</p>
 
         <div className="prc-price-row">
           <span className="prc-price">{priceLabel}</span>
@@ -72,6 +71,19 @@ function ProductCard({ product }) {
   );
 }
 
+function SkeletonCard() {
+  return (
+    <article className="prc-card" style={{ animation: "pulse 1.5s ease-in-out infinite" }}>
+      <div className="prc-img-wrap" style={{ background: "rgba(255,255,255,0.07)", minHeight: 200 }} />
+      <div className="prc-body">
+        <div style={{ height: 16, background: "rgba(255,255,255,0.07)", borderRadius: 6, marginBottom: 8 }} />
+        <div style={{ height: 12, width: "70%", background: "rgba(255,255,255,0.05)", borderRadius: 6, marginBottom: 12 }} />
+        <div style={{ height: 20, width: "40%", background: "rgba(255,255,255,0.07)", borderRadius: 6 }} />
+      </div>
+    </article>
+  );
+}
+
 /* ─── Main Page ─────────────────────────────────── */
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -79,23 +91,48 @@ export default function Products() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProducts().then((data) => {
+      setAllProducts(Array.isArray(data) ? data : []);
+      setLoading(false);
+    });
+  }, []);
+
+  const categories = useMemo(() => {
+    const cats = [{ id: "all", label: "All Products" }];
+    const seen = new Set();
+    allProducts.forEach((p) => {
+      if (p.category && !seen.has(p.category)) {
+        seen.add(p.category);
+        const label = p.category.charAt(0).toUpperCase() + p.category.slice(1);
+        cats.push({ id: p.category, label });
+      }
+    });
+    return cats;
+  }, [allProducts]);
 
   const filtered = useMemo(() => {
-    let result = products.filter((p) => {
+    let result = allProducts.filter((p) => {
       const matchCat = activeCategory === "all" || p.category === activeCategory;
       const q = searchQuery.toLowerCase();
+      const tags = Array.isArray(p.tags) ? p.tags : [];
       const matchSearch =
         !q ||
-        p.name.toLowerCase().includes(q) ||
-        p.shortDesc.toLowerCase().includes(q) ||
-        p.tags.some((t) => t.includes(q));
+        (p.name || "").toLowerCase().includes(q) ||
+        (p.short_desc || p.shortDesc || "").toLowerCase().includes(q) ||
+        tags.some((t) => String(t).toLowerCase().includes(q));
       return matchCat && matchSearch;
     });
-    if (sortBy === "price-asc") result = [...result].sort((a, b) => a.price - b.price);
-    if (sortBy === "price-desc") result = [...result].sort((a, b) => b.price - a.price);
-    if (sortBy === "rating") result = [...result].sort((a, b) => b.rating - a.rating);
+    if (sortBy === "price-asc") result = [...result].sort((a, b) => Number(a.price) - Number(b.price));
+    if (sortBy === "price-desc") result = [...result].sort((a, b) => Number(b.price) - Number(a.price));
+    if (sortBy === "rating") result = [...result].sort((a, b) => Number(b.rating) - Number(a.rating));
     return result;
-  }, [activeCategory, searchQuery, sortBy]);
+  }, [allProducts, activeCategory, searchQuery, sortBy]);
+
+  useEffect(() => { setCurrentPage(1); }, [activeCategory, searchQuery, sortBy]);
 
   const totalPages = Math.ceil(filtered.length / PRODUCTS_PER_PAGE);
   const paginated = filtered.slice(
@@ -147,8 +184,8 @@ export default function Products() {
                 ? `Search: "${searchQuery}"`
                 : activeCategory === "all"
                 ? "All Products"
-                : productCategories.find((c) => c.id === activeCategory)?.label}
-              <span className="prl-count"> ({filtered.length})</span>
+                : categories.find((c) => c.id === activeCategory)?.label}
+              {!loading && <span className="prl-count"> ({filtered.length})</span>}
             </div>
             <div className="prl-grid-controls">
               {(searchQuery || activeCategory !== "all") && (
@@ -169,7 +206,11 @@ export default function Products() {
             </div>
           </div>
 
-          {paginated.length === 0 ? (
+          {loading ? (
+            <div className="prl-grid">
+              {Array.from({ length: 6 }, (_, i) => <SkeletonCard key={i} />)}
+            </div>
+          ) : paginated.length === 0 ? (
             <div className="prl-empty">
               <div className="prl-empty-icon">🔍</div>
               <h3>No products found</h3>
@@ -186,7 +227,7 @@ export default function Products() {
             </div>
           )}
 
-          {totalPages > 1 && (
+          {!loading && totalPages > 1 && (
             <div className="prl-pagination">
               <button
                 className="prl-page-btn"

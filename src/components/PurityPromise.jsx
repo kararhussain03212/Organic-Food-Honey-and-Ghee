@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { getSettings, parseJsonField } from "../api/apiClient";
 
-const promises = [
+const STATIC_PROMISES = [
   {
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -21,7 +22,7 @@ const promises = [
         <path d="M9 22V12h6v10"/>
       </svg>
     ),
-    tag: "sources Fresh",
+    tag: "Sources Fresh",
     title: "Traditional Purity",
     desc: "Rooted in generations of artisan knowledge, our methods honor the land. Time-tested traditions preserve the natural goodness in every jar.",
     color: "#b8860b",
@@ -54,12 +55,33 @@ const promises = [
   },
 ];
 
-const badges = ["100% Natural", "Chemical Free", "sources Fresh", "Premium Quality"];
+const STATIC_BADGES = ["100% Natural", "Chemical Free", "Sources Fresh", "Premium Quality"];
 
 export default function PurityPromise() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [activeBadge, setActiveBadge] = useState(0);
+  const [promises, setPromises] = useState(STATIC_PROMISES);
+  const [badges, setBadges] = useState(STATIC_BADGES);
+
+  useEffect(() => {
+    getSettings().then((s) => {
+      if (!s?.home_purity_items) return;
+      const items = parseJsonField(s.home_purity_items, []);
+      if (items.length === 0) return;
+      setPromises(
+        items.map((item) => ({
+          icon: <span style={{ fontSize: "1.6rem" }}>{item.icon || "✦"}</span>,
+          tag: item.title || "",
+          title: item.title || "",
+          desc: item.desc || "",
+          color: "#4a7c59",
+          bg: "rgba(74,124,89,0.08)",
+        }))
+      );
+      setBadges(items.map((item) => item.title || ""));
+    });
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -71,19 +93,18 @@ export default function PurityPromise() {
   }, []);
 
   useEffect(() => {
+    if (badges.length <= 1) return;
     const t = setInterval(() => setActiveBadge((p) => (p + 1) % badges.length), 2000);
     return () => clearInterval(t);
-  }, []);
+  }, [badges.length]);
 
   return (
     <section className="purity-section" ref={sectionRef}>
-      {/* Organic background blobs */}
       <div className="purity-blob purity-blob-1" />
       <div className="purity-blob purity-blob-2" />
       <div className="purity-blob purity-blob-3" />
 
       <div className="purity-inner">
-        {/* Header */}
         <div className={`purity-header ${visible ? "fade-up" : "fade-hidden"}`}>
           <div className="purity-eyebrow">
             <span className="purity-leaf">🌿</span>
@@ -97,20 +118,15 @@ export default function PurityPromise() {
             and made with the reverence nature deserves.
           </p>
 
-          {/* Animated badge strip */}
           <div className="badge-strip">
             {badges.map((b, i) => (
-              <span
-                key={b}
-                className={`purity-badge ${i === activeBadge ? "purity-badge-active" : ""}`}
-              >
+              <span key={b} className={`purity-badge ${i === activeBadge ? "purity-badge-active" : ""}`}>
                 {b}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Cards grid */}
         <div className="purity-grid">
           {promises.map((p, i) => (
             <div
@@ -131,21 +147,6 @@ export default function PurityPromise() {
             </div>
           ))}
         </div>
-
-        {/* Bottom trust strip */}
-        {/* <div className={`purity-trust-strip ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.7s" }}>
-          {[
-            { num: "100%", label: "Pure Ingredients" },
-            { num: "0", label: "Artificial Additives" },
-            { num: "15+", label: "Years of Heritage" },
-            { num: "50k+", label: "Happy Families" },
-          ].map((s) => (
-            <div className="purity-stat" key={s.label}>
-              <span className="purity-stat-num">{s.num}</span>
-              <span className="purity-stat-label">{s.label}</span>
-            </div>
-          ))}
-        </div> */}
       </div>
     </section>
   );

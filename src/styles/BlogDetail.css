@@ -316,6 +316,19 @@
   font-size: .72rem; font-weight: 700; color: var(--muted);
   background: var(--ivory); border-radius: 999px; padding: .1rem .5rem;
 }
+
+.bd-side-categories { display: flex; flex-direction: column; gap: .3rem; margin-top: .9rem; }
+.bd-side-category {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  background: none; border: none; padding: .55rem .65rem; border-radius: 10px;
+  font-size: .88rem; color: var(--brown); cursor: pointer; font-family: inherit;
+  transition: background .2s, color .2s;
+}
+.bd-side-category:hover { background: var(--ivory); color: var(--green); }
+.bd-side-category-count {
+  font-size: .72rem; font-weight: 700; color: var(--muted);
+  background: var(--ivory); border-radius: 999px; padding: .1rem .5rem;
+}
 .bd-side-posts { display: flex; flex-direction: column; gap: .85rem; }
 .bd-side-post {
   display: flex; gap: .7rem; cursor: pointer;
@@ -339,6 +352,30 @@
   transition: border-color .2s, color .2s;
 }
 .bd-side-tag:hover { border-color: var(--green); color: var(--green); }
+
+.bd-side-newsletter-text {
+  font-size: .86rem; color: var(--muted); line-height: 1.6; margin-top: .9rem; margin-bottom: .8rem;
+}
+.bd-side-form { display: flex; flex-direction: column; gap: .6rem; }
+.bd-side-input {
+  width: 100%; padding: .65rem .9rem;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: .88rem; font-family: inherit; color: var(--brown);
+  background: var(--ivory); outline: none;
+  transition: border-color .2s;
+}
+.bd-side-input:focus { border-color: var(--green); }
+.bd-side-input::placeholder { color: var(--muted); }
+.bd-side-btn {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  background: var(--green); color: #fff; border: none; border-radius: 10px;
+  padding: .75rem; font-size: .9rem; font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: background .2s;
+}
+.bd-side-btn svg { width: 16px; height: 16px; }
+.bd-side-btn:hover:not(:disabled) { background: #3b5239; }
+.bd-side-btn:disabled { opacity: .6; cursor: not-allowed; }
+
 .bd-newsletter { display: flex; flex-direction: column; gap: .7rem; }
 .bd-newsletter-desc { font-size: .86rem; color: var(--muted); line-height: 1.6; }
 .bd-newsletter-input {

@@ -172,21 +172,14 @@ function ContactForm() {
     setStatus("loading");
     setErrorMessage("");
     try {
-      const res = await fetch("/api/contact.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          subject: form.subject,
-          message: form.message,
-        }),
+      const { postContact } = await import("../api/apiClient");
+      await postContact({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        subject: form.subject,
+        message: form.message,
       });
-      const payload = await res.json().catch(() => null);
-      if (!res.ok || !payload?.ok) {
-        throw new Error(payload?.error || "Message could not be sent.");
-      }
       setStatus("success");
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
     } catch (err) {
@@ -565,7 +558,8 @@ export default function Contact() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setVisible(true);
+    const frame = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   return (

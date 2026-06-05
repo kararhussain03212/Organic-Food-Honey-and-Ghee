@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Backward compatibility for old nested upload paths:
+# /uploads/icons/file.webp -> /uploads/file.webp
+# /uploads/settings/file.webp -> /uploads/file.webp
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^/backend/uploads/(?:blog|blogs|gallery|hero|icons|products|profiles|services|settings|team|testimonials)/(.+)$ [NC]
+RewriteCond %{DOCUMENT_ROOT}/backend/uploads/%1 -f
+RewriteRule ^(?:blog|blogs|gallery|hero|icons|products|profiles|services|settings|team|testimonials)/(.+)$ /backend/uploads/$1 [L]

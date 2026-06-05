@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
-import { products } from "../data/productsData";
 import { useNavigate } from "react-router-dom";
+import { getProducts } from "../api/apiClient";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
@@ -20,25 +21,27 @@ function ProductCard({ product }) {
   const navigate = useNavigate();
   const productImage = product.images?.[0] || "/product-images/cow-ghee-500g.png";
   const variant = product.variants?.[0] ?? product.subtitle;
-  const price = product.variantPrices?.[variant] ?? product.price;
+  const price = product.variantPrices?.[variant] ?? product.variant_prices?.[variant] ?? product.price;
 
   const handleShopNow = () => {
-    const message = `🛍️ *ORDER REQUEST*\n\n*Product:* ${product.name}\n*Variant:* ${variant}\n*Price:* Rs ${price.toLocaleString()}`;
+    const message = `🛍️ *ORDER REQUEST*\n\n*Product:* ${product.name}\n*Variant:* ${variant}\n*Price:* Rs ${Number(price).toLocaleString()}`;
     window.dispatchEvent(new CustomEvent("shop:requestLocation", { detail: { message } }));
   };
 
   const goToProduct = () => navigate(`/products/${product.slug}`);
+
+  const badges = Array.isArray(product.badges) ? product.badges : [];
 
   return (
     <div className="swiper-prod-card">
       <div className="prod-img-wrap" style={{ cursor: "pointer" }} onClick={goToProduct}>
         <img src={productImage} alt={product.name} className="prod-img" />
         <div className="prod-badges">
-          {product.badges.slice(0, 2).map((b) => (
+          {badges.slice(0, 2).map((b) => (
             <span key={b} className="prod-badge" style={badgeColors[b]}>{b}</span>
           ))}
         </div>
-        {product.originalPrice && <div className="prod-sale-tag">SALE</div>}
+        {product.original_price && <div className="prod-sale-tag">SALE</div>}
       </div>
 
       <div className="prod-info">
@@ -46,8 +49,8 @@ function ProductCard({ product }) {
         <div className="prod-subtitle">{product.subtitle}</div>
         <div className="prod-price-row">
           <span className="prod-price">{formatPrice(product.price)}</span>
-          {product.originalPrice && (
-            <span className="prod-original-price">{formatPrice(product.originalPrice)}</span>
+          {product.original_price && (
+            <span className="prod-original-price">{formatPrice(product.original_price)}</span>
           )}
         </div>
         <button className="prod-cart-btn" onClick={handleShopNow}>
@@ -61,7 +64,32 @@ function ProductCard({ product }) {
   );
 }
 
+function SkeletonCard() {
+  return (
+    <div className="swiper-prod-card" style={{ animation: "pulse 1.5s ease-in-out infinite" }}>
+      <div className="prod-img-wrap" style={{ background: "rgba(255,255,255,0.07)", minHeight: 220 }} />
+      <div className="prod-info">
+        <div style={{ height: 16, background: "rgba(255,255,255,0.07)", borderRadius: 6, marginBottom: 8 }} />
+        <div style={{ height: 12, width: "60%", background: "rgba(255,255,255,0.05)", borderRadius: 6, marginBottom: 12 }} />
+        <div style={{ height: 20, width: "40%", background: "rgba(255,255,255,0.07)", borderRadius: 6 }} />
+      </div>
+    </div>
+  );
+}
+
 export default function Products() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProducts().then((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const displayItems = loading ? Array.from({ length: 4 }, (_, i) => i) : products;
+
   return (
     <section className="products-section" id="products">
       <div className="products-inner">
@@ -81,7 +109,7 @@ export default function Products() {
           slidesPerView={4}
           spaceBetween={24}
           freeMode={true}
-          loop={true}
+          loop={!loading && products.length > 0}
           autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
           pagination={{ clickable: true }}
           modules={[FreeMode, Pagination, Autoplay]}
@@ -93,11 +121,17 @@ export default function Products() {
             1200: { slidesPerView: 4, spaceBetween: 24 },
           }}
         >
-          {products.map((product) => (
-            <SwiperSlide key={product.id} className="products-swiper-slide">
-              <ProductCard product={product} />
-            </SwiperSlide>
-          ))}
+          {loading
+            ? displayItems.map((i) => (
+                <SwiperSlide key={i} className="products-swiper-slide">
+                  <SkeletonCard />
+                </SwiperSlide>
+              ))
+            : products.map((product) => (
+                <SwiperSlide key={product.id} className="products-swiper-slide">
+                  <ProductCard product={product} />
+                </SwiperSlide>
+              ))}
         </Swiper>
 
         <div className="products-view-all" style={{ marginTop: "2.5rem" }}>
