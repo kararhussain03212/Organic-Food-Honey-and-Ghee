@@ -7,10 +7,10 @@
 ]
 
 export const topLinks = [
+  'Home',
   'About',
-  'Edenews',
-  'Pertinent Info',
-  'Recipes',
+  'Products',
+  'Blog',
   'Contact',
 ]
 
@@ -18,14 +18,14 @@ export const promoMessage = 'Family-run since 1968  Pantry staples made with car
 
 export const footerContent = {
   brand: {
-    title: 'Swift Sign',
+    title: 'Arion Organic Food',
     subtitle: 'ORGANIC FOODS',
   },
   contact: {
     heading: 'Contact Us',
     items: [
       { label: 'WhatsApp', value: '+92 333 8399480' },
-      { label: 'Email', value: 'info@swiftsigngeneraltrading.com' },
+      { label: 'Email', value: 'info@arionorganic.com' },
       {
         label: 'Address',
         value: 'Office 22, 4th Floor, Pakland City Center, I-8 Markaz, Islamabad, Pakistan.',

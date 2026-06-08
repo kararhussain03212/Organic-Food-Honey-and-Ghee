@@ -154,11 +154,14 @@ CREATE TABLE IF NOT EXISTS `blog_posts` (
 -- settings
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `settings` (
-  `id`         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `key`        VARCHAR(120) NOT NULL UNIQUE,
-  `value`      LONGTEXT DEFAULT NULL,
-  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id`             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `setting_key`    VARCHAR(120) NOT NULL UNIQUE,
+  `setting_value`  LONGTEXT DEFAULT NULL,
+  `setting_type`   VARCHAR(20) NOT NULL DEFAULT 'text',
+  `order_position` INT UNSIGNED NOT NULL DEFAULT 0,
+  `status`         ENUM('active','inactive') NOT NULL DEFAULT 'active',
+  `created_at`     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------
@@ -178,14 +181,21 @@ CREATE TABLE IF NOT EXISTS `contact_messages` (
 -- ============================================================
 -- Settings seed — all keys used by frontend & admin
 -- ============================================================
-INSERT IGNORE INTO `settings` (`key`, `value`) VALUES
+INSERT IGNORE INTO `settings` (`setting_key`, `setting_value`) VALUES
 
 -- Navbar
-('navbar_logo',          'Arion Organic Food'),
-('navbar_links',         '[{"label":"Home","path":"/"},{"label":"About","path":"/about"},{"label":"Products","path":"/products"},{"label":"Blog","path":"/blog"},{"label":"Contact","path":"/contact"}]'),
-('whatsapp_number',      '923338399480'),
+('navbar_logo',           'Arion Organic Food'),
+('navbar_brand_title',    'Arion Organic Food'),
+('navbar_brand_subtitle', 'Organic Foods'),
+('navbar_phone',          '+92 333 8399480'),
+('navbar_email',          'info@arionorganic.com'),
+('navbar_welcome_text',   'Welcome to Arion Organic Food'),
+('nav_links',             '[{"label":"Home","path":"/"},{"label":"About","path":"/about"},{"label":"Products","path":"/products"},{"label":"Blog","path":"/blog"},{"label":"Contact","path":"/contact"}]'),
+('whatsapp_number',       '923338399480'),
 
 -- Footer
+('footer_brand_title',    'Arion Organic Food'),
+('footer_brand_subtitle', 'ORGANIC FOODS'),
 ('footer_about_text',    'Premium organic products including Desi Ghee, Honey, and Shilajit — sourced naturally.'),
 ('footer_phone',         '+92 333 8399480'),
 ('footer_email',         'info@arionorganic.com'),
@@ -194,7 +204,12 @@ INSERT IGNORE INTO `settings` (`key`, `value`) VALUES
 ('footer_social_instagram', 'https://www.instagram.com/ssarionorganicfood/'),
 ('footer_social_youtube',   'https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing'),
 ('footer_social_tiktok',    'https://www.tiktok.com/@ssarionorganicfood'),
-('footer_copyright',     '© 2026 Arion Organic Food · All rights reserved'),
+('footer_copyright',        '© 2026 Arion Organic Food · All rights reserved'),
+('footer_timings_heading', 'Our Timings'),
+('footer_timings_days',    'Mon-Sun'),
+('footer_timings_time',    '10am - 7pm'),
+('footer_links',         '[{"label":"Terms & Conditions","path":"/terms-and-conditions"},{"label":"Privacy Policy","path":"/privacy-policy"},{"label":"Return Policy","path":"/return-policy"},{"label":"Shipping Policy","path":"/online-order-policy"},{"label":"Certification","path":"/certification"}]'),
+('footer_social_links',  '[{"label":"Facebook","url":"https://www.facebook.com/SSgeneraltradinguae","icon":"facebook"},{"label":"Instagram","url":"https://www.instagram.com/ssarionorganicfood/","icon":"instagram"},{"label":"YouTube","url":"https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing","icon":"youtube"},{"label":"TikTok","url":"https://www.tiktok.com/@ssarionorganicfood","icon":"tiktok"}]'),
 
 -- Contact
 ('contact_email',              'info@arionorganic.com'),

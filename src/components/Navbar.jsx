@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiInstagram } from "react-icons/fi";
 import { FaFacebookSquare } from "react-icons/fa";
@@ -10,10 +10,11 @@ import { IoCall } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
+import { getSettings, parseJsonField } from "../api/apiClient";
 
 const DELIVERY_KEY = "delivery_location";
 
-const NAV_ITEMS = [
+const DEFAULT_NAV_ITEMS = [
   { label: "Home", path: "/" },
   { label: "About", path: "/about" },
   { label: "Products", path: "/products" },
@@ -33,7 +34,26 @@ const Navbar = () => {
   const [pendingWaMessage, setPendingWaMessage] = useState("");
   const [cartItems, setCartItems] = useState(() => getCartItems());
   const [searchTerm, setSearchTerm] = useState("");
+  const [settings, setSettings] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getSettings().then((data) => {
+      if (data && Object.keys(data).length > 0) setSettings(data);
+    });
+  }, []);
+
+  const brandTitle    = settings.navbar_brand_title    || "Arion Organic Food";
+  const brandSubtitle = settings.navbar_brand_subtitle || "Organic Foods";
+  const navPhone      = settings.navbar_phone          || "+92 333 8399480";
+  const navEmail      = settings.navbar_email          || "info@arionorganic.com";
+  const welcomeText   = settings.navbar_welcome_text   || "Welcome to Arion Organic Food";
+  const waNumber      = settings.whatsapp_number       || "923338399480";
+
+  const navItems = useMemo(() => {
+    const parsed = parseJsonField(settings.nav_links, []);
+    return parsed.length > 0 ? parsed : DEFAULT_NAV_ITEMS;
+  }, [settings.nav_links]);
 
   const saved = loadSaved();
   const [firstName, setFirstName] = useState(saved.firstName || "");
@@ -109,7 +129,7 @@ const Navbar = () => {
       buildDeliveryBlock(),
     ].join("\n");
     window.open(
-      `https://wa.me/923338399480?text=${encodeURIComponent(message)}`,
+      `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`,
       "_blank",
       "noopener,noreferrer",
     );
@@ -125,7 +145,7 @@ const Navbar = () => {
     setIsLocationOpen(false);
     if (pendingWaMessage) {
       window.open(
-        `https://wa.me/923338399480?text=${encodeURIComponent(pendingWaMessage + buildDeliveryBlock())}`,
+        `https://wa.me/${waNumber}?text=${encodeURIComponent(pendingWaMessage + buildDeliveryBlock())}`,
         "_blank",
         "noopener,noreferrer",
       );
@@ -140,18 +160,18 @@ const Navbar = () => {
       <Marquee />
 
       <div className="main-nav">
-        <Link className="brand" to="/" aria-label="Swift Sign home">
+        <Link className="brand" to="/" aria-label={`${brandTitle} home`}>
           <div className="logo-badge" aria-hidden="true">
             <img src="/logo/General trading storke.png" alt="logo" />
           </div>
           <div className="brand-text">
-            <span className="brand-title">Swift Sign</span>
-            <span className="brand-subtitle">Organic Foods</span>
+            <span className="brand-title">{brandTitle}</span>
+            <span className="brand-subtitle">{brandSubtitle}</span>
           </div>
         </Link>
 
         <nav className="nav-links desktop" aria-label="Main navigation">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <Link className="nav-link" to={item.path} key={item.label}>{item.label}</Link>
           ))}
         </nav>
@@ -193,16 +213,16 @@ const Navbar = () => {
           <div className="info-left">
             <div className="info-item">
               <span className="info-icon" aria-hidden="true"><IoCall /></span>
-              <span className="info-text">+92 333 8399480</span>
+              <span className="info-text">{navPhone}</span>
             </div>
             <div className="info-item">
               <span className="info-icon" aria-hidden="true"><MdEmail /></span>
-              <span className="info-text">info@swiftsigngeneraltrading.com</span>
+              <span className="info-text">{navEmail}</span>
             </div>
           </div>
           <div className="info-left">
             <div className="info-item info-right">
-              <span className="info-text">Welcome to Swift Sign Arion Organic Food</span>
+              <span className="info-text">{welcomeText}</span>
             </div>
           </div>
         </div>
@@ -215,17 +235,17 @@ const Navbar = () => {
       <div className={`mobile-panel ${isOpen ? "open" : ""}`} role="dialog" aria-modal="true">
         <div className="mobile-panel-header">
           <div className="mobile-brand">
-            <img src="/logo/General trading storke.png" alt="Swift Sign logo" />
+            <img src="/logo/General trading storke.png" alt={`${brandTitle} logo`} />
             <div>
-              <span className="mobile-brand-title">Swift Sign</span>
-              <span className="mobile-brand-subtitle">Organic Foods</span>
+              <span className="mobile-brand-title">{brandTitle}</span>
+              <span className="mobile-brand-subtitle">{brandSubtitle}</span>
             </div>
           </div>
           <button className="mobile-panel-close" type="button" aria-label="Close menu" onClick={() => setIsOpen(false)}>×</button>
         </div>
 
         <nav className="nav-links mobile" aria-label="Mobile navigation">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <Link className="nav-link" to={item.path} key={`mob-${item.label}`} onClick={() => setIsOpen(false)}>
               {item.label}
             </Link>
@@ -239,7 +259,7 @@ const Navbar = () => {
           </div>
           <div>
             <IoCall />
-            <div><span>+92 333 8399480</span><small>Call support</small></div>
+            <div><span>{navPhone}</span><small>Call support</small></div>
           </div>
         </div>
 
@@ -307,10 +327,10 @@ const Navbar = () => {
             <div className="location-modal-header">
               <div className="location-modal-brand">
                 <div className="location-modal-logo">
-                  <img src="/logo/General trading storke.png" alt="Swift Sign logo" />
+                  <img src="/logo/General trading storke.png" alt={`${brandTitle} logo`} />
                 </div>
                 <div>
-                  <p className="location-modal-kicker">Swift Sign</p>
+                  <p className="location-modal-kicker">{brandTitle}</p>
                   <h3 className="location-modal-title">Choose Delivery Location</h3>
                   <p className="location-modal-subtitle">Fresh products delivered near you</p>
                 </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getSettings } from "../api/apiClient";
 import { footerContent as staticFooter } from "../data/siteContent";
@@ -18,8 +18,8 @@ const Footer = () => {
     });
   }, []);
 
-  const brandTitle   = staticFooter.brand.title;
-  const brandSub     = staticFooter.brand.subtitle;
+  const brandTitle   = s?.footer_brand_title    || staticFooter.brand.title;
+  const brandSub     = s?.footer_brand_subtitle || staticFooter.brand.subtitle;
   const aboutText    = s?.footer_about_text || staticFooter.contact.items[1]?.value || "";
   const phone        = s?.footer_phone     || staticFooter.contact.items[0]?.value || "";
   const email        = s?.footer_email     || staticFooter.contact.items[1]?.value || "";
@@ -42,7 +42,6 @@ const Footer = () => {
             <div className="footer-title">{brandTitle}</div>
             <div className="footer-subtitle">{brandSub}</div>
           </div>
-          {aboutText && <p style={{ marginTop: "0.75rem", fontSize: "0.85rem", opacity: 0.7, lineHeight: 1.6 }}>{aboutText}</p>}
         </div>
 
         <div className="footer-contact">
@@ -61,10 +60,10 @@ const Footer = () => {
 
         <div className="footer-timings">
           <div className="timing-row">
-            <h3>{staticFooter.timings.heading}</h3>
+            <h3>{s?.footer_timings_heading || staticFooter.timings.heading}</h3>
             <div className="date-time-row">
-              <p>{staticFooter.timings.days}</p>
-              <p>{staticFooter.timings.time}</p>
+              <p>{s?.footer_timings_days || staticFooter.timings.days}</p>
+              <p>{s?.footer_timings_time || staticFooter.timings.time}</p>
             </div>
           </div>
         </div>
