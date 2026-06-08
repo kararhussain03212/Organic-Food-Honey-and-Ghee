@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
-import { getProducts } from "../api/apiClient";
+import { getProducts, getSettings } from "../api/apiClient";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
@@ -15,6 +15,15 @@ const badgeColors = {
   Pure: { background: "#4a7c59", color: "#fff" },
   "Limited Stock": { background: "#c0392b", color: "#fff" },
   "Premium Quality": { background: "#8b4513", color: "#fff" },
+};
+
+const DEFAULTS = {
+  eyebrow: "Our Collection",
+  heading: "Premium Organic",
+  headingAccent: "Products",
+  subtext: "Each product is carefully sourced, traditionally crafted, and rigorously tested — bringing the finest of nature directly to your home.",
+  btnText: "View All Products",
+  btnLink: "/products",
 };
 
 function ProductCard({ product }) {
@@ -83,11 +92,24 @@ function SkeletonCard() {
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [header, setHeader] = useState(DEFAULTS);
 
   useEffect(() => {
     getProducts().then((data) => {
       setProducts(data);
       setLoading(false);
+    });
+
+    getSettings().then((s) => {
+      if (!s) return;
+      setHeader({
+        eyebrow: s.home_collection_eyebrow || DEFAULTS.eyebrow,
+        heading: s.home_collection_heading || DEFAULTS.heading,
+        headingAccent: s.home_collection_heading_accent || DEFAULTS.headingAccent,
+        subtext: s.home_collection_subtext || DEFAULTS.subtext,
+        btnText: s.home_collection_btn_text || DEFAULTS.btnText,
+        btnLink: s.home_collection_btn_link || DEFAULTS.btnLink,
+      });
     });
   }, []);
 
@@ -97,15 +119,11 @@ export default function Products() {
     <section className="products-section" id="products">
       <div className="products-inner">
         <div className="products-header">
-          <div className="products-eyebrow">🛒 Our Collection</div>
+          <div className="products-eyebrow">🛒 {header.eyebrow}</div>
           <h2 className="products-heading">
-            Premium Organic <span className="products-accent">Products</span>
+            {header.heading} <span className="products-accent">{header.headingAccent}</span>
           </h2>
-          <p className="products-subtext">
-            Each product is carefully sourced, traditionally crafted, and
-            rigorously tested — bringing the finest of nature directly to your
-            home.
-          </p>
+          <p className="products-subtext">{header.subtext}</p>
         </div>
 
         <Swiper
@@ -138,8 +156,8 @@ export default function Products() {
         </Swiper>
 
         <div className="products-view-all" style={{ marginTop: "2.5rem" }}>
-          <a href="products" className="view-all-btn">
-            View All Products
+          <a href={header.btnLink} className="view-all-btn">
+            {header.btnText}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>

@@ -9,6 +9,8 @@ import ProductList from "./pages/product/ProductList";
 import ProductForm from "./pages/product/ProductForm";
 import SliderList from "./pages/slider/SliderList";
 import SliderForm from "./pages/slider/SliderForm";
+import CommitmentItemList from "./pages/commitment/CommitmentItemList";
+import CommitmentItemForm from "./pages/commitment/CommitmentItemForm";
 import SiteSettings from "./pages/settings/SiteSettings";
 import TestimonialList from "./pages/testimonial/TestimonialList";
 import TestimonialForm from "./pages/testimonial/TestimonialForm";
@@ -16,6 +18,16 @@ import BlogList from "./pages/blog/BlogList";
 import BlogForm from "./pages/blog/BlogForm";
 import UserManagement from "./pages/users/UserManagement";
 import ContactMessages from "./pages/contact/ContactMessages";
+import ContactPageSettings from "./pages/contact/ContactPageSettings";
+import HeroSectionAdmin from "./pages/about/HeroSectionAdmin";
+import StorySectionAdmin from "./pages/about/StorySectionAdmin";
+import MissionSectionAdmin from "./pages/about/MissionSectionAdmin";
+import CtaSectionAdmin from "./pages/about/CtaSectionAdmin";
+import ComparisonSectionAdmin from "./pages/about/ComparisonSectionAdmin";
+import ProblemCardList from "./pages/about/ProblemCardList";
+import ProblemCardForm from "./pages/about/ProblemCardForm";
+import CoreValueList from "./pages/about/CoreValueList";
+import CoreValueForm from "./pages/about/CoreValueForm";
 import { useAuth } from "./context/useAuth";
 import { normalizeUserRole } from "./modules/users/constants";
 
@@ -258,6 +270,22 @@ export default function App() {
             }
           />
           <Route
+            path="/settings/home-commitment"
+            element={
+              <ProtectedPage>
+                <SiteSettings forcedMainSection="home" forcedHomeSection="commitment" />
+              </ProtectedPage>
+            }
+          />
+          <Route
+            path="/settings/home-authentic"
+            element={
+              <ProtectedPage>
+                <SiteSettings forcedMainSection="home" forcedHomeSection="authentic" />
+              </ProtectedPage>
+            }
+          />
+          <Route
             path="/settings/footer"
             element={
               <ProtectedPage>
@@ -338,6 +366,30 @@ export default function App() {
             }
           />
           <Route
+            path="/commitment"
+            element={
+              <ProtectedPage>
+                <CommitmentItemList />
+              </ProtectedPage>
+            }
+          />
+          <Route
+            path="/commitment/new"
+            element={
+              <ProtectedPage>
+                <CommitmentItemForm />
+              </ProtectedPage>
+            }
+          />
+          <Route
+            path="/commitment/edit/:id"
+            element={
+              <ProtectedPage>
+                <CommitmentItemForm />
+              </ProtectedPage>
+            }
+          />
+          <Route
             path="/contact-messages"
             element={
               <ProtectedPage>
@@ -345,6 +397,29 @@ export default function App() {
               </ProtectedPage>
             }
           />
+          <Route
+            path="/contact-settings"
+            element={
+              <ProtectedPage>
+                <ContactPageSettings />
+              </ProtectedPage>
+            }
+          />
+
+          {/* About Us Management */}
+          <Route path="/about/hero"    element={<ProtectedPage><HeroSectionAdmin /></ProtectedPage>} />
+          <Route path="/about/story"   element={<ProtectedPage><StorySectionAdmin /></ProtectedPage>} />
+          <Route path="/about/mission" element={<ProtectedPage><MissionSectionAdmin /></ProtectedPage>} />
+          <Route path="/about/cta"     element={<ProtectedPage><CtaSectionAdmin /></ProtectedPage>} />
+          <Route path="/about/comparison" element={<ProtectedPage><ComparisonSectionAdmin /></ProtectedPage>} />
+
+          <Route path="/about/problems"          element={<ProtectedPage><ProblemCardList /></ProtectedPage>} />
+          <Route path="/about/problems/new"      element={<ProtectedPage><ProblemCardForm /></ProtectedPage>} />
+          <Route path="/about/problems/edit/:id" element={<ProtectedPage><ProblemCardForm /></ProtectedPage>} />
+
+          <Route path="/about/core-values"          element={<ProtectedPage><CoreValueList /></ProtectedPage>} />
+          <Route path="/about/core-values/new"      element={<ProtectedPage><CoreValueForm /></ProtectedPage>} />
+          <Route path="/about/core-values/edit/:id" element={<ProtectedPage><CoreValueForm /></ProtectedPage>} />
           <Route
             path="/users"
             element={

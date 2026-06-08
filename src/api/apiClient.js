@@ -44,6 +44,33 @@ export async function getTestimonials() {
   }
 }
 
+export async function getCommitmentItems() {
+  try {
+    const result = await fetchApi("/api/public/commitment-items?paginate=0");
+    return Array.isArray(result) ? result : (result?.data ?? []);
+  } catch {
+    return [];
+  }
+}
+
+export async function getBlogSettings() {
+  try {
+    const result = await fetchApi("/api/public/blog/settings");
+    return result ?? {};
+  } catch {
+    return {};
+  }
+}
+
+export async function searchBlogs(q) {
+  try {
+    const result = await fetchApi(`/api/public/blog/search?q=${encodeURIComponent(q)}`);
+    return Array.isArray(result) ? result : (result?.data ?? []);
+  } catch {
+    return [];
+  }
+}
+
 export async function getBlogs(params = {}) {
   try {
     const qs = new URLSearchParams({ paginate: "0", ...params }).toString();
@@ -84,6 +111,15 @@ export async function getHeroSlides() {
     return Array.isArray(result) ? result : (result?.data ?? []);
   } catch {
     return [];
+  }
+}
+
+export async function getContactPage() {
+  try {
+    const result = await fetchApi("/api/public/contact-page");
+    return result ?? {};
+  } catch {
+    return {};
   }
 }
 

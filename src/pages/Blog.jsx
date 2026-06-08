@@ -1,8 +1,16 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getBlogs, parseJsonField } from "../api/apiClient";
+import { getBlogs, getBlogSettings, parseJsonField } from "../api/apiClient";
 import { blogs as staticBlogs } from "../data/blogData";
 import "../styles/Blog.css";
+
+const STATIC_HERO = {
+  badgeText: "Wellness Journal",
+  title: "Nourish Your Mind &",
+  titleAccent: "Body",
+  description: "Explore healthy living, natural nutrition, traditional wellness, and organic lifestyle knowledge — curated by our expert team.",
+  searchPlaceholder: "Search articles, topics, ingredients…",
+};
 
 const POSTS_PER_PAGE = 6;
 
@@ -187,9 +195,22 @@ export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [visible, setVisible] = useState(false);
+  const [hero, setHero] = useState(STATIC_HERO);
   const heroRef = useRef(null);
 
   useEffect(() => { setVisible(true); }, []);
+
+  useEffect(() => {
+    getBlogSettings().then((s) => {
+      setHero({
+        badgeText:         s.blog_badge_text          || STATIC_HERO.badgeText,
+        title:             s.blog_hero_title           || STATIC_HERO.title,
+        titleAccent:       s.blog_hero_title_accent    || STATIC_HERO.titleAccent,
+        description:       s.blog_hero_description     || STATIC_HERO.description,
+        searchPlaceholder: s.blog_search_placeholder   || STATIC_HERO.searchPlaceholder,
+      });
+    });
+  }, []);
 
   useEffect(() => {
     getBlogs().then((data) => {
@@ -252,14 +273,11 @@ export default function Blog() {
       <section className={`bl-hero${visible ? " visible" : ""}`} ref={heroRef}>
         <div className="bl-hero-inner">
           <div className="bl-hero-text">
-            <div className="bl-eyebrow"><span>✦</span> Wellness Journal</div>
+            <div className="bl-eyebrow"><span>✦</span> {hero.badgeText}</div>
             <h1 className="bl-hero-title">
-              Nourish Your <span className="bl-hero-accent">Mind & Body</span>
+              {hero.title} <span className="bl-hero-accent">{hero.titleAccent}</span>
             </h1>
-            <p className="bl-hero-subtitle">
-              Explore healthy living, natural nutrition, traditional wellness,
-              and organic lifestyle knowledge — curated by our expert team.
-            </p>
+            <p className="bl-hero-subtitle">{hero.description}</p>
           </div>
 
           <div className="bl-hero-search-wrap">
@@ -267,7 +285,7 @@ export default function Blog() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <input
                 type="text"
-                placeholder="Search articles, topics, ingredients…"
+                placeholder={hero.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="bl-hero-search-input"

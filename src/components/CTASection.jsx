@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { getSettings } from "../api/apiClient";
 
 const floatingLeaves = [
   { id: 1, emoji: "🌿", style: { top: "8%", left: "5%", fontSize: "2.2rem", animationDelay: "0s", animationDuration: "6s" } },
@@ -9,16 +10,39 @@ const floatingLeaves = [
   { id: 6, emoji: "🍃", style: { top: "40%", left: "3%", fontSize: "1.3rem", animationDelay: "0.4s", animationDuration: "9s" } },
 ];
 
-// const trustIndicators = [
-//   { icon: "🚚", label: "Free Delivery", sub: "On orders above Rs 2,000" },
-//   { icon: "↩️", label: "Easy Returns", sub: "30-day return policy" },
-//   { icon: "🛡️", label: "100% Genuine", sub: "Authenticity guaranteed" },
-//   { icon: "⭐", label: "4.9 Rating", sub: "From 50,000+ customers" },
-// ];
+const DEFAULTS = {
+  eyebrow: "Pure. Natural. Authentic.",
+  heading: "Experience Real Purity",
+  headingAccent: "in Every Product",
+  subtext: "Fresh, natural, and traditionally crafted products delivered to your home. No preservatives. No shortcuts. Just the honest goodness of nature.",
+  btnText: "Shop Now",
+  btnLink: "#products",
+  btn2Text: "Our Story",
+  btn2Link: "/about",
+  badgeText: "Authenticity Guaranteed",
+};
 
 export default function CTASection() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
+  const [data, setData] = useState(DEFAULTS);
+
+  useEffect(() => {
+    getSettings().then((s) => {
+      if (!s) return;
+      setData({
+        eyebrow: s.home_cta_eyebrow || DEFAULTS.eyebrow,
+        heading: s.home_cta_heading || DEFAULTS.heading,
+        headingAccent: s.home_cta_heading_accent || DEFAULTS.headingAccent,
+        subtext: s.home_cta_subtext || DEFAULTS.subtext,
+        btnText: s.home_cta_btn_text || DEFAULTS.btnText,
+        btnLink: s.home_cta_btn_link || DEFAULTS.btnLink,
+        btn2Text: s.home_cta_btn2_text || DEFAULTS.btn2Text,
+        btn2Link: s.home_cta_btn2_link || DEFAULTS.btn2Link,
+        badgeText: s.home_cta_badge_text || DEFAULTS.badgeText,
+      });
+    });
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -31,72 +55,49 @@ export default function CTASection() {
 
   return (
     <section className="cta-section" ref={sectionRef}>
-      {/* Floating leaves */}
       {floatingLeaves.map((leaf) => (
         <div key={leaf.id} className="cta-leaf" style={leaf.style}>
           {leaf.emoji}
         </div>
       ))}
 
-      {/* Radial glows */}
       <div className="cta-glow cta-glow-1" />
       <div className="cta-glow cta-glow-2" />
 
       <div className="cta-inner">
-        {/* Guarantee badge */}
-        {/* <div className={`cta-guarantee ${visible ? "fade-up" : "fade-hidden"}`}>
-          <span className="cta-guarantee-icon">🏆</span>
-          <span>100% Satisfaction Guaranteed or Your Money Back</span>
-        </div> */}
-
         <div className={`cta-content ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.1s" }}>
-          <div className="cta-eyebrow">🌿 Pure. Natural. Authentic.</div>
+          <div className="cta-eyebrow">🌿 {data.eyebrow}</div>
           <h2 className="cta-heading">
-            Experience Real Purity<br />
-            <span className="cta-accent">in Every Product</span>
+            {data.heading}<br />
+            <span className="cta-accent">{data.headingAccent}</span>
           </h2>
-          <p className="cta-subtext">
-            Fresh, natural, and traditionally crafted products delivered to your home.
-            No preservatives. No shortcuts. Just the honest goodness of nature.
-          </p>
+          <p className="cta-subtext">{data.subtext}</p>
 
           <div className="cta-actions">
-            <a href="#products" className="cta-primary-btn" id="cta-shop-now">
-              <span>Shop Now</span>
+            <a href={data.btnLink} className="cta-primary-btn" id="cta-shop-now">
+              <span>{data.btnText}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </a>
-            <a href="about" className="cta-secondary-btn" id="cta-our-story">
+            <a href={data.btn2Link} className="cta-secondary-btn" id="cta-our-story">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M10 9l5 3-5 3V9z" fill="currentColor"/>
               </svg>
-              Our Story
+              {data.btn2Text}
             </a>
           </div>
 
-          {/* Delivery info chips */}
           <div className="cta-delivery-row">
             <div className="cta-delivery-chip">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
-              Authenticity Guaranteed
+              {data.badgeText}
             </div>
           </div>
         </div>
-
-        {/* Trust Indicators */}
-        {/* <div className={`cta-trust ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.3s" }}>
-          {trustIndicators.map((t) => (
-            <div className="cta-trust-card" key={t.label}>
-              <span className="cta-trust-icon">{t.icon}</span>
-              <div className="cta-trust-label">{t.label}</div>
-              <div className="cta-trust-sub">{t.sub}</div>
-            </div>
-          ))}
-        </div> */}
       </div>
     </section>
   );

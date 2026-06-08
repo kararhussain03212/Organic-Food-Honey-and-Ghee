@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Backend\Controllers;
 
 use Backend\Models\BlogPost;
+use Backend\Models\Setting;
 use Backend\Utils\ActivityLogger;
 use Backend\Utils\Cache;
 use Backend\Utils\Response;
@@ -12,6 +13,7 @@ use Backend\Utils\Validator;
 
 require_once __DIR__ . '/BaseCrudController.php';
 require_once __DIR__ . '/../models/BlogPost.php';
+require_once __DIR__ . '/../models/Setting.php';
 require_once __DIR__ . '/../utils/ActivityLogger.php';
 require_once __DIR__ . '/../utils/Cache.php';
 require_once __DIR__ . '/../utils/Response.php';
@@ -100,5 +102,53 @@ final class BlogController extends BaseCrudController
         }
 
         Response::success($post, 'Fetched successfully');
+    }
+
+    public function publicSearch(array $params = []): void
+    {
+        $q = trim((string) ($this->query()['q'] ?? ''));
+        if ($q === '') {
+            Response::success([], 'No query provided');
+            return;
+        }
+
+        $results = Cache::remember('public:blog:search:' . md5($q), static function () use ($q) {
+            $model = new BlogPost();
+            return $model->search($q);
+        });
+
+        Response::success($results, 'Search results');
+    }
+
+    public function publicBlogSettings(array $params = []): void
+    {
+        $data = Cache::remember('public:blog-settings', static function () {
+            $model = new Setting();
+            $all = $model->asMap(true);
+            $blog = [];
+            foreach ($all as $key => $value) {
+                if (str_starts_with((string) $key, 'blog_')) {
+                    $blog[$key] = $value;
+                }
+            }
+            return $blog;
+        });
+        Response::success($data, 'Blog settings fetched');
+    }
+
+    public function adminUpdateBlogSettings(array $params = []): void
+    {
+        $payload = $this->body();
+        if (!is_array($payload) || $payload === []) {
+            Response::error('Payload required', 422);
+        }
+
+        $model = new Setting();
+        $model->upsertMany($payload);
+
+        ActivityLogger::log($this->currentAdminId(), 'update', 'blog-settings', null);
+        Cache::clearAll();
+
+        Response::success(null, 'Blog settings updated');
     }
 }

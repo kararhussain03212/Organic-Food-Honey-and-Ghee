@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { getTestimonials, getSettings } from "../api/apiClient";
+import { getBackendRoot } from "../api/runtimeApi";
 
-
-const testimonials = [
+const STATIC_TESTIMONIALS = [
   {
     id: 1,
     name: "Ayesha Malik",
     role: "Mother of 3, Lahore",
     avatar: "/avatar1.png",
     rating: 5,
-    quote:
-      "Since switching to Arion's ghee and honey, I've noticed a real difference in my family's health. The quality is unmistakable — you can literally taste the purity. This is the real thing.",
+    quote: "Since switching to Arion's ghee and honey, I've noticed a real difference in my family's health. The quality is unmistakable — you can literally taste the purity. This is the real thing.",
     product: "Pure Desi Ghee",
     verified: true,
   },
@@ -19,8 +19,7 @@ const testimonials = [
     role: "Nutritionist, Islamabad",
     avatar: "/avatar2.png",
     rating: 5,
-    quote:
-      "As a nutritionist, I'm very particular about what I recommend. Arion's products are genuinely chemical-free and traditionally sourced. I recommend them to all my clients without hesitation.",
+    quote: "As a nutritionist, I'm very particular about what I recommend. Arion's products are genuinely chemical-free and traditionally sourced. I recommend them to all my clients without hesitation.",
     product: "Raw Honey 500g",
     verified: true,
   },
@@ -30,8 +29,7 @@ const testimonials = [
     role: "Wellness Coach, Karachi",
     avatar: "/avatar3.png",
     rating: 5,
-    quote:
-      "The Shilajit has been life-changing for my energy levels. And the packaging tells you everything — premium, careful, and respectful of the product inside. I'm a loyal customer for life.",
+    quote: "The Shilajit has been life-changing for my energy levels. And the packaging tells you everything — premium, careful, and respectful of the product inside. I'm a loyal customer for life.",
     product: "Himalayan Shilajit",
     verified: true,
   },
@@ -41,12 +39,18 @@ const testimonials = [
     role: "Chef & Food Blogger",
     avatar: "/avatar2.png",
     rating: 5,
-    quote:
-      "I use Arion ghee in my restaurant. Customers always ask what makes the food taste so rich and wholesome. The answer is always the same — quality ingredients from quality people.",
+    quote: "I use Arion ghee in my restaurant. Customers always ask what makes the food taste so rich and wholesome. The answer is always the same — quality ingredients from quality people.",
     product: "Premium Ghee",
     verified: true,
   },
 ];
+
+const STATIC_HEADER = {
+  eyebrow: "Customer Stories",
+  heading: "Trusted by Families Who",
+  headingAccent: "Value Purity.",
+  subtext: "Real experiences from real people — because our greatest achievement is the trust of the families we serve.",
+};
 
 function Stars({ rating }) {
   return (
@@ -60,10 +64,51 @@ function Stars({ rating }) {
   );
 }
 
+const resolveAvatar = (value, apiRoot) => {
+  if (!value) return null;
+  if (value.startsWith("http")) return value;
+  if (value.startsWith("/uploads/")) return apiRoot + value;
+  if (value.startsWith("/")) return apiRoot.replace(/\/backend$/, "") + value;
+  return apiRoot + "/uploads/" + value;
+};
+
 export default function Testimonials() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(0);
+  const [testimonials, setTestimonials] = useState(STATIC_TESTIMONIALS);
+  const [header, setHeader] = useState(STATIC_HEADER);
+  const apiRoot = useMemo(() => getBackendRoot(), []);
+
+  useEffect(() => {
+    getSettings().then((s) => {
+      if (!s) return;
+      setHeader({
+        eyebrow: s.home_testimonials_eyebrow || STATIC_HEADER.eyebrow,
+        heading: s.home_testimonials_heading || STATIC_HEADER.heading,
+        headingAccent: s.home_testimonials_heading_accent || STATIC_HEADER.headingAccent,
+        subtext: s.home_testimonials_subtext || STATIC_HEADER.subtext,
+      });
+    });
+
+    getTestimonials().then((items) => {
+      if (!Array.isArray(items) || items.length === 0) return;
+      const active = items.filter((t) => t.is_active === 1 || t.is_active === true);
+      if (active.length === 0) return;
+      setTestimonials(
+        active.map((t) => ({
+          id: t.id,
+          name: t.name || "",
+          role: t.role || "Verified Customer",
+          avatar: resolveAvatar(t.avatar, apiRoot) || "/avatar1.png",
+          rating: Number(t.rating ?? 5),
+          quote: t.quote || "",
+          product: t.product || "",
+          verified: t.verified === 1 || t.verified === true,
+        }))
+      );
+    });
+  }, [apiRoot]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -75,9 +120,10 @@ export default function Testimonials() {
   }, []);
 
   useEffect(() => {
+    if (testimonials.length <= 1) return;
     const t = setInterval(() => setCurrent((p) => (p + 1) % testimonials.length), 5000);
     return () => clearInterval(t);
-  }, []);
+  }, [testimonials.length]);
 
   const prev = () => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
   const next = () => setCurrent((p) => (p + 1) % testimonials.length);
@@ -89,18 +135,14 @@ export default function Testimonials() {
 
       <div className="test-inner">
         <div className={`test-header ${visible ? "fade-up" : "fade-hidden"}`}>
-          <div className="test-eyebrow">💬 Customer Stories</div>
+          <div className="test-eyebrow">💬 {header.eyebrow}</div>
           <h2 className="test-heading">
-            Trusted by Families Who <span className="test-accent">Value Purity.</span>
+            {header.heading} <span className="test-accent">{header.headingAccent}</span>
           </h2>
-          <p className="test-subtext">
-            Real experiences from real people — because our greatest achievement
-            is the trust of the families we serve.
-          </p>
+          <p className="test-subtext">{header.subtext}</p>
         </div>
 
         <div className={`test-carousel-wrap ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.4s" }}>
-          {/* Main featured testimonial */}
           <div className="test-featured">
             {testimonials.map((t, i) => (
               <div
@@ -121,13 +163,12 @@ export default function Testimonials() {
                     <div className="test-name">{t.name}</div>
                     <div className="test-role">{t.role}</div>
                   </div>
-                  <div className="test-product-chip">{t.product}</div>
+                  {t.product && <div className="test-product-chip">{t.product}</div>}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Navigation */}
           <div className="test-nav">
             <button className="test-nav-btn" onClick={prev} aria-label="Previous">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -151,13 +192,6 @@ export default function Testimonials() {
             </button>
           </div>
         </div>
-
-        {/* Trust badges
-        <div className={`test-trust-row ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.4s" }}>
-          {["⭐ 4.9/5 Average Rating", "✅ 50,000+ Verified Buyers", "🔒 100% Authentic Reviews", "🌿 Trusted Since 2008"].map((item) => (
-            <div className="test-trust-chip" key={item}>{item}</div>
-          ))}
-        </div> */}
       </div>
     </section>
   );

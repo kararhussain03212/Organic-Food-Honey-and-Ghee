@@ -156,6 +156,32 @@ abstract class BaseModel
         return $stmt->execute([':id' => $id]);
     }
 
+    /**
+     * Insert or update the single canonical row (id = 1) for singleton tables.
+     */
+    public function saveSingle(array $data): ?array
+    {
+        $payload = $this->sanitizeFillable($data);
+        $payload['updated_at'] = date('Y-m-d H:i:s');
+
+        if ($this->find(1) !== null) {
+            $this->update(1, $data);
+        } else {
+            $payload['created_at'] = date('Y-m-d H:i:s');
+            $cols   = implode(', ', array_keys($payload));
+            $pmarks = implode(', ', array_map(static fn (string $k): string => ':' . $k, array_keys($payload)));
+            $binds  = [];
+            foreach ($payload as $k => $v) {
+                $binds[':' . $k] = $v;
+            }
+            $this->pdo->prepare(
+                "INSERT INTO {$this->table} (id, {$cols}) VALUES (1, {$pmarks})"
+            )->execute($binds);
+        }
+
+        return $this->find(1);
+    }
+
     public function reorder(array $items): bool
     {
         if (!$this->hasColumn('order_position')) {

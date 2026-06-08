@@ -1,14 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { getSettings, parseJsonField } from "../api/apiClient";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { getSettings, getCommitmentItems } from "../api/apiClient";
+import { getBackendRoot } from "../api/runtimeApi";
 
 const STATIC_PROMISES = [
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-        <path d="M8 12l3 3 5-5"/>
-      </svg>
-    ),
+    icon: "check-circle",
     tag: "100% Natural",
     title: "Naturally Sourced Quality",
     desc: "Every product begins its journey in pristine natural environments—no shortcuts, no compromises. We trace every ingredient from source to shelf.",
@@ -16,12 +12,7 @@ const STATIC_PROMISES = [
     bg: "rgba(74,124,89,0.08)",
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-        <path d="M9 22V12h6v10"/>
-      </svg>
-    ),
+    icon: "house",
     tag: "Sources Fresh",
     title: "Traditional Purity",
     desc: "Rooted in generations of artisan knowledge, our methods honor the land. Time-tested traditions preserve the natural goodness in every jar.",
@@ -29,12 +20,7 @@ const STATIC_PROMISES = [
     bg: "rgba(184,134,11,0.08)",
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M9 12l2 2 4-4"/>
-        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-    ),
+    icon: "check-circle",
     tag: "Chemical Free",
     title: "No Artificial Compromise",
     desc: "Zero preservatives, zero additives, zero artificial flavors. Pure as nature intended—what you see is exactly what goes in.",
@@ -42,11 +28,7 @@ const STATIC_PROMISES = [
     bg: "rgba(139,69,19,0.08)",
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-    ),
+    icon: "shield",
     tag: "Premium Quality",
     title: "Our Quality Commitment",
     desc: "Rigorous testing at every stage of production. Our quality promise isn't just a label—it's the foundation everything we do is built upon.",
@@ -55,33 +37,93 @@ const STATIC_PROMISES = [
   },
 ];
 
-const STATIC_BADGES = ["100% Natural", "Chemical Free", "Sources Fresh", "Premium Quality"];
+const COLORS = [
+  { color: "#4a7c59", bg: "rgba(74,124,89,0.08)" },
+  { color: "#b8860b", bg: "rgba(184,134,11,0.08)" },
+  { color: "#8b4513", bg: "rgba(139,69,19,0.08)" },
+  { color: "#2e6b4f", bg: "rgba(46,107,79,0.08)" },
+];
+
+const STATIC_HEADER = {
+  eyebrow: "Our Commitment to You",
+  heading: "We Take Quality",
+  headingAccent: "Seriously.",
+  subtext: "Every product we craft carries our unyielding promise — pure, honest, and made with the reverence nature deserves.",
+  btnText: "Explore Our Products",
+  btnLink: "#products",
+};
+
+const resolveIconUrl = (value, apiRoot) => {
+  if (!value) return null;
+  if (value.startsWith("http")) return value;
+  if (value.startsWith("/uploads/")) return apiRoot + value;
+  if (value.startsWith("/")) return apiRoot + value;
+  return apiRoot + "/uploads/" + value;
+};
+
+function SvgIcon({ name, color, size = 28 }) {
+  const s = { width: size, height: size, flexShrink: 0 };
+  const p = { fill: "none", stroke: color, strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" };
+
+  switch (name) {
+    case "check-circle":
+      return <svg viewBox="0 0 24 24" style={s} {...p}><circle cx="12" cy="12" r="10" /><polyline points="9 12 11 14 15 10" /></svg>;
+    case "shield":
+      return <svg viewBox="0 0 24 24" style={s} {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>;
+    case "house":
+      return <svg viewBox="0 0 24 24" style={s} {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>;
+    case "leaf":
+      return <svg viewBox="0 0 24 24" style={s} {...p}><path d="M17 8C8 10 5.9 16.17 3.82 19.5c.2.6.4 1.2.8 1.5A12 12 0 0 0 22 10C22 10 20 8 17 8z" /><path d="M3.82 19.5l5.7-5.7" /></svg>;
+    case "star":
+      return <svg viewBox="0 0 24 24" style={s} {...p}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>;
+    case "heart":
+      return <svg viewBox="0 0 24 24" style={s} {...p}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>;
+    case "droplet":
+      return <svg viewBox="0 0 24 24" style={s} {...p}><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" /></svg>;
+    case "award":
+      return <svg viewBox="0 0 24 24" style={s} {...p}><circle cx="12" cy="8" r="7" /><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" /></svg>;
+    case "check":
+      return <svg viewBox="0 0 24 24" style={s} {...p} strokeWidth={2.5}><polyline points="20 6 9 17 4 12" /></svg>;
+    default:
+      return null;
+  }
+}
 
 export default function PurityPromise() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [activeBadge, setActiveBadge] = useState(0);
   const [promises, setPromises] = useState(STATIC_PROMISES);
-  const [badges, setBadges] = useState(STATIC_BADGES);
+  const [header, setHeader] = useState(STATIC_HEADER);
+  const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
     getSettings().then((s) => {
-      if (!s?.home_purity_items) return;
-      const items = parseJsonField(s.home_purity_items, []);
-      if (items.length === 0) return;
+      if (!s) return;
+      setHeader({
+        eyebrow: s.home_commitment_eyebrow || STATIC_HEADER.eyebrow,
+        heading: s.home_commitment_heading || STATIC_HEADER.heading,
+        headingAccent: s.home_commitment_heading_accent || STATIC_HEADER.headingAccent,
+        subtext: s.home_commitment_subtext || STATIC_HEADER.subtext,
+        btnText: s.home_commitment_btn_text ?? STATIC_HEADER.btnText,
+        btnLink: s.home_commitment_btn_link || STATIC_HEADER.btnLink,
+      });
+    });
+
+    getCommitmentItems().then((items) => {
+      if (!Array.isArray(items) || items.length === 0) return;
       setPromises(
-        items.map((item) => ({
-          icon: <span style={{ fontSize: "1.6rem" }}>{item.icon || "✦"}</span>,
-          tag: item.title || "",
+        items.map((item, i) => ({
+          icon: item.icon || "check-circle",
+          icon_url: item.icon_url ? resolveIconUrl(item.icon_url, apiRoot) : null,
+          tag: item.tag || item.title || "",
           title: item.title || "",
-          desc: item.desc || "",
-          color: "#4a7c59",
-          bg: "rgba(74,124,89,0.08)",
+          desc: item.description || "",
+          ...COLORS[i % COLORS.length],
         }))
       );
-      setBadges(items.map((item) => item.title || ""));
     });
-  }, []);
+  }, [apiRoot]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -93,10 +135,10 @@ export default function PurityPromise() {
   }, []);
 
   useEffect(() => {
-    if (badges.length <= 1) return;
-    const t = setInterval(() => setActiveBadge((p) => (p + 1) % badges.length), 2000);
+    if (promises.length <= 1) return;
+    const t = setInterval(() => setActiveBadge((p) => (p + 1) % promises.length), 2000);
     return () => clearInterval(t);
-  }, [badges.length]);
+  }, [promises.length]);
 
   return (
     <section className="purity-section" ref={sectionRef}>
@@ -108,20 +150,17 @@ export default function PurityPromise() {
         <div className={`purity-header ${visible ? "fade-up" : "fade-hidden"}`}>
           <div className="purity-eyebrow">
             <span className="purity-leaf">🌿</span>
-            Our Commitment to You
+            {header.eyebrow}
           </div>
           <h2 className="purity-heading">
-            We Take Quality <span className="purity-accent">Seriously.</span>
+            {header.heading} <span className="purity-accent">{header.headingAccent}</span>
           </h2>
-          <p className="purity-subtext">
-            Every product we craft carries our unyielding promise — pure, honest,
-            and made with the reverence nature deserves.
-          </p>
+          <p className="purity-subtext">{header.subtext}</p>
 
           <div className="badge-strip">
-            {badges.map((b, i) => (
-              <span key={b} className={`purity-badge ${i === activeBadge ? "purity-badge-active" : ""}`}>
-                {b}
+            {promises.map((p, i) => (
+              <span key={p.tag + i} className={`purity-badge ${i === activeBadge ? "purity-badge-active" : ""}`}>
+                {p.tag}
               </span>
             ))}
           </div>
@@ -130,13 +169,17 @@ export default function PurityPromise() {
         <div className="purity-grid">
           {promises.map((p, i) => (
             <div
-              key={p.title}
+              key={p.title + i}
               className={`purity-card ${visible ? "fade-up" : "fade-hidden"}`}
               style={{ transitionDelay: `${0.15 + i * 0.12}s`, "--card-accent": p.color, "--card-bg": p.bg }}
             >
               <div className="purity-card-glow" />
               <div className="purity-icon-wrap" style={{ background: p.bg, color: p.color }}>
-                {p.icon}
+                {p.icon_url ? (
+                  <img src={p.icon_url} alt={p.title} style={{ width: "1.8rem", height: "1.8rem", objectFit: "contain" }} />
+                ) : (
+                  <SvgIcon name={p.icon} color={p.color} size={28} />
+                )}
               </div>
               <div className="purity-card-tag" style={{ color: p.color }}>
                 ✦ {p.tag}
@@ -147,6 +190,14 @@ export default function PurityPromise() {
             </div>
           ))}
         </div>
+
+        {header.btnText && (
+          <div className={`purity-cta-wrap ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.6s" }}>
+            <a href={header.btnLink || "#"} className="story2-btn">
+              {header.btnText}
+            </a>
+          </div>
+        )}
       </div>
     </section>
   );

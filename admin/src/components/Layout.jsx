@@ -10,23 +10,30 @@ const navItems = [
   { path: "/users",             label: "User Management", adminOnly: true },
   { path: "/sliders",           label: "Hero Slides" },
   { path: "/products",          label: "Products" },
+  { path: "/commitment",        label: "Commitment Items" },
   { path: "/blogs",             label: "Blogs" },
   { path: "/testimonials",      label: "Testimonials" },
   { path: "/contact-messages",  label: "Contact Messages" },
+  { path: "/contact-settings",  label: "Contact Page Settings" },
+  // About Us Management
+  { path: "/about",             label: "About Us",        group: "aboutMgmt" },
+  { path: "/about/hero",        label: "Hero Section",    child: true, childGroup: "aboutMgmt" },
+  { path: "/about/story",       label: "Our Story",       child: true, childGroup: "aboutMgmt" },
+  { path: "/about/problems",    label: "Why We Exist",    child: true, childGroup: "aboutMgmt" },
+  { path: "/about/mission",     label: "Mission Section", child: true, childGroup: "aboutMgmt" },
+  { path: "/about/core-values", label: "Core Values",     child: true, childGroup: "aboutMgmt" },
+  { path: "/about/comparison",  label: "Comparison",      child: true, childGroup: "aboutMgmt" },
+  { path: "/about/cta",         label: "CTA Section",     child: true, childGroup: "aboutMgmt" },
+  // Settings
   { path: "/settings/navbar",   label: "Navbar" },
   { path: "/settings/footer",   label: "Footer" },
   { path: "/settings/home",     label: "Home" },
-  { path: "/settings/home-about",        label: "Home - Our Story",   child: true, childGroup: "home" },
-  { path: "/settings/home-company",      label: "Home - Products",    child: true, childGroup: "home" },
-  { path: "/settings/home-offer",        label: "Home - Purity",      child: true, childGroup: "home" },
-  { path: "/settings/home-testimonials", label: "Home - Testimonials",child: true, childGroup: "home" },
-  { path: "/settings/home-blog",         label: "Home - Blog",        child: true, childGroup: "home" },
-  { path: "/settings/about",    label: "About Page" },
-  { path: "/settings/about-hero",     label: "About - Hero",     child: true, childGroup: "about" },
-  { path: "/settings/about-info",     label: "About - Story",    child: true, childGroup: "about" },
-  { path: "/settings/about-company",  label: "About - Timeline", child: true, childGroup: "about" },
-  { path: "/settings/about-category", label: "About - Mission",  child: true, childGroup: "about" },
-  { path: "/settings/about-process",  label: "About - Duality",  child: true, childGroup: "about" },
+  { path: "/settings/home-about",        label: "Home - Our Story",    child: true, childGroup: "home" },
+  { path: "/settings/home-company",      label: "Home - Collection",   child: true, childGroup: "home" },
+  { path: "/settings/home-commitment",   label: "Home - Commitment",   child: true, childGroup: "home" },
+  { path: "/settings/home-testimonials", label: "Home - Testimonials", child: true, childGroup: "home" },
+  { path: "/settings/home-authentic",    label: "Home - Authentic",    child: true, childGroup: "home" },
+  { path: "/settings/home-blog",         label: "Home - Blog",         child: true, childGroup: "home" },
   { path: "/settings/product",  label: "Product Page" },
   { path: "/settings/blog",     label: "Blog Page" },
   { path: "/settings/contact",  label: "Contact & WhatsApp" },
@@ -39,18 +46,22 @@ const pageTitleMap = {
   "/sliders/new": "Add Hero Slide",
   "/products": "Products",
   "/products/new": "Add Product",
+  "/commitment": "Commitment Items",
+  "/commitment/new": "Add Commitment Item",
   "/blogs": "Blogs",
   "/blogs/new": "Add Blog",
   "/testimonials": "Testimonials",
   "/testimonials/new": "Add Testimonial",
   "/contact-messages": "Contact Messages",
+  "/contact-settings": "Contact Page Settings",
   "/settings": "Site Settings",
   "/settings/navbar": "Navbar Settings",
   "/settings/home": "Home Settings",
   "/settings/home-about": "Home - Our Story Settings",
-  "/settings/home-company": "Home - Products Settings",
-  "/settings/home-offer": "Home - Purity Promise Settings",
+  "/settings/home-company": "Home - Collection Settings",
+  "/settings/home-commitment": "Home - Commitment Settings",
   "/settings/home-testimonials": "Home - Testimonials Settings",
+  "/settings/home-authentic": "Home - Authentic Settings",
   "/settings/home-blog": "Home - Blog Settings",
   "/settings/footer": "Footer Settings",
   "/settings/product": "Product Page Settings",
@@ -70,6 +81,7 @@ export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [homeDropdownOpen, setHomeDropdownOpen] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
+  const [aboutMgmtOpen, setAboutMgmtOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const { user, logout } = useAuth();
   const isAdmin = normalizeUserRole(user?.role) === "admin";
@@ -82,8 +94,20 @@ export default function Layout({ children }) {
     }
     if (location.pathname.startsWith("/sliders/edit")) return "Edit Hero Slide";
     if (location.pathname.startsWith("/products/edit")) return "Edit Product";
+    if (location.pathname.startsWith("/commitment/edit")) return "Edit Commitment Item";
     if (location.pathname.startsWith("/blogs/edit")) return "Edit Blog";
     if (location.pathname.startsWith("/testimonials/edit")) return "Edit Testimonial";
+    if (location.pathname.startsWith("/about/problems/edit")) return "Edit Problem Card";
+    if (location.pathname.startsWith("/about/core-values/edit")) return "Edit Core Value";
+    if (location.pathname === "/about/hero") return "About - Hero Section";
+    if (location.pathname === "/about/story") return "About - Our Story";
+    if (location.pathname === "/about/problems") return "About - Problem Cards";
+    if (location.pathname === "/about/problems/new") return "Add Problem Card";
+    if (location.pathname === "/about/mission") return "About - Mission Section";
+    if (location.pathname === "/about/core-values") return "About - Core Values";
+    if (location.pathname === "/about/core-values/new") return "Add Core Value";
+    if (location.pathname === "/about/comparison") return "About - Comparison Section";
+    if (location.pathname === "/about/cta") return "About - CTA Section";
     return "Dashboard";
   }, [location.pathname]);
 
@@ -102,6 +126,9 @@ export default function Layout({ children }) {
     }
     if (location.pathname.startsWith("/settings/about")) {
       setAboutDropdownOpen(true);
+    }
+    if (location.pathname.startsWith("/about/")) {
+      setAboutMgmtOpen(true);
     }
   }, [location.pathname]);
 
@@ -182,7 +209,42 @@ export default function Layout({ children }) {
             Main
           </p>
           {navItems.filter((item) => !item.adminOnly || isAdmin).map((item) => (
-            item.path === "/settings/home" ? (
+            item.group === "aboutMgmt" ? (
+              <div key="aboutMgmt" className="mb-0.5">
+                <button
+                  type="button"
+                  onClick={() => setAboutMgmtOpen((prev) => !prev)}
+                  className={`flex w-full items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm duration-200 ${
+                    location.pathname.startsWith("/about/")
+                      ? "border border-[var(--admin-border-amber)] bg-[var(--admin-sidebar-hover)] text-[var(--admin-primary)] font-semibold"
+                      : "text-[var(--admin-muted)] hover:bg-[var(--admin-sidebar-hover)] hover:text-white"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  <span className={`pi ${aboutMgmtOpen ? "pi-chevron-up" : "pi-chevron-down"} text-xs`} />
+                </button>
+                {aboutMgmtOpen ? (
+                  <div className="mt-1 space-y-0.5">
+                    {navItems
+                      .filter((entry) => entry.child && entry.childGroup === "aboutMgmt")
+                      .map((entry) => (
+                        <Link
+                          key={entry.path}
+                          to={entry.path}
+                          onClick={() => setSidebarOpen(false)}
+                          className={`ml-3 flex items-center gap-3 rounded-xl px-3 py-2 text-sm duration-200 ${
+                            location.pathname === entry.path || location.pathname.startsWith(entry.path + "/")
+                              ? "border border-[var(--admin-border-amber)] bg-[var(--admin-sidebar-hover)] text-[var(--admin-primary)] font-semibold"
+                              : "text-[var(--admin-muted)] hover:bg-[var(--admin-sidebar-hover)] hover:text-white"
+                          }`}
+                        >
+                          {entry.label}
+                        </Link>
+                      ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : item.path === "/settings/home" ? (
               <div key={item.path} className="mb-0.5">
                 <button
                   type="button"

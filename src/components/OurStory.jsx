@@ -1,34 +1,47 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { getSettings, parseJsonField } from "../api/apiClient";
+import { getBackendRoot } from "../api/runtimeApi";
 
 const DEFAULTS = {
-  heading: "Pure From the Hive,",
-  headingAccent: "Straight to Your Table",
   eyebrow: "About Us",
-  text: "Our family has been dedicated to bringing you the purest, most authentic organic products. From hand-harvested mountain honey to traditionally made desi ghee — every product carries our promise of purity, quality, and generational craftsmanship.",
+  heading: "Our Story",
+  headingAccent: "Straight to Your Table",
+  text: "From the pristine valleys of Pakistan, we bring you the purest organic products.",
   image: "/story_farm.png",
   bullets: [
     "100% natural — no additives, no preservatives",
     "Sourced directly from trusted organic sources",
     "Traditional methods passed through generations",
   ],
+  btnText: "Explore Our Products",
+  btnLink: "#products",
 };
 
 export default function OurStory() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [data, setData] = useState(DEFAULTS);
+  const apiRoot = useMemo(() => getBackendRoot(), []);
+
+  const toImageUrl = (val) => {
+    if (!val) return "";
+    if (val.startsWith("http")) return val;
+    if (val.startsWith("/uploads/")) return apiRoot + val;
+    return val; // local frontend asset (e.g. /story_farm.png)
+  };
 
   useEffect(() => {
     getSettings().then((s) => {
-      if (!s || !s.home_story_heading) return;
+      if (!s) return;
       setData({
+        eyebrow: s.home_story_eyebrow || DEFAULTS.eyebrow,
         heading: s.home_story_heading || DEFAULTS.heading,
-        headingAccent: DEFAULTS.headingAccent,
-        eyebrow: "About Us",
+        headingAccent: s.home_story_heading_accent || DEFAULTS.headingAccent,
         text: s.home_story_text || DEFAULTS.text,
         image: s.home_story_image || DEFAULTS.image,
         bullets: parseJsonField(s.home_story_bullets, DEFAULTS.bullets),
+        btnText: s.home_story_btn_text || DEFAULTS.btnText,
+        btnLink: s.home_story_btn_link || DEFAULTS.btnLink,
       });
     });
   }, []);
@@ -46,9 +59,9 @@ export default function OurStory() {
     <section className="story2-section" id="our-story" ref={sectionRef}>
       <div className="story2-inner">
 
-        {/* LEFT — Single Hexagonal image */}
+        {/* LEFT — Single image */}
         <div className={`story2-hex-wrap ${visible ? "story2-fade-left" : "story2-hidden"}`}>
-          <img src={data.image} alt="Our Story" className="story2-single-img" />
+          <img src={toImageUrl(data.image)} alt="Our Story" className="story2-single-img" />
         </div>
 
         {/* RIGHT — Content */}
@@ -74,8 +87,8 @@ export default function OurStory() {
             ))}
           </ul>
 
-          <a href="#products" className="story2-btn">
-            Explore Our Products
+          <a href={data.btnLink} className="story2-btn">
+            {data.btnText}
           </a>
         </div>
       </div>

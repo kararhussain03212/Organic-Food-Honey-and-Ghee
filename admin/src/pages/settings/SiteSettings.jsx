@@ -5,6 +5,9 @@ import NavbarSettingsSection from "./sections/NavbarSettingsSection";
 import HomeAboutSettingsSection from "./sections/HomeAboutSettingsSection";
 import HomeCompanySettingsSection from "./sections/HomeCompanySettingsSection";
 import HomeOfferSettingsSection from "./sections/HomeOfferSettingsSection";
+import HomeCommitmentSettingsSection from "./sections/HomeCommitmentSettingsSection";
+import HomeTestimonialsSettingsSection from "./sections/HomeTestimonialsSettingsSection";
+import HomeAuthenticSettingsSection from "./sections/HomeAuthenticSettingsSection";
 import HomeBlogSettingsSection from "./sections/HomeBlogSettingsSection";
 import FooterSettingsSection from "./sections/FooterSettingsSection";
 import ProductSettingsSection from "./sections/ProductSettingsSection";
@@ -16,10 +19,11 @@ import { getBackendRoot } from "../../api/runtimeApi";
 
 const homeSectionTabs = [
   { key: "about",        label: "Our Story"    },
-  { key: "company",      label: "Products"     },
-  { key: "offer",        label: "Purity"       },
+  { key: "company",      label: "Collection"   },
+  { key: "commitment",   label: "Commitment"   },
   { key: "testimonials", label: "Testimonials" },
-  { key: "blog",         label: "Blog"         },
+  { key: "authentic",    label: "Authentic"    },
+  // { key: "blog",         label: "Blog"         },
 ];
 
 const textFieldConfig = [
@@ -38,24 +42,24 @@ const textFieldConfig = [
   { key: "home_about_button_link", section: "home.about" },
   { key: "home_about_image", section: "home.about" },
   { key: "home_about_properties_title", section: "home.about" },
-  { key: "home_company_kicker", section: "home.company" },
-  { key: "home_company_title", section: "home.company" },
-  { key: "home_company_accent", section: "home.company" },
-  { key: "home_company_suffix", section: "home.company" },
-  { key: "home_company_text", section: "home.company" },
-  { key: "home_company_button_text", section: "home.company" },
-  { key: "home_company_button_link", section: "home.company" },
-  { key: "home_company_image", section: "home.company" },
-  { key: "home_products_title", section: "home.company" },
-  { key: "home_products_description", section: "home.company" },
+  // { key: "home_company_kicker", section: "home.company" },
+  // { key: "home_company_title", section: "home.company" },
+  // { key: "home_company_accent", section: "home.company" },
+  // { key: "home_company_suffix", section: "home.company" },
+  // { key: "home_company_text", section: "home.company" },
+  // { key: "home_company_button_text", section: "home.company" },
+  // { key: "home_company_button_link", section: "home.company" },
+  // { key: "home_company_image", section: "home.company" },
+  // { key: "home_products_title", section: "home.company" },
+  // { key: "home_products_description", section: "home.company" },
   { key: "home_offer_title", section: "home.offer" },
   { key: "home_offer_accent", section: "home.offer" },
   { key: "home_offer_description", section: "home.offer" },
   { key: "home_offer_button_text", section: "home.offer" },
   { key: "home_offer_button_link", section: "home.offer" },
   { key: "home_offer_image", section: "home.offer" },
-  { key: "home_testimonials_title", section: "home.testimonials" },
-  { key: "home_testimonials_description", section: "home.testimonials" },
+  // { key: "home_testimonials_title", section: "home.testimonials" },
+  // { key: "home_testimonials_description", section: "home.testimonials" },
   { key: "home_newsletter_title", section: "home.newsletter" },
   { key: "home_newsletter_description", section: "home.newsletter" },
   { key: "home_newsletter_button_text", section: "home.newsletter" },
@@ -108,20 +112,53 @@ const textFieldConfig = [
   { key: "about_mission",             section: "about" },
   { key: "about_traditional",         section: "about" },
   { key: "about_modern",              section: "about" },
-  // Home sections (Arion)
+  // Home — Our Story (About Us)
+  { key: "home_story_eyebrow",        section: "home.about" },
   { key: "home_story_heading",        section: "home.about" },
+  { key: "home_story_heading_accent", section: "home.about" },
   { key: "home_story_text",           section: "home.about" },
   { key: "home_story_image",          section: "home.about" },
   { key: "home_story_bullets",        section: "home.about" },
-  { key: "home_purity_items",         section: "home.offer" },
+  { key: "home_story_btn_text",       section: "home.about" },
+  { key: "home_story_btn_link",       section: "home.about" },
+  // Home — Our Collection (products section heading)
+  { key: "home_collection_eyebrow",          section: "home.company" },
+  { key: "home_collection_heading",          section: "home.company" },
+  { key: "home_collection_heading_accent",   section: "home.company" },
+  { key: "home_collection_subtext",          section: "home.company" },
+  { key: "home_collection_btn_text",         section: "home.company" },
+  { key: "home_collection_btn_link",         section: "home.company" },
   { key: "home_company_heading",      section: "home.company" },
   { key: "home_company_subtext",      section: "home.company" },
+  // Home — Commitment section heading
+  { key: "home_commitment_eyebrow",         section: "home.commitment" },
+  { key: "home_commitment_heading",         section: "home.commitment" },
+  { key: "home_commitment_heading_accent",  section: "home.commitment" },
+  { key: "home_commitment_subtext",         section: "home.commitment" },
+  { key: "home_commitment_btn_text",        section: "home.commitment" },
+  { key: "home_commitment_btn_link",        section: "home.commitment" },
+  // Home — Testimonials / Customer Stories heading
+  { key: "home_testimonials_eyebrow",          section: "home.testimonials" },
+  { key: "home_testimonials_heading",          section: "home.testimonials" },
+  { key: "home_testimonials_heading_accent",   section: "home.testimonials" },
+  { key: "home_testimonials_subtext",          section: "home.testimonials" },
+  // Home — Authentic / CTA section
+  { key: "home_cta_eyebrow",        section: "home.authentic" },
+  { key: "home_cta_heading",        section: "home.authentic" },
+  { key: "home_cta_heading_accent", section: "home.authentic" },
+  { key: "home_cta_subtext",        section: "home.authentic" },
+  { key: "home_cta_btn_text",       section: "home.authentic" },
+  { key: "home_cta_btn_link",       section: "home.authentic" },
+  { key: "home_cta_btn2_text",      section: "home.authentic" },
+  { key: "home_cta_btn2_link",      section: "home.authentic" },
+  { key: "home_cta_badge_text",     section: "home.authentic" },
+  // Home — Blog
   { key: "home_blog_heading",         section: "home.blog" },
   { key: "home_blog_subtext",         section: "home.blog" },
-  { key: "cta_title",                 section: "home.testimonials" },
-  { key: "cta_subtitle",              section: "home.testimonials" },
-  { key: "cta_button_text",           section: "home.testimonials" },
-  { key: "cta_button_link",           section: "home.testimonials" },
+  { key: "cta_title",                 section: "home.authentic" },
+  { key: "cta_subtitle",              section: "home.authentic" },
+  { key: "cta_button_text",           section: "home.authentic" },
+  { key: "cta_button_link",           section: "home.authentic" },
   // Navbar/Footer (Arion)
   { key: "navbar_logo",               section: "navbar" },
   { key: "footer_brand_title",        section: "footer" },
@@ -142,6 +179,12 @@ const textFieldConfig = [
   { key: "blog_page_title", section: "blog" },
   { key: "blog_page_breadcrumb_home", section: "blog" },
   { key: "blog_page_breadcrumb_current", section: "blog" },
+  // Blog page hero
+  { key: "blog_badge_text",          section: "blog" },
+  { key: "blog_hero_title",          section: "blog" },
+  { key: "blog_hero_title_accent",   section: "blog" },
+  { key: "blog_hero_description",    section: "blog" },
+  { key: "blog_search_placeholder",  section: "blog" },
   { key: "seo_home_meta_description", section: "home.seo" },
   { key: "seo_about_meta_description", section: "about.seo" },
   { key: "seo_product_meta_description", section: "product.seo" },
@@ -157,6 +200,7 @@ const imageSettingKeys = new Set([
   "product_page_hero_image",
   "contact_page_hero_image",
   "home_about_image",
+  "home_story_image",
   "home_company_image",
   "home_offer_image",
   "about_page_hero_image",
@@ -199,8 +243,10 @@ const defaultSectionStatus = {
   navbar: "active",
   home_about: "active",
   home_company: "active",
+  home_commitment: "active",
   home_offer: "active",
   home_testimonials: "active",
+  home_authentic: "active",
   home_blog: "active",
   footer: "active",
   product: "active",
@@ -226,6 +272,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
   const [aboutPageProcessCards, setAboutPageProcessCards] = useState([
     { icon_url: "", title: "", description: "" },
   ]);
+  const [storyBullets, setStoryBullets] = useState([""]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savingStatus, setSavingStatus] = useState(false);
@@ -243,11 +290,13 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
 
   const headerTitle = useMemo(() => {
     if (activeMainSection === "home") {
-      if (activeHomeSection === "about") return "Home - Our Story Settings";
-      if (activeHomeSection === "company") return "Home - Products Settings";
-      if (activeHomeSection === "offer") return "Home - Purity Promise Settings";
+      if (activeHomeSection === "about")       return "Home - Our Story Settings";
+      if (activeHomeSection === "company")     return "Home - Collection Settings";
+      if (activeHomeSection === "commitment")  return "Home - Commitment Settings";
+      if (activeHomeSection === "offer")       return "Home - Purity Promise Settings";
       if (activeHomeSection === "testimonials") return "Home - Testimonials Settings";
-      if (activeHomeSection === "blog") return "Home - Blog Settings";
+      if (activeHomeSection === "authentic")   return "Home - Authentic / CTA Settings";
+      if (activeHomeSection === "blog")        return "Home - Blog Settings";
     }
     if (activeMainSection === "navbar") return "Navbar Settings";
     if (activeMainSection === "footer") return "Footer Settings";
@@ -306,12 +355,23 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         let nextAboutPageProperties = [""];
         let nextAboutPageCategories = [{ icon: "", icon_url: "", title: "", description: "" }];
         let nextAboutPageProcessCards = [{ icon_url: "", title: "", description: "" }];
+        let nextStoryBullets = [""];
         const nextSectionStatus = { ...defaultSectionStatus };
+
+        // PHP's BaseModel::normalizeUploadColumns auto-decodes JSON arrays/objects,
+        // so setting_value may arrive as an array instead of a string.
+        const asArray = (val, fallback = []) => {
+          if (Array.isArray(val)) return val;
+          return parseJsonArray(String(val ?? ""), fallback);
+        };
 
         rows.forEach((row) => {
           const key = String(row?.setting_key || "").trim();
           if (!key) return;
-          const rawValue = decodeHtmlEntities(row?.setting_value ?? "");
+
+          const sv = row?.setting_value;
+          // Only call decodeHtmlEntities when the value is still a plain string.
+          const rawValue = Array.isArray(sv) ? sv : decodeHtmlEntities(sv ?? "");
 
           if (key.startsWith("section_status_")) {
             const statusKey = key.replace("section_status_", "");
@@ -320,7 +380,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           }
 
           if (key === "nav_links") {
-            const parsed = parseJsonArray(rawValue, []);
+            const parsed = asArray(rawValue);
             const normalized = parsed
               .map((item) => ({ label: String(item?.label || ""), path: String(item?.path || "") }))
               .filter((item) => item.label || item.path);
@@ -329,14 +389,14 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           }
 
           if (key === "home_about_properties") {
-            const parsed = parseJsonArray(rawValue, []);
+            const parsed = asArray(rawValue);
             const normalized = parsed.map((item) => String(item || "")).filter(Boolean);
             if (normalized.length) nextAboutProperties = normalized;
             return;
           }
 
           if (key === "home_ghee_cards") {
-            const parsed = parseJsonArray(rawValue, []);
+            const parsed = asArray(rawValue);
             const normalized = parsed
               .map((item) => ({
                 icon: String(item?.icon || "cow"),
@@ -350,7 +410,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           }
 
           if (key === "footer_links") {
-            const parsed = parseJsonArray(rawValue, []);
+            const parsed = asArray(rawValue);
             const normalized = parsed
               .map((item) => ({ label: String(item?.label || ""), path: String(item?.path || "") }))
               .filter((item) => item.label || item.path);
@@ -359,7 +419,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           }
 
           if (key === "footer_social_links") {
-            const parsed = parseJsonArray(rawValue, []);
+            const parsed = asArray(rawValue);
             const normalized = parsed
               .map((item) => ({
                 label: String(item?.label || ""),
@@ -372,14 +432,14 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           }
 
           if (key === "about_page_properties") {
-            const parsed = parseJsonArray(rawValue, []);
+            const parsed = asArray(rawValue);
             const normalized = parsed.map((item) => String(item || "")).filter(Boolean);
             if (normalized.length) nextAboutPageProperties = normalized;
             return;
           }
 
           if (key === "about_page_categories") {
-            const parsed = parseJsonArray(rawValue, []);
+            const parsed = asArray(rawValue);
             const normalized = parsed
               .map((item) => ({
                 icon: String(item?.icon || ""),
@@ -393,7 +453,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           }
 
           if (key === "about_page_process_cards") {
-            const parsed = parseJsonArray(rawValue, []);
+            const parsed = asArray(rawValue);
             const normalized = parsed
               .map((item) => ({
                 icon_url: String(item?.icon_url || ""),
@@ -405,7 +465,14 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
             return;
           }
 
-          if (Object.prototype.hasOwnProperty.call(next, key)) next[key] = String(rawValue);
+          if (key === "home_story_bullets") {
+            const parsed = asArray(rawValue);
+            const normalized = parsed.map((item) => String(item || "")).filter(Boolean);
+            if (normalized.length) nextStoryBullets = normalized;
+            return;
+          }
+
+          if (Object.prototype.hasOwnProperty.call(next, key)) next[key] = String(Array.isArray(rawValue) ? "" : rawValue);
         });
 
         setForm(next);
@@ -417,6 +484,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         setAboutPageProperties(nextAboutPageProperties);
         setAboutPageCategories(nextAboutPageCategories);
         setAboutPageProcessCards(nextAboutPageProcessCards);
+        setStoryBullets(nextStoryBullets);
         setSectionStatus(nextSectionStatus);
       } catch (err) {
         console.error(err);
@@ -564,6 +632,9 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           }))
           .filter((item) => item.title || item.description || item.icon_url),
       );
+      payload.home_story_bullets = JSON.stringify(
+        storyBullets.map((item) => String(item || "").trim()).filter(Boolean),
+      );
       Object.entries(sectionStatus).forEach(([statusKey, statusValue]) => {
         payload[`section_status_${statusKey}`] = statusValue;
       });
@@ -586,6 +657,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
     aboutPageProperties,
     aboutPageCategories,
     aboutPageProcessCards,
+    storyBullets,
     sectionStatus,
   ]);
 
@@ -633,6 +705,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
     aboutPageProperties,
     aboutPageCategories,
     aboutPageProcessCards,
+    storyBullets,
     handleSave,
   ]);
 
@@ -676,7 +749,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
             </button>
           </div>
         </div>
-        {activeMainSection === "home" ? (
+        {/* {activeMainSection === "home" ? (
           <div className="mt-4 flex flex-wrap gap-2">
             {homeSectionTabs.map((tab) => (
               <button
@@ -693,7 +766,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
               </button>
             ))}
           </div>
-        ) : null}
+        ) : null} */}
       </header>
 
       {error ? (
@@ -718,27 +791,14 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         ) : null}
 
         {activeMainSection === "home" && activeHomeSection === "about" ? (
-          <>
-            <FieldRows
-              keys={getKeysFor("home.seo")}
-              form={form}
-              setField={setField}
-              toLabel={toLabel}
-            />
-            <HomeAboutSettingsSection
-              fieldKeys={getKeysFor("home.about")}
-              form={form}
-              setField={setField}
-              toLabel={toLabel}
-              toImageUrl={toImageUrl}
-              uploadToSetting={uploadToSetting}
-              aboutProperties={aboutProperties}
-              setAboutProperties={setAboutProperties}
-              gheeCards={gheeCards}
-              setGheeCards={setGheeCards}
-              uploadCardIcon={uploadCardIcon}
-            />
-          </>
+          <HomeAboutSettingsSection
+            form={form}
+            setField={setField}
+            toImageUrl={toImageUrl}
+            uploadToSetting={uploadToSetting}
+            storyBullets={storyBullets}
+            setStoryBullets={setStoryBullets}
+          />
         ) : null}
 
         {activeMainSection === "home" && activeHomeSection === "company" ? (
@@ -763,12 +823,30 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           />
         ) : null}
 
+        {activeMainSection === "home" && activeHomeSection === "commitment" ? (
+          <HomeCommitmentSettingsSection
+            fieldKeys={getKeysFor("home.commitment")}
+            form={form}
+            setField={setField}
+            toLabel={toLabel}
+          />
+        ) : null}
+
         {activeMainSection === "home" && activeHomeSection === "testimonials" ? (
-          <FieldRows 
-            keys={getKeysFor("home.testimonials")} 
-            form={form} 
-            setField={setField} 
-            toLabel={toLabel} 
+          <HomeTestimonialsSettingsSection
+            fieldKeys={getKeysFor("home.testimonials")}
+            form={form}
+            setField={setField}
+            toLabel={toLabel}
+          />
+        ) : null}
+
+        {activeMainSection === "home" && activeHomeSection === "authentic" ? (
+          <HomeAuthenticSettingsSection
+            fieldKeys={getKeysFor("home.authentic")}
+            form={form}
+            setField={setField}
+            toLabel={toLabel}
           />
         ) : null}
 
@@ -889,10 +967,8 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
               toLabel={toLabel}
             />
             <BlogSettingsSection
-              fieldKeys={getKeysFor("blog")}
               form={form}
               setField={setField}
-              toLabel={toLabel}
               toImageUrl={toImageUrl}
               uploadToSetting={uploadToSetting}
             />
