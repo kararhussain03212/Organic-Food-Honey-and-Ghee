@@ -19,8 +19,13 @@ export default function ProductPageSettings() {
         setLoading(true);
         setError("");
         const res = await getProductPageSettings();
-        if (res?.data) {
-          setSettings(res.data);
+        const data = res?.data?.data ?? res?.data ?? {};
+        if (data && typeof data === "object" && !Array.isArray(data)) {
+          setSettings({
+            badge_text: data.badge_text || "",
+            title:      data.title      || "",
+            subtitle:   data.subtitle   || "",
+          });
         }
       } catch (err) {
         console.error(err);
@@ -46,6 +51,17 @@ export default function ProductPageSettings() {
     try {
       await updateProductPageSettings(settings);
       setSuccess("Product page settings saved successfully.");
+
+      // Re-fetch to confirm what was actually persisted
+      const res = await getProductPageSettings();
+      const data = res?.data?.data ?? res?.data ?? {};
+      if (data && typeof data === "object" && !Array.isArray(data)) {
+        setSettings({
+          badge_text: data.badge_text || "",
+          title:      data.title      || "",
+          subtitle:   data.subtitle   || "",
+        });
+      }
     } catch (err) {
       console.error(err);
       setError(err?.response?.data?.message || "Failed to save settings.");

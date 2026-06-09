@@ -75,15 +75,21 @@ run($pdo, "USE `{$dbName}`", "Select database '{$dbName}'", $log, $errors);
 
 run($pdo, "
     CREATE TABLE IF NOT EXISTS `admins` (
-        `id`            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        `name`          VARCHAR(120) NOT NULL,
-        `email`         VARCHAR(180) NOT NULL UNIQUE,
-        `password`      VARCHAR(255) NOT NULL,
-        `role`          ENUM('admin','editor') NOT NULL DEFAULT 'editor',
-        `profile_photo` VARCHAR(255) DEFAULT NULL,
-        `last_login_at` DATETIME DEFAULT NULL,
-        `created_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        `updated_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        `id`               INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        `name`             VARCHAR(120) NOT NULL,
+        `email`            VARCHAR(180) NOT NULL UNIQUE,
+        `password`         VARCHAR(255) NOT NULL,
+        `role`             ENUM('admin','editor') NOT NULL DEFAULT 'editor',
+        `status`           ENUM('active','inactive') NOT NULL DEFAULT 'active',
+        `designation`      VARCHAR(255) DEFAULT NULL,
+        `phone`            VARCHAR(30)  DEFAULT NULL,
+        `location`         VARCHAR(255) DEFAULT NULL,
+        `bio`              TEXT         DEFAULT NULL,
+        `permissions_json` JSON         DEFAULT NULL,
+        `profile_photo`    VARCHAR(255) DEFAULT NULL,
+        `last_login_at`    DATETIME DEFAULT NULL,
+        `created_at`       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updated_at`       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ", 'Create table: admins', $log, $errors);
 
@@ -244,8 +250,9 @@ run($pdo, "
 // 3. SEED: admin
 // ═════════════════════════════════════════════════════════════════════════════
 run($pdo, "
-    INSERT IGNORE INTO `admins` (`name`, `email`, `password`, `role`) VALUES
-    ('Admin', 'admin@arionorganic.com', '\$2y\$12\$7BnDmWjB4e5GHB9FgFr3puNiKH.MyvNJJhL2xGS3sZnMWj6OJz5/i', 'admin')
+    INSERT IGNORE INTO `admins` (`name`, `email`, `password`, `role`, `status`, `permissions_json`) VALUES
+    ('Admin', 'admin@arionorganic.com', '\$2y\$12\$7BnDmWjB4e5GHB9FgFr3puNiKH.MyvNJJhL2xGS3sZnMWj6OJz5/i', 'admin', 'active',
+     '[\"create_content\",\"edit_content\",\"delete_content\",\"publish_content\",\"manage_users\",\"view_dashboard\"]')
 ", 'Seed: admin user (password: admin123)', $log, $errors);
 
 // ═════════════════════════════════════════════════════════════════════════════

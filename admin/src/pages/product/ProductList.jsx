@@ -34,10 +34,10 @@ export default function ProductList() {
   const [error, setError]       = useState("");
   const [toast, setToast]       = useState({ show: false, text: "" });
 
-  const canAdd     = hasPermission(user, "add_data");
-  const canEdit    = hasPermission(user, "edit_data");
-  const canDelete  = hasPermission(user, "delete_data");
-  const canPublish = hasPermission(user, "publish_data");
+  const canAdd     = hasPermission(user, "create_content");
+  const canEdit    = hasPermission(user, "edit_content");
+  const canDelete  = hasPermission(user, "delete_content");
+  const canPublish = hasPermission(user, "publish_content");
 
   const showNoPerm = (action) => setToast({ show: true, text: `You do not have permission to ${action}.` });
 

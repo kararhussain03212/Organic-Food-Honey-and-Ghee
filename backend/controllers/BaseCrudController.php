@@ -61,6 +61,7 @@ abstract class BaseCrudController extends BaseController
 
     public function store(array $params = []): void
     {
+        $this->requirePermission('create_content');
         $model = new $this->modelClass();
         $payload = Validator::sanitizeInput($this->body());
 
@@ -82,6 +83,7 @@ abstract class BaseCrudController extends BaseController
 
     public function update(array $params): void
     {
+        $this->requirePermission('edit_content');
         $id = (int) ($params['id'] ?? 0);
         if ($id <= 0) {
             Response::error('Invalid resource ID', 422);
@@ -111,6 +113,7 @@ abstract class BaseCrudController extends BaseController
 
     public function destroy(array $params): void
     {
+        $this->requirePermission('delete_content');
         $id = (int) ($params['id'] ?? 0);
         if ($id <= 0) {
             Response::error('Invalid resource ID', 422);
@@ -130,6 +133,7 @@ abstract class BaseCrudController extends BaseController
 
     public function reorder(array $params = []): void
     {
+        $this->requirePermission('edit_content');
         $body = $this->body();
         $items = $body['items'] ?? $body;
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AuthContext from "./authContext";
 import { changePasswordApi, loginApi, meApi, updateProfileApi } from "../api/authApi";
 
@@ -391,6 +391,14 @@ export function AuthProvider({ children }) {
     throw new Error("Delete account endpoint is not available in this backend yet.");
   };
 
+  const can = useCallback((permission) => {
+    if (!user) return false;
+    if (String(user.status || "active").toLowerCase() === "inactive") return false;
+    if (normalizeRole(user.role) === "admin") return true;
+    const permissions = Array.isArray(user.permissions) ? user.permissions : [];
+    return permissions.includes(permission);
+  }, [user]);
+
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(AUTH_USER_KEY);
@@ -408,6 +416,7 @@ export function AuthProvider({ children }) {
         users,
         login,
         logout,
+        can,
         createUser,
         deleteUser,
         updateProfile,

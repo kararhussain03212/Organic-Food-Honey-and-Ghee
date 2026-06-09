@@ -30,7 +30,22 @@ import ProblemCardForm from "./pages/about/ProblemCardForm";
 import CoreValueList from "./pages/about/CoreValueList";
 import CoreValueForm from "./pages/about/CoreValueForm";
 import { useAuth } from "./context/useAuth";
-import { normalizeUserRole } from "./modules/users/constants";
+
+function Forbidden403() {
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 px-4 text-center">
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-500/15 text-4xl">
+        🔒
+      </div>
+      <div>
+        <h1 className="text-3xl font-bold text-white">403 — Forbidden</h1>
+        <p className="mt-2 max-w-sm text-white/60">
+          You don't have permission to access this page. Contact your administrator to request access.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function ProtectedPage({ children }) {
   return (
@@ -40,12 +55,15 @@ function ProtectedPage({ children }) {
   );
 }
 
-function AdminOnlyPage({ children }) {
-  const { user } = useAuth();
-  const isAdmin = normalizeUserRole(user?.role) === "admin";
-
-  if (!isAdmin) return <Navigate to="/dashboard" replace />;
-
+function PermissionPage({ permission, children }) {
+  const { can } = useAuth();
+  if (!can(permission)) {
+    return (
+      <ProtectedPage>
+        <Forbidden403 />
+      </ProtectedPage>
+    );
+  }
   return <>{children}</>;
 }
 
@@ -424,11 +442,11 @@ export default function App() {
           <Route
             path="/users"
             element={
-              <ProtectedPage>
-                <AdminOnlyPage>
+              <PermissionPage permission="manage_users">
+                <ProtectedPage>
                   <UserManagement />
-                </AdminOnlyPage>
-              </ProtectedPage>
+                </ProtectedPage>
+              </PermissionPage>
             }
           />
 

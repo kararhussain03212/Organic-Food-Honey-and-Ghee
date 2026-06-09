@@ -37,17 +37,31 @@ final class AuthMiddleware
         }
 
         self::$currentAdmin = [
-            'id' => (int) ($payload['sub'] ?? 0),
-            'email' => (string) ($payload['email'] ?? ''),
-            'name' => (string) ($payload['name'] ?? ''),
-            'role' => (string) ($payload['role'] ?? 'editor'),
-            'csrf' => (string) ($payload['csrf'] ?? ''),
+            'id'          => (int) ($payload['sub'] ?? 0),
+            'email'       => (string) ($payload['email'] ?? ''),
+            'name'        => (string) ($payload['name'] ?? ''),
+            'role'        => (string) ($payload['role'] ?? 'editor'),
+            'status'      => (string) ($payload['status'] ?? 'active'),
+            'permissions' => \is_array($payload['permissions'] ?? null) ? $payload['permissions'] : [],
+            'csrf'        => (string) ($payload['csrf'] ?? ''),
         ];
     }
 
     public static function user(): ?array
     {
         return self::$currentAdmin;
+    }
+
+    public static function can(string $permission): bool
+    {
+        $admin = self::$currentAdmin;
+        if (!$admin) {
+            return false;
+        }
+        if ((string) ($admin['role'] ?? '') === 'admin') {
+            return true;
+        }
+        return \in_array($permission, (array) ($admin['permissions'] ?? []), true);
     }
 
     private static function resolveAuthorizationHeader(): string

@@ -33,6 +33,7 @@ final class SettingController extends BaseController
 
     public function update(array $params = []): void
     {
+        $this->requirePermission('edit_content');
         $payload = $this->body();
         if (!is_array($payload) || $payload === []) {
             Response::error('Settings payload is required', 422);

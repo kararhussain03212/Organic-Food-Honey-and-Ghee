@@ -14,6 +14,20 @@ import { getSettings, parseJsonField } from "../api/apiClient";
 
 const DELIVERY_KEY = "delivery_location";
 
+const SOCIAL_ICON_MAP = {
+  instagram: <FiInstagram />,
+  facebook:  <FaFacebookSquare />,
+  youtube:   <IoLogoYoutube />,
+  tiktok:    <AiFillTikTok />,
+};
+
+const DEFAULT_SOCIAL_LINKS = [
+  { label: "Instagram", url: "https://www.instagram.com/ssarionorganicfood/", icon: "instagram" },
+  { label: "Facebook",  url: "https://www.facebook.com/SSgeneraltradinguae",  icon: "facebook"  },
+  { label: "YouTube",   url: "https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw", icon: "youtube" },
+  { label: "TikTok",   url: "https://www.tiktok.com/@ssarionorganicfood",    icon: "tiktok"    },
+];
+
 const DEFAULT_NAV_ITEMS = [
   { label: "Home", path: "/" },
   { label: "About", path: "/about" },
@@ -55,6 +69,18 @@ const Navbar = () => {
     const parsed = parseJsonField(settings.nav_links, []);
     return parsed.length > 0 ? parsed : DEFAULT_NAV_ITEMS;
   }, [settings.nav_links]);
+
+  const socialLinks = useMemo(() => {
+    const parsed = parseJsonField(settings.footer_social_links, []);
+    if (parsed.length > 0) return parsed;
+    // fall back to individual contact settings
+    const fallback = [];
+    if (settings.contact_instagram) fallback.push({ label: "Instagram", url: settings.contact_instagram, icon: "instagram" });
+    if (settings.contact_facebook)  fallback.push({ label: "Facebook",  url: settings.contact_facebook,  icon: "facebook"  });
+    if (settings.contact_youtube)   fallback.push({ label: "YouTube",   url: settings.contact_youtube,   icon: "youtube"   });
+    if (settings.contact_tiktok)    fallback.push({ label: "TikTok",    url: settings.contact_tiktok,    icon: "tiktok"    });
+    return fallback.length > 0 ? fallback : DEFAULT_SOCIAL_LINKS;
+  }, [settings.footer_social_links, settings.contact_instagram, settings.contact_facebook, settings.contact_youtube, settings.contact_tiktok]);
 
   const saved = loadSaved();
   const [firstName, setFirstName] = useState(saved.firstName || "");
@@ -239,6 +265,13 @@ const Navbar = () => {
             <div className="info-item info-right">
               <span className="info-text">{welcomeText}</span>
             </div>
+            <div className="info-socials">
+              {socialLinks.map((link) => (
+                <a key={link.icon} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={link.label || link.icon} className="info-social-link">
+                  {SOCIAL_ICON_MAP[link.icon] ?? null}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -294,10 +327,11 @@ const Navbar = () => {
         </div>
 
         <div className="mobile-socials" aria-label="Social links">
-          <a href="https://www.instagram.com/ssarionorganicfood/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FiInstagram /></a>
-          <a href="https://www.facebook.com/SSgeneraltradinguae" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FaFacebookSquare /></a>
-          <a href="https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><IoLogoYoutube /></a>
-          <a href="https://www.tiktok.com/@ssarionorganicfood" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><AiFillTikTok /></a>
+          {socialLinks.map((link) => (
+            <a key={link.icon} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={link.label || link.icon}>
+              {SOCIAL_ICON_MAP[link.icon] ?? null}
+            </a>
+          ))}
         </div>
       </div>
 

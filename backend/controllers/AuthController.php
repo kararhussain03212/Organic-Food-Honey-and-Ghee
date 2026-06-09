@@ -48,16 +48,18 @@ final class AuthController extends BaseController
         }
 
         if (($admin['status'] ?? 'active') !== 'active') {
-            Response::error('Admin account is inactive', 403);
+            Response::error('Your account has been deactivated. Please contact the administrator.', 403);
         }
 
         $csrfToken = bin2hex(random_bytes(24));
         $token = Jwt::encode([
-            'sub' => (int) $admin['id'],
-            'email' => (string) $admin['email'],
-            'name' => (string) $admin['name'],
-            'role' => (string) ($admin['role'] ?? 'editor'),
-            'csrf' => $csrfToken,
+            'sub'         => (int) $admin['id'],
+            'email'       => (string) $admin['email'],
+            'name'        => (string) $admin['name'],
+            'role'        => (string) ($admin['role'] ?? 'editor'),
+            'status'      => (string) ($admin['status'] ?? 'active'),
+            'permissions' => $this->parsePermissions($admin['permissions_json'] ?? null),
+            'csrf'        => $csrfToken,
         ]);
 
         $pdo = Database::connection();
@@ -112,6 +114,9 @@ final class AuthController extends BaseController
 
     private function parsePermissions($value): array
     {
+        if (is_array($value)) {
+            return array_values(array_filter(array_map(static fn ($item) => trim((string) $item), $value)));
+        }
         if (!is_string($value) || trim($value) === '') return [];
         $decoded = json_decode($value, true);
         if (!is_array($decoded)) return [];

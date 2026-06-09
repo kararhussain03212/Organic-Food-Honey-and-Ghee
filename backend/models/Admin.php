@@ -9,7 +9,7 @@ require_once __DIR__ . '/BaseModel.php';
 final class Admin extends BaseModel
 {
     protected string $table = 'admins';
-    protected array $fillable = ['name', 'email', 'password_hash', 'role', 'status', 'designation', 'phone', 'location', 'bio', 'profile_photo', 'permissions_json', 'last_login_at'];
+    protected array $fillable = ['name', 'email', 'password', 'role', 'status', 'designation', 'phone', 'location', 'bio', 'profile_photo', 'permissions_json', 'last_login_at'];
 
     public function findByLogin(string $login): ?array
     {

@@ -10,6 +10,13 @@ require_once __DIR__ . '/../middleware/auth.php';
 
 abstract class BaseController
 {
+    protected function requirePermission(string $permission): void
+    {
+        if (!AuthMiddleware::can($permission)) {
+            Response::error('You do not have permission to perform this action.', 403);
+        }
+    }
+
     protected function body(): array
     {
         $contentType = $_SERVER['CONTENT_TYPE'] ?? '';

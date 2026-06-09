@@ -1,23 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  /* Dark theme matching new yellow logo */
-  --admin-bg: #121212;
-  --admin-bg-deep: #0a0a0a;
-  --admin-sidebar: #171717;
-  --admin-sidebar-hover: #262626;
-  --admin-card: #171717;
-  --admin-card-elevated: #262626;
-  --admin-ink: #ffffff;
-  --admin-muted: rgba(255,255,255,0.6);
-  --admin-primary: #ffc107;
-  --admin-primary-strong: #e0a800;
-  --admin-amber: #ffc107;
-  --admin-accent: #ffc107;
-  --admin-accent-strong: #e0a800;
-  --admin-border: rgba(255,255,255,0.1);
-  --admin-border-amber: rgba(255,193,7,0.3);
+  font-family: "Source Sans 3", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  /* Arion Organic — dark panel, vibrant brand palette */
+  --admin-bg:             #0a0f0b;
+  --admin-bg-deep:        #060908;
+  --admin-sidebar:        #0d1410;
+  --admin-sidebar-hover:  #182419;
+  --admin-card:           #111a13;
+  --admin-card-elevated:  #182419;
+  --admin-ink:            #ffffff;
+  --admin-muted:          rgba(255,255,255,0.52);
+  /* Primary = vivid leaf green (readable on dark bg) */
+  --admin-primary:        #5cb96a;
+  --admin-primary-strong: #48a356;
+  --admin-primary-light:  rgba(92,185,106,0.14);
+  /* Accent = warm vibrant gold */
+  --admin-amber:          #e0b85c;
+  --admin-accent:         #e0b85c;
+  --admin-accent-strong:  #c99e40;
+  /* Borders */
+  --admin-border:         rgba(255,255,255,0.08);
+  --admin-border-amber:   rgba(224,184,92,0.38);
+  /* Brand green (dark, for gradients/backgrounds) */
+  --brand-green:          #496348;
+  --brand-green-deep:     #2e4030;
 }
 
 *,

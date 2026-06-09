@@ -128,8 +128,7 @@ const textFieldConfig = [
   { key: "home_collection_subtext",          section: "home.company" },
   { key: "home_collection_btn_text",         section: "home.company" },
   { key: "home_collection_btn_link",         section: "home.company" },
-  { key: "home_company_heading",      section: "home.company" },
-  { key: "home_company_subtext",      section: "home.company" },
+
   // Home — Commitment section heading
   { key: "home_commitment_eyebrow",         section: "home.commitment" },
   { key: "home_commitment_heading",         section: "home.commitment" },
@@ -150,13 +149,6 @@ const textFieldConfig = [
   { key: "home_cta_btn2_text",      section: "home.authentic" },
   { key: "home_cta_btn2_link",      section: "home.authentic" },
   { key: "home_cta_badge_text",     section: "home.authentic" },
-  // Home — Blog
-  { key: "home_blog_heading",         section: "home.blog" },
-  { key: "home_blog_subtext",         section: "home.blog" },
-  { key: "cta_title",                 section: "home.authentic" },
-  { key: "cta_subtitle",              section: "home.authentic" },
-  { key: "cta_button_text",           section: "home.authentic" },
-  { key: "cta_button_link",           section: "home.authentic" },
   // Navbar/Footer (Arion)
   { key: "navbar_logo",               section: "navbar" },
   { key: "footer_brand_title",        section: "footer" },
@@ -682,10 +674,22 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
       await updateSettings(payload);
       setSuccess("Settings saved successfully.");
 
-      // Reload settings to ensure form matches database
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      // Refetch settings from database to verify save
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const res = await getSettings();
+      const rows = Array.isArray(res?.data?.data) ? res.data.data : [];
+      const next = createEmptyTextForm();
+
+      rows.forEach((row) => {
+        const key = String(row?.setting_key || "").trim();
+        if (Object.prototype.hasOwnProperty.call(next, key)) {
+          const sv = row?.setting_value;
+          const rawValue = Array.isArray(sv) ? "" : decodeHtmlEntities(sv ?? "");
+          next[key] = String(rawValue);
+        }
+      });
+
+      setForm(next);
     } catch (err) {
       console.error(err);
       setError(err?.response?.data?.message || "Failed to save settings.");

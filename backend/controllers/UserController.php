@@ -29,13 +29,9 @@ final class UserController extends BaseController
 
     private function ensureAdminOnly(): array
     {
+        $this->requirePermission('manage_users');
         $currentUser = $this->currentAdmin();
-        $role = strtolower((string) ($currentUser['role'] ?? ''));
-        if ($role !== 'admin') {
-            Response::error('Forbidden. Admin access required.', 403);
-        }
-
-        return $currentUser;
+        return $currentUser ?? [];
     }
 
     public function index(array $params = []): void
@@ -141,7 +137,7 @@ final class UserController extends BaseController
         $id = $model->create([
             'name' => $name,
             'email' => $email,
-            'password_hash' => password_hash($password, PASSWORD_BCRYPT),
+            'password' => password_hash($password, PASSWORD_BCRYPT),
             'role' => $role,
             'status' => $status,
             'designation' => $designation,
@@ -206,7 +202,7 @@ final class UserController extends BaseController
                 if (strlen($password) < 6) {
                     Response::error('Password must be at least 6 characters.', 422);
                 }
-                $update['password_hash'] = password_hash($password, PASSWORD_BCRYPT);
+                $update['password'] = password_hash($password, PASSWORD_BCRYPT);
             }
         }
 
@@ -309,6 +305,9 @@ final class UserController extends BaseController
 
     private function parsePermissions($value): array
     {
+        if (is_array($value)) {
+            return array_values(array_filter(array_map(static fn ($item) => trim((string) $item), $value)));
+        }
         if (!is_string($value) || trim($value) === '') return [];
         $decoded = json_decode($value, true);
         if (!is_array($decoded)) return [];

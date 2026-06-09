@@ -10,9 +10,15 @@ export default function ProductPageSettingsSection({ onDataLoaded, onDataChange 
 
   useEffect(() => {
     getProductPageSettings().then((res) => {
-      if (res?.data) {
-        setSettings(res.data);
-        if (onDataLoaded) onDataLoaded("product_page", res.data);
+      const data = res?.data?.data ?? res?.data ?? {};
+      if (data && typeof data === "object" && !Array.isArray(data)) {
+        const normalized = {
+          badge_text: data.badge_text || "",
+          title:      data.title      || "",
+          subtitle:   data.subtitle   || "",
+        };
+        setSettings(normalized);
+        if (onDataLoaded) onDataLoaded("product_page", normalized);
       }
     });
   }, [onDataLoaded]);

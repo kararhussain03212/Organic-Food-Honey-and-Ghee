@@ -591,6 +591,30 @@ html {
 .info-left{
   display: flex;
   gap: 10rem;
+  align-items: center;
+}
+
+.info-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-social-link {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--forest);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.info-social-link:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
 }
 
 .info-item {
