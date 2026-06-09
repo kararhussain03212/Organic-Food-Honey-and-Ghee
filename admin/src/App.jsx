@@ -12,6 +12,7 @@ import SliderForm from "./pages/slider/SliderForm";
 import CommitmentItemList from "./pages/commitment/CommitmentItemList";
 import CommitmentItemForm from "./pages/commitment/CommitmentItemForm";
 import SiteSettings from "./pages/settings/SiteSettings";
+import ProductPageSettings from "./pages/settings/ProductPageSettings";
 import TestimonialList from "./pages/testimonial/TestimonialList";
 import TestimonialForm from "./pages/testimonial/TestimonialForm";
 import BlogList from "./pages/blog/BlogList";
@@ -297,7 +298,7 @@ export default function App() {
             path="/settings/product"
             element={
               <ProtectedPage>
-                <SiteSettings forcedMainSection="product" />
+                <ProductPageSettings />
               </ProtectedPage>
             }
           />

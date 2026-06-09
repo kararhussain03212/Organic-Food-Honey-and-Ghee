@@ -1,10 +1,16 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getProducts } from "../api/apiClient";
+import { getProducts, getProductPage } from "../api/apiClient";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
 
 const PRODUCTS_PER_PAGE = 9;
+
+const DEFAULT_PRODUCT_PAGE = {
+  badge_text: "✦ Arion Organics",
+  title: "Our Products",
+  subtitle: "Pure, traditional, and naturally sourced wellness essentials for your everyday life.",
+};
 
 /* ─── Product Card ──────────────────────────────── */
 function ProductCard({ product }) {
@@ -95,11 +101,17 @@ export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [productPageSettings, setProductPageSettings] = useState(DEFAULT_PRODUCT_PAGE);
 
   useEffect(() => {
     getProducts().then((data) => {
       setAllProducts(Array.isArray(data) ? data : []);
       setLoading(false);
+    });
+    getProductPage().then((data) => {
+      if (data && Object.keys(data).length > 0) {
+        setProductPageSettings(data);
+      }
     });
   }, []);
 
@@ -157,13 +169,12 @@ export default function Products() {
       <section className="prl-hero">
         <div className="prl-container">
           <div className="prl-hero-text">
-            <div className="prl-eyebrow">✦ Arion Organics</div>
+            <div className="prl-eyebrow">{productPageSettings.badge_text}</div>
             <h1 className="prl-hero-title">
-              Our <span className="prl-accent">Products</span>
+              {productPageSettings.title.split(' ').slice(0, -1).join(' ')} <span className="prl-accent">{productPageSettings.title.split(' ').pop()}</span>
             </h1>
             <p className="prl-hero-sub">
-              Pure, traditional, and naturally sourced wellness essentials for
-              your everyday life.
+              {productPageSettings.subtitle}
             </p>
           </div>
           {searchQuery && (

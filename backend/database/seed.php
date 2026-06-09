@@ -229,6 +229,17 @@ run($pdo, "
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ", 'Create table: contact_messages', $log, $errors);
 
+run($pdo, "
+    CREATE TABLE IF NOT EXISTS `product_page_settings` (
+        `id`            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        `badge_text`    VARCHAR(255) DEFAULT NULL,
+        `title`         VARCHAR(255) DEFAULT NULL,
+        `subtitle`      TEXT DEFAULT NULL,
+        `created_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updated_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+", 'Create table: product_page_settings', $log, $errors);
+
 // ═════════════════════════════════════════════════════════════════════════════
 // 3. SEED: admin
 // ═════════════════════════════════════════════════════════════════════════════
@@ -242,7 +253,8 @@ run($pdo, "
 // ═════════════════════════════════════════════════════════════════════════════
 $settings = [
     // Navbar
-    'navbar_logo'             => 'Arion Organic Food',
+    'navbar_logo'             => 'https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=200&auto=format&fit=crop',
+    'nav_logo'                => 'https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=200&auto=format&fit=crop',
     'navbar_brand_title'      => 'Arion Organic Food',
     'navbar_brand_subtitle'   => 'Organic Foods',
     'navbar_phone'            => '+92 333 8399480',
@@ -252,6 +264,9 @@ $settings = [
     'whatsapp_number'         => '923338399480',
 
     // Footer
+    'footer_logo'             => 'https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=200&auto=format&fit=crop',
+    'footer_brand_title'      => 'Arion Organic Food',
+    'footer_brand_subtitle'   => 'Pure & Organic',
     'footer_about_text'       => 'Premium organic products including Desi Ghee, Honey, and Shilajit — sourced naturally.',
     'footer_phone'            => '+92 333 8399480',
     'footer_email'            => 'info@arionorganic.com',
@@ -261,6 +276,9 @@ $settings = [
     'footer_social_youtube'   => 'https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing',
     'footer_social_tiktok'    => 'https://www.tiktok.com/@ssarionorganicfood',
     'footer_copyright'        => '© 2026 Arion Organic Food · All rights reserved',
+    'footer_timings_heading'  => 'Working Hours',
+    'footer_timings_days'     => 'Monday - Saturday',
+    'footer_timings_time'     => '9:00 AM - 6:00 PM',
     'footer_links'            => '[{"label":"Terms & Conditions","path":"/terms-and-conditions"},{"label":"Privacy Policy","path":"/privacy-policy"},{"label":"Return Policy","path":"/return-policy"},{"label":"Shipping Policy","path":"/online-order-policy"},{"label":"Certification","path":"/certification"}]',
     'footer_social_links'     => '[{"label":"Facebook","url":"https://www.facebook.com/SSgeneraltradinguae","icon":"facebook"},{"label":"Instagram","url":"https://www.instagram.com/ssarionorganicfood/","icon":"instagram"},{"label":"YouTube","url":"https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing","icon":"youtube"},{"label":"TikTok","url":"https://www.tiktok.com/@ssarionorganicfood","icon":"tiktok"}]',
 
@@ -350,7 +368,7 @@ $products = [
         'price' => 1000.00, 'original_price' => 1200.00, 'discount' => 16,
         'rating' => 4.9, 'reviews' => 92, 'stock' => 1, 'featured' => 0,
         'variants' => '["5g"]', 'variant_prices' => '{"5g":1000}', 'variant_original_prices' => '{"5g":1200}',
-        'images' => '["/product-images/shilajit 5g.png"]', 'badges' => '["Trial Size","Pure Product"]',
+        'images' => '["https://images.unsplash.com/photo-1587854692152-cbe660dbde0f?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Trial Size","Pure Product"]',
         'short_desc' => 'Pure, high-altitude gold-grade mineral resin. Perfect trial size for beginners.',
         'description' => 'Sourced from pristine Himalayan mountain ranges, our 5gm Shilajit jar offers premium quality. An excellent choice for individuals looking to experience the profound cellular energy and recovery benefits of ancient organic minerals.',
         'benefits' => '["Supplies trace ionic minerals to counteract everyday physical exhaustion.","Improves your body\'s natural resilience against environmental stressors.","Authentic resin form ensuring zero fillers, binding powders, or synthetic shortcuts."]',
@@ -366,7 +384,7 @@ $products = [
         'price' => 2000.00, 'original_price' => 2100.00, 'discount' => 5,
         'rating' => 5.0, 'reviews' => 184, 'stock' => 1, 'featured' => 1,
         'variants' => '["10g"]', 'variant_prices' => '{"10g":2000}', 'variant_original_prices' => '{"10g":2100}',
-        'images' => '["/product-images/shilajit 10g.png"]', 'badges' => '["Gold Grade","Organic"]',
+        'images' => '["https://images.unsplash.com/photo-1587854692152-cbe660dbde0f?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Gold Grade","Organic"]',
         'short_desc' => 'Pure, gold-grade mineral resin sourced from high-altitude Himalayan peaks, rich in Fulvic acid.',
         'description' => 'Our Pure Himalayan Shilajit resin is meticulously purified to eliminate impurities while keeping its complex trace mineral profile intact.',
         'benefits' => '["Extremely rich in Fulvic Acid and over 85 essential trace ionic minerals.","Accelerates natural energy levels, cellular ATP production, and daily stamina.","Supports robust immune response, joint health, and sharp mental clarity."]',
@@ -382,7 +400,7 @@ $products = [
         'price' => 2000.00, 'original_price' => 2250.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 248, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g"]', 'variant_prices' => '{"500g":2000}', 'variant_original_prices' => '{"500g":2250}',
-        'images' => '["/product-images/cow-ghee-500g.png"]', 'badges' => '["Best Seller","Organic"]',
+        'images' => '["https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Best Seller","Organic"]',
         'short_desc' => "High-quality Desi Ghee made from 100% carefully selected cow's milk.",
         'description' => "We use 100% cow's milk to make our Desi Ghee, very carefully chosen to suit our requirements and fulfill hygiene standards.",
         'benefits' => '["Helps increase bile production.","Improve insulin resistance by normalizing blood sugars.","Decrease inflammation.","Increase energy.","Omega 3 Fatty Acids (Healthy Fats).","Vitamin A, D, E and K (Fat-soluble vitamins)."]',
@@ -398,7 +416,7 @@ $products = [
         'price' => 4000.00, 'original_price' => 4500.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 182, 'stock' => 1, 'featured' => 0,
         'variants' => '["1kg"]', 'variant_prices' => '{"1kg":4000}', 'variant_original_prices' => '{"1kg":4500}',
-        'images' => '["/product-images/ghee-cow-1kg.png"]', 'badges' => '["Pure"]',
+        'images' => '["https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Pure"]',
         'short_desc' => "High-quality Desi Ghee made from 100% carefully selected cow's milk.",
         'description' => "We use 100% cow's milk to make our Desi Ghee, very carefully chosen to suit our requirements and fulfill hygiene standards.",
         'benefits' => '["Helps increase bile production.","Improve insulin resistance by normalizing blood sugars.","Decrease inflammation.","Omega 3 Fatty Acids (Healthy Fats).","Vitamin A, D, E and K (Fat-soluble vitamins)."]',
@@ -414,7 +432,7 @@ $products = [
         'price' => 3500.00, 'original_price' => 3750.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 312, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g"]', 'variant_prices' => '{"500g":3500}', 'variant_original_prices' => '{"500g":3750}',
-        'images' => '["/product-images/honey 500 g.png","/product-images/honey.png"]', 'badges' => '["Best Seller","Pure"]',
+        'images' => '["https://images.unsplash.com/photo-1587854692152-cbe660dbde0f?q=80&w=800&auto=format&fit=crop","https://images.unsplash.com/photo-1618164436241-4473940571cd?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Best Seller","Pure"]',
         'short_desc' => 'Cold-extracted, unfiltered raw honey taken directly from natural hives.',
         'description' => 'This honey is extracted by honeybees that collect nectar from flowers, making it naturally rich in vitamins, especially Vitamin C.',
         'benefits' => '["Loaded with natural antioxidants with anti-inflammatory and immune boosting properties.","Contains healthy minerals including zinc, boron, manganese, magnesium, calcium, and selenium.","Has healing properties for minor wound and burn treatment.","Contains antibacterial properties, soothes sore throat and treats cough.","Can help regulate blood sugar levels due to a low glycemic index."]',
@@ -430,7 +448,7 @@ $products = [
         'price' => 7000.00, 'original_price' => 7500.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 167, 'stock' => 1, 'featured' => 0,
         'variants' => '["1kg"]', 'variant_prices' => '{"1kg":7000}', 'variant_original_prices' => '{"1kg":7500}',
-        'images' => '["/product-images/honey-1kg.png"]', 'badges' => '["Organic"]',
+        'images' => '["https://images.unsplash.com/photo-1618164436241-4473940571cd?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Organic"]',
         'short_desc' => 'Cold-extracted, unfiltered raw honey taken directly from natural hives.',
         'description' => 'This honey is extracted by honeybees that collect nectar from flowers, making it naturally rich in vitamins, especially Vitamin C.',
         'benefits' => '["Loaded with natural antioxidants with anti-inflammatory, anti-allergy, and immune-boosting properties.","Contains antibacterial properties that help fight pathogens, soothe sore throat, and treat cough.","Can help regulate blood sugar levels due to a low glycemic index profile."]',
@@ -446,7 +464,7 @@ $products = [
         'price' => 3000.00, 'original_price' => 3250.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 131, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g"]', 'variant_prices' => '{"500g":3000}', 'variant_original_prices' => '{"500g":3250}',
-        'images' => '["/product-images/goat-ghee-500g.png"]', 'badges' => '["Best Seller","Organic"]',
+        'images' => '["https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Best Seller","Organic"]',
         'short_desc' => 'Traditional clarified butter made from goat milk for rich flavor and aroma.',
         'description' => 'Our Pure Desi Goat Ghee is prepared in small batches using traditional methods for rich aroma, taste, and nutritional quality.',
         'benefits' => '["Naturally rich taste and aroma","Supports everyday cooking","Traditional small-batch quality"]',
@@ -462,7 +480,7 @@ $products = [
         'price' => 6000.00, 'original_price' => 6500.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 96, 'stock' => 1, 'featured' => 0,
         'variants' => '["1kg"]', 'variant_prices' => '{"1kg":6000}', 'variant_original_prices' => '{"1kg":6500}',
-        'images' => '["/product-images/ghee-goat-1kg.png"]', 'badges' => '["Pure"]',
+        'images' => '["https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Pure"]',
         'short_desc' => 'Family-size goat ghee with rich flavor and traditional quality.',
         'description' => 'Pure Desi Goat Ghee 1kg is ideal for regular home use with the same traditional quality and aroma.',
         'benefits' => '["Everyday cooking support","Naturally rich flavor","Premium traditional quality"]',
@@ -478,7 +496,7 @@ $products = [
         'price' => 1800.00, 'original_price' => 2050.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 142, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g","1kg"]', 'variant_prices' => '{"500g":1800,"1kg":3400}', 'variant_original_prices' => '{"500g":2050,"1kg":3900}',
-        'images' => '["/product-images/buffalo-ghee-500g.png"]', 'badges' => '["Premium Quality","Pure Desi"]',
+        'images' => '["https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Premium Quality","Pure Desi"]',
         'short_desc' => 'Arion premium creamy white clarified butter derived from healthy, grass-fed buffalo milk.',
         'description' => 'Our Arion Buffalo Desi Ghee is made using traditional methods to ensure an authentic taste and a thick, granular texture. It is 100% pure, free from harmful trans fats, chemicals, and hydrogenated oils.',
         'benefits' => '["Rich source of healthy Medium-Chain Triglycerides (MCTs) for immediate physical energy.","High smoke point (250°C), preventing the formation of dangerous free radicals during deep cooking.","Lubricates joints and deeply nourishes internal bodily tissues."]',
@@ -494,7 +512,7 @@ $products = [
         'price' => 3400.00, 'original_price' => 3900.00, 'discount' => 5,
         'rating' => 4.9, 'reviews' => 216, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g","1kg"]', 'variant_prices' => '{"500g":1800,"1kg":3400}', 'variant_original_prices' => '{"500g":2050,"1kg":3900}',
-        'images' => '["/product-images/ghee-buff-1kg.png"]', 'badges' => '["Best Value","100% Organic"]',
+        'images' => '["https://images.unsplash.com/photo-1599599810694-b5ac4dd37e1b?q=80&w=800&auto=format&fit=crop"]', 'badges' => '["Best Value","100% Organic"]',
         'short_desc' => 'Family-sized 1kg jar of Arion premium clarified butter. Slow-cooked from pure buffalo milk.',
         'description' => 'Our 1kg pack of Arion Buffalo Ghee is perfect for everyday cooking. Made using traditional methods, it keeps all its natural vitamins and healthy fats.',
         'benefits' => '["Provides sustained daily energy without causing rapid blood-glucose spikes.","Contains zero hydrogenated vegetable blends, chemical fillers, or artificial scent additives.","Slow-cooked in small batches to guarantee authentic, historic culinary quality."]',
@@ -613,6 +631,20 @@ run($pdo, "
         1, 1, NOW(), NOW()
     )
 ", 'Seed: 1 hero slide', $log, $errors);
+
+// ═════════════════════════════════════════════════════════════════════════════
+// 9. SEED: product page settings
+// ═════════════════════════════════════════════════════════════════════════════
+run($pdo, "
+    INSERT IGNORE INTO `product_page_settings`
+        (`badge_text`,`title`,`subtitle`,`created_at`,`updated_at`)
+    VALUES (
+        '✦ Arion Organics',
+        'Our Products',
+        'Pure, traditional, and naturally sourced wellness essentials for your everyday life.',
+        NOW(), NOW()
+    )
+", 'Seed: product page settings', $log, $errors);
 
 // ═════════════════════════════════════════════════════════════════════════════
 // Output

@@ -123,6 +123,15 @@ export async function getContactPage() {
   }
 }
 
+export async function getProductPage() {
+  try {
+    const result = await fetchApi("/api/public/product-page");
+    return result ?? {};
+  } catch {
+    return {};
+  }
+}
+
 export async function postContact(data) {
   return fetchApi("/api/public/contact", {
     method: "POST",

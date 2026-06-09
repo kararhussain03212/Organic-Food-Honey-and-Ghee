@@ -9,6 +9,7 @@ use Backend\Controllers\ContactController;
 use Backend\Controllers\DashboardController;
 use Backend\Controllers\HeroController;
 use Backend\Controllers\ProductController;
+use Backend\Controllers\ProductPageController;
 use Backend\Controllers\SettingController;
 use Backend\Controllers\TestimonialController;
 use Backend\Controllers\UploadController;
@@ -18,6 +19,7 @@ use Backend\Utils\Router;
 
 require_once __DIR__ . '/../controllers/HeroController.php';
 require_once __DIR__ . '/../controllers/ProductController.php';
+require_once __DIR__ . '/../controllers/ProductPageController.php';
 require_once __DIR__ . '/../controllers/TestimonialController.php';
 require_once __DIR__ . '/../controllers/CommitmentItemController.php';
 require_once __DIR__ . '/../controllers/BlogController.php';
@@ -51,6 +53,10 @@ function registerAdminRoutes(Router $router): void
     $router->put('/api/admin/products/{id}', [ProductController::class, 'update'], $mw);
     $router->delete('/api/admin/products/{id}', [ProductController::class, 'destroy'], $mw);
     $router->patch('/api/admin/products/reorder', [ProductController::class, 'reorder'], $mw);
+
+    // Product Page Settings (admin)
+    $router->get('/api/admin/product-page', [ProductPageController::class, 'index'], $mw);
+    $router->put('/api/admin/product-page', [ProductPageController::class, 'update'], $mw);
 
     // Testimonials
     $router->get('/api/admin/testimonials', [TestimonialController::class, 'index'], $mw);

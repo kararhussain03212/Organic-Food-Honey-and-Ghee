@@ -9,6 +9,8 @@ const ImageUpload = ({
   required = false,
 }) => {
   const [objectUrl, setObjectUrl] = useState("");
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const preview = objectUrl || value || "";
 
@@ -18,6 +20,13 @@ const ImageUpload = ({
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [objectUrl]);
+
+  // Log for debugging
+  useEffect(() => {
+    if (preview) {
+      console.log("ImageUpload preview URL:", preview);
+    }
+  }, [preview]);
 
   const handleChange = (event) => {
     const file = event.target.files?.[0];
@@ -52,12 +61,20 @@ const ImageUpload = ({
         className="mt-3 block w-full text-sm text-white file:mr-3 file:rounded-md file:border-0 file:bg-[var(--admin-primary)] file:px-3 file:py-2 file:text-black hover:file:bg-[var(--admin-primary-strong)]"
       />
 
-      {preview ? (
+      {preview && !imageError ? (
         <img
           src={preview}
           alt="Preview"
           className="mt-4 h-36 w-full rounded-lg object-cover"
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          style={{ display: imageLoaded ? "block" : "block" }}
         />
+      ) : null}
+      {imageError && preview ? (
+        <div className="mt-4 flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-red-500/50 bg-red-500/10 text-sm text-red-400">
+          Failed to load image: {preview.slice(0, 50)}...
+        </div>
       ) : null}
     </label>
   );

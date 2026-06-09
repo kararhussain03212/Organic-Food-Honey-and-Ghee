@@ -8,12 +8,14 @@ use Backend\Controllers\CommitmentItemController;
 use Backend\Controllers\ContactController;
 use Backend\Controllers\HeroController;
 use Backend\Controllers\ProductController;
+use Backend\Controllers\ProductPageController;
 use Backend\Controllers\SettingController;
 use Backend\Controllers\TestimonialController;
 use Backend\Utils\Router;
 
 require_once __DIR__ . '/../controllers/HeroController.php';
 require_once __DIR__ . '/../controllers/ProductController.php';
+require_once __DIR__ . '/../controllers/ProductPageController.php';
 require_once __DIR__ . '/../controllers/TestimonialController.php';
 require_once __DIR__ . '/../controllers/BlogController.php';
 require_once __DIR__ . '/../controllers/SettingController.php';
@@ -36,6 +38,7 @@ function registerPublicRoutes(Router $router): void
     $router->get('/api/public/settings', [SettingController::class, 'publicIndex']);
     $router->get('/api/public/contact-page',  [ContactController::class, 'publicContactPage']);
     $router->post('/api/public/contact', [ContactController::class, 'store']);
+    $router->get('/api/public/product-page', [ProductPageController::class, 'publicPage']);
 
     // About Us
     $router->get('/api/public/about/page',        [AboutController::class, 'publicPage']);
