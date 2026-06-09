@@ -191,13 +191,13 @@ export default function PurityPromise() {
           ))}
         </div>
 
-        {header.btnText && (
+        {/* {header.btnText && (
           <div className={`purity-cta-wrap ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.6s" }}>
             <a href={header.btnLink || "#"} className="story2-btn">
               {header.btnText}
             </a>
           </div>
-        )}
+        )} */}
       </div>
     </section>
   );

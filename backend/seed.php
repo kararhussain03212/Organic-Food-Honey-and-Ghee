@@ -551,37 +551,43 @@ foreach ($products as $p) {
 $log[] = "&#10003; Seed: {$productsOk}/10 products inserted (INSERT IGNORE)";
 
 // ═════════════════════════════════════════════════════════════════════════════
-// 6. SEED: testimonials (6)
+// 6. SEED: testimonials (6) — only insert if table is empty (never wipe admin data)
 // ═════════════════════════════════════════════════════════════════════════════
-$testimonials = [
-    ['name' => 'Ayesha Malik',     'role' => 'Mother of 3, Lahore',         'avatar' => '/avatar1.png', 'rating' => 5, 'sort_order' => 1, 'verified' => 1, 'product' => 'Pure Desi Ghee',      'quote' => "Since switching to Arion's ghee and honey, I've noticed a real difference in my family's health. The quality is unmistakable — you can literally taste the purity."],
-    ['name' => 'Bilal Chaudhry',  'role' => 'Nutritionist, Islamabad',     'avatar' => '/avatar2.png', 'rating' => 5, 'sort_order' => 2, 'verified' => 1, 'product' => 'Raw Honey 500g',      'quote' => "As a nutritionist, I'm very particular about what I recommend. Arion's products are genuinely chemical-free and traditionally sourced. I recommend them to all my clients without hesitation."],
-    ['name' => 'Sadia Hussain',   'role' => 'Wellness Coach, Karachi',     'avatar' => '/avatar3.png', 'rating' => 5, 'sort_order' => 3, 'verified' => 1, 'product' => 'Himalayan Shilajit',  'quote' => "The Shilajit quality is exceptional. I've tried several brands but nothing compares to the purity and potency of Arion's product. My energy levels have improved noticeably."],
-    ['name' => 'Usman Tariq',     'role' => 'Fitness Trainer, Rawalpindi', 'avatar' => '',             'rating' => 5, 'sort_order' => 4, 'verified' => 1, 'product' => 'Arion Cow Desi Ghee', 'quote' => "I switched my clients to Arion Cow Ghee for their cooking and the feedback has been amazing. Pure, clean flavor and absolutely no compromise on quality."],
-    ['name' => 'Fatima Zara',     'role' => 'Homemaker, Faisalabad',       'avatar' => '',             'rating' => 5, 'sort_order' => 5, 'verified' => 1, 'product' => 'Buffalo Desi Ghee',   'quote' => "The Buffalo Ghee reminds me of the ghee my grandmother used to make. That authentic desi aroma and thick, creamy texture — I haven't found anything like it in the market before."],
-    ['name' => 'Dr. Kamran Iqbal','role' => 'General Physician, Lahore',   'avatar' => '',             'rating' => 5, 'sort_order' => 6, 'verified' => 1, 'product' => 'Arion Honey 500g',    'quote' => "Medically, I've started recommending Arion's raw honey to patients for immune support and sore throat relief. It is genuinely unheated and unfiltered — which makes all the difference therapeutically."],
-];
+$existingTestimonials = (int) $pdo->query("SELECT COUNT(*) FROM `testimonials`")->fetchColumn();
 
-$testStmt = $pdo->prepare("
-    INSERT IGNORE INTO `testimonials`
-        (`name`,`role`,`avatar`,`rating`,`quote`,`product`,`verified`,`sort_order`,`is_active`,`created_at`,`updated_at`)
-    VALUES (:name,:role,:avatar,:rating,:quote,:product,:verified,:sort_order,1,NOW(),NOW())
-");
+if ($existingTestimonials === 0) {
+    $testimonials = [
+        ['name' => 'Ayesha Malik',     'role' => 'Mother of 3, Lahore',         'avatar' => '/avatar1.png', 'rating' => 5, 'sort_order' => 1, 'verified' => 1, 'product' => 'Pure Desi Ghee',      'quote' => "Since switching to Arion's ghee and honey, I've noticed a real difference in my family's health. The quality is unmistakable — you can literally taste the purity."],
+        ['name' => 'Bilal Chaudhry',  'role' => 'Nutritionist, Islamabad',     'avatar' => '/avatar2.png', 'rating' => 5, 'sort_order' => 2, 'verified' => 1, 'product' => 'Raw Honey 500g',      'quote' => "As a nutritionist, I'm very particular about what I recommend. Arion's products are genuinely chemical-free and traditionally sourced. I recommend them to all my clients without hesitation."],
+        ['name' => 'Sadia Hussain',   'role' => 'Wellness Coach, Karachi',     'avatar' => '/avatar3.png', 'rating' => 5, 'sort_order' => 3, 'verified' => 1, 'product' => 'Himalayan Shilajit',  'quote' => "The Shilajit quality is exceptional. I've tried several brands but nothing compares to the purity and potency of Arion's product. My energy levels have improved noticeably."],
+        ['name' => 'Usman Tariq',     'role' => 'Fitness Trainer, Rawalpindi', 'avatar' => '',             'rating' => 5, 'sort_order' => 4, 'verified' => 1, 'product' => 'Arion Cow Desi Ghee', 'quote' => "I switched my clients to Arion Cow Ghee for their cooking and the feedback has been amazing. Pure, clean flavor and absolutely no compromise on quality."],
+        ['name' => 'Fatima Zara',     'role' => 'Homemaker, Faisalabad',       'avatar' => '',             'rating' => 5, 'sort_order' => 5, 'verified' => 1, 'product' => 'Buffalo Desi Ghee',   'quote' => "The Buffalo Ghee reminds me of the ghee my grandmother used to make. That authentic desi aroma and thick, creamy texture — I haven't found anything like it in the market before."],
+        ['name' => 'Dr. Kamran Iqbal','role' => 'General Physician, Lahore',   'avatar' => '',             'rating' => 5, 'sort_order' => 6, 'verified' => 1, 'product' => 'Arion Honey 500g',    'quote' => "Medically, I've started recommending Arion's raw honey to patients for immune support and sore throat relief. It is genuinely unheated and unfiltered — which makes all the difference therapeutically."],
+    ];
 
-$testOk = 0;
-foreach ($testimonials as $t) {
-    try {
-        $testStmt->execute([
-            ':name' => $t['name'], ':role' => $t['role'], ':avatar' => $t['avatar'],
-            ':rating' => $t['rating'], ':quote' => $t['quote'], ':product' => $t['product'],
-            ':verified' => $t['verified'], ':sort_order' => $t['sort_order'],
-        ]);
-        $testOk++;
-    } catch (PDOException $e) {
-        $errors[] = "&#10007; Testimonial '{$t['name']}': " . htmlspecialchars($e->getMessage());
+    $testStmt = $pdo->prepare("
+        INSERT INTO `testimonials`
+            (`name`,`role`,`avatar`,`rating`,`quote`,`product`,`verified`,`sort_order`,`is_active`,`created_at`,`updated_at`)
+        VALUES (:name,:role,:avatar,:rating,:quote,:product,:verified,:sort_order,1,NOW(),NOW())
+    ");
+
+    $testOk = 0;
+    foreach ($testimonials as $t) {
+        try {
+            $testStmt->execute([
+                ':name' => $t['name'], ':role' => $t['role'], ':avatar' => $t['avatar'],
+                ':rating' => $t['rating'], ':quote' => $t['quote'], ':product' => $t['product'],
+                ':verified' => $t['verified'], ':sort_order' => $t['sort_order'],
+            ]);
+            $testOk++;
+        } catch (PDOException $e) {
+            $errors[] = "&#10007; Testimonial '{$t['name']}': " . htmlspecialchars($e->getMessage());
+        }
     }
+    $log[] = "&#10003; Seed: {$testOk}/6 testimonials inserted";
+} else {
+    $log[] = "&#10003; Testimonials already exist ({$existingTestimonials} rows) — skipping seed";
 }
-$log[] = "&#10003; Seed: {$testOk}/6 testimonials inserted (INSERT IGNORE)";
 
 // ═════════════════════════════════════════════════════════════════════════════
 // 7. SEED: blog post (1)

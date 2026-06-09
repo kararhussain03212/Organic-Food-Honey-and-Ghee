@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getBackendRoot } from "../api/runtimeApi";
 
 const VideoUpload = ({
   value = "",
@@ -11,8 +12,18 @@ const VideoUpload = ({
   const [objectUrl, setObjectUrl] = useState("");
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const apiRoot = useMemo(() => getBackendRoot(), []);
 
-  const preview = objectUrl || value || "";
+  const resolveVideoUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("blob:")) return url;
+    if (url.startsWith("http")) return url;
+    if (url.startsWith("/uploads/")) return apiRoot + url;
+    if (url.startsWith("/")) return url;
+    return `${apiRoot}/uploads/${url}`;
+  };
+
+  const preview = objectUrl || resolveVideoUrl(value) || "";
 
   useEffect(() => {
     return () => {

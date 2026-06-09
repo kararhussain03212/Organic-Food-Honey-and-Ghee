@@ -135,8 +135,6 @@ const textFieldConfig = [
   { key: "home_commitment_heading",         section: "home.commitment" },
   { key: "home_commitment_heading_accent",  section: "home.commitment" },
   { key: "home_commitment_subtext",         section: "home.commitment" },
-  { key: "home_commitment_btn_text",        section: "home.commitment" },
-  { key: "home_commitment_btn_link",        section: "home.commitment" },
   // Home — Testimonials / Customer Stories heading
   { key: "home_testimonials_eyebrow",          section: "home.testimonials" },
   { key: "home_testimonials_heading",          section: "home.testimonials" },
@@ -683,6 +681,11 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
 
       await updateSettings(payload);
       setSuccess("Settings saved successfully.");
+
+      // Reload settings to ensure form matches database
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (err) {
       console.error(err);
       setError(err?.response?.data?.message || "Failed to save settings.");

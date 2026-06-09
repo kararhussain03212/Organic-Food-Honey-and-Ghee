@@ -42,7 +42,7 @@ export default function NavbarSettingsSection({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-2 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-3 md:grid-cols-[280px_1fr] md:items-start">
+      {/* <div className="grid grid-cols-1 gap-2 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-3 md:grid-cols-[280px_1fr] md:items-start">
         <label className="pt-2 text-sm font-semibold text-[var(--admin-ink)]">Cart Icon</label>
         <div className="space-y-3">
           <ImageUpload
@@ -59,7 +59,7 @@ export default function NavbarSettingsSection({
             className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-sm text-[var(--admin-ink)] outline-none transition focus:border-[var(--admin-primary)]"
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="space-y-3 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">

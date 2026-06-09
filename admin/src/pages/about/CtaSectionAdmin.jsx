@@ -110,7 +110,7 @@ export default function CtaSectionAdmin() {
         </div>
 
         {/* Background */}
-        <div className={sectionCls}>
+        {/* <div className={sectionCls}>
           <h3 className="font-semibold text-white/90">Background Image</h3>
           <p className="text-xs text-white/40">Optional full-width background image for the CTA banner.</p>
           <ImageUpload
@@ -119,7 +119,7 @@ export default function CtaSectionAdmin() {
             label="Upload CTA Background"
             helperText="Recommended: 1920×600 or wider"
           />
-        </div>
+        </div> */}
 
         <div className="flex justify-end pt-2">
           <button type="submit" disabled={saving} className="rounded-lg bg-[var(--admin-primary)] px-6 py-2.5 font-semibold text-black hover:bg-[var(--admin-primary-strong)] disabled:opacity-60">

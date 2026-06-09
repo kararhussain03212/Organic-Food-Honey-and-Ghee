@@ -126,6 +126,30 @@ export default function ProductForm() {
     setField("variants", updated);
   };
 
+  const handleImageSelect = (file) => {
+    const blobUrl = URL.createObjectURL(file);
+    setForm((p) => ({
+      ...p,
+      images: [...p.images, blobUrl],
+      imageFiles: [...p.imageFiles, file],
+    }));
+  };
+
+  const handleRemoveImage = (i) => {
+    const url = form.images[i];
+    if (url.startsWith("blob:")) {
+      URL.revokeObjectURL(url);
+      const blobsBefore = form.images.slice(0, i).filter((u) => u.startsWith("blob:")).length;
+      setForm((p) => ({
+        ...p,
+        images: p.images.filter((_, j) => j !== i),
+        imageFiles: p.imageFiles.filter((_, j) => j !== blobsBefore),
+      }));
+    } else {
+      setField("images", form.images.filter((_, j) => j !== i));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -135,11 +159,17 @@ export default function ProductForm() {
     try {
       setSaving(true);
 
-      // Upload any new image files
-      const uploadedUrls = [...form.images.filter((u) => u && !form.imageFiles.length)];
-      for (const file of form.imageFiles) {
-        const url = await uploadImage(file, "products", "");
-        uploadedUrls.push(url);
+      // Upload new files; keep existing server URLs as-is
+      let fileIdx = 0;
+      const uploadedUrls = [];
+      for (const url of form.images) {
+        if (url.startsWith("blob:")) {
+          const serverUrl = await uploadImage(form.imageFiles[fileIdx++], "products", "");
+          uploadedUrls.push(serverUrl);
+          URL.revokeObjectURL(url);
+        } else {
+          uploadedUrls.push(url);
+        }
       }
 
       const variantArr = form.variants.filter((v) => v.trim());
@@ -299,22 +329,40 @@ export default function ProductForm() {
         {/* ── Images ── */}
         <div className={sectionCls}>
           <h3 className="font-semibold text-white/90">Product Images</h3>
-          {form.images.map((url, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <img src={url} alt="" className="h-16 w-16 rounded-lg object-cover" onError={(e) => { e.target.style.display = "none"; }} />
-              <span className="flex-1 truncate text-xs text-white/50">{url}</span>
-              <button type="button" onClick={() => setField("images", form.images.filter((_, j) => j !== i))} className="text-red-400 text-sm">✕</button>
+
+          {form.images.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {form.images.map((url, i) => (
+                <div key={i} className="group relative aspect-square overflow-hidden rounded-xl border border-white/10">
+                  <img
+                    src={url}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    onError={(e) => { e.target.style.display = "none"; }}
+                  />
+                  {url.startsWith("blob:") && (
+                    <span className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 text-center text-[10px] font-semibold text-amber-400">
+                      New — not saved yet
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(i)}
+                    className="absolute right-1.5 top-1.5 hidden h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white group-hover:flex"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
           <ImageUpload
             value=""
-            onFileSelect={(file) => setField("imageFiles", [...form.imageFiles, file])}
-            label="Upload Image"
-            helperText="Upload product images (one at a time)"
+            onFileSelect={handleImageSelect}
+            label="Upload Product Image"
+            helperText="PNG, JPG — upload one at a time, add as many as needed"
           />
-          {form.imageFiles.length > 0 && (
-            <p className="text-xs text-white/50">{form.imageFiles.length} new image(s) queued for upload.</p>
-          )}
         </div>
 
         {/* ── Badges ── */}

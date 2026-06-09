@@ -337,6 +337,20 @@ $settings = [
     'about_traditional' => '["Hand-selected raw materials","Traditional purification methods","Generational knowledge","Small-batch production"]',
     'about_modern'      => '["Modern hygiene standards","Lab quality testing","Hygienic packaging","Fast nationwide delivery"]',
 
+    // Home — commitment section
+    'home_commitment_eyebrow'        => 'Why Choose Arion',
+    'home_commitment_heading'        => 'Our Commitment to You',
+    'home_commitment_heading_accent' => 'Quality & Purity',
+    'home_commitment_subtext'        => 'We are dedicated to bringing you the finest organic products, sourced sustainably and tested for purity.',
+    'home_commitment_btn_text'       => 'Learn More',
+    'home_commitment_btn_link'       => '/about',
+
+    // Home — testimonials section
+    'home_testimonials_eyebrow'        => 'What Our Customers Say',
+    'home_testimonials_heading'        => 'Real Reviews from Real Customers',
+    'home_testimonials_heading_accent' => 'Trusted & Loved',
+    'home_testimonials_subtext'        => 'Join thousands of happy customers who have made Arion their trusted source for pure organic food.',
+
     // Product page
     'product_page_heading' => 'Our Products',
     'product_page_subtext' => 'Explore our full range of organic products.',
@@ -368,7 +382,7 @@ $products = [
         'price' => 1000.00, 'original_price' => 1200.00, 'discount' => 16,
         'rating' => 4.9, 'reviews' => 92, 'stock' => 1, 'featured' => 0,
         'variants' => '["5g"]', 'variant_prices' => '{"5g":1000}', 'variant_original_prices' => '{"5g":1200}',
-        'images' => '["/product-images/shilajit 5g.png"]', 'badges' => '["Trial Size","Pure Product"]',
+        'images' => '["/uploads/product-images/shilajit 5g.png"]', 'badges' => '["Trial Size","Pure Product"]',
         'short_desc' => 'Pure, high-altitude gold-grade mineral resin. Perfect trial size for beginners.',
         'description' => 'Sourced from pristine Himalayan mountain ranges, our 5gm Shilajit jar offers premium quality. An excellent choice for individuals looking to experience the profound cellular energy and recovery benefits of ancient organic minerals.',
         'benefits' => '["Supplies trace ionic minerals to counteract everyday physical exhaustion.","Improves your body\'s natural resilience against environmental stressors.","Authentic resin form ensuring zero fillers, binding powders, or synthetic shortcuts."]',
@@ -384,7 +398,7 @@ $products = [
         'price' => 2000.00, 'original_price' => 2100.00, 'discount' => 5,
         'rating' => 5.0, 'reviews' => 184, 'stock' => 1, 'featured' => 1,
         'variants' => '["10g"]', 'variant_prices' => '{"10g":2000}', 'variant_original_prices' => '{"10g":2100}',
-        'images' => '["/product-images/shilajit 10g.png"]', 'badges' => '["Gold Grade","Organic"]',
+        'images' => '["/uploads/product-images/shilajit 10g.png"]', 'badges' => '["Gold Grade","Organic"]',
         'short_desc' => 'Pure, gold-grade mineral resin sourced from high-altitude Himalayan peaks, rich in Fulvic acid.',
         'description' => 'Our Pure Himalayan Shilajit resin is meticulously purified to eliminate impurities while keeping its complex trace mineral profile intact.',
         'benefits' => '["Extremely rich in Fulvic Acid and over 85 essential trace ionic minerals.","Accelerates natural energy levels, cellular ATP production, and daily stamina.","Supports robust immune response, joint health, and sharp mental clarity."]',
@@ -400,7 +414,7 @@ $products = [
         'price' => 2000.00, 'original_price' => 2250.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 248, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g"]', 'variant_prices' => '{"500g":2000}', 'variant_original_prices' => '{"500g":2250}',
-        'images' => '["/product-images/cow-ghee-500g.png"]', 'badges' => '["Best Seller","Organic"]',
+        'images' => '["/uploads/product-images/cow-ghee-500g.png"]', 'badges' => '["Best Seller","Organic"]',
         'short_desc' => "High-quality Desi Ghee made from 100% carefully selected cow's milk.",
         'description' => "We use 100% cow's milk to make our Desi Ghee, very carefully chosen to suit our requirements and fulfill hygiene standards.",
         'benefits' => '["Helps increase bile production.","Improve insulin resistance by normalizing blood sugars.","Decrease inflammation.","Increase energy.","Omega 3 Fatty Acids (Healthy Fats).","Vitamin A, D, E and K (Fat-soluble vitamins)."]',
@@ -416,7 +430,7 @@ $products = [
         'price' => 4000.00, 'original_price' => 4500.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 182, 'stock' => 1, 'featured' => 0,
         'variants' => '["1kg"]', 'variant_prices' => '{"1kg":4000}', 'variant_original_prices' => '{"1kg":4500}',
-        'images' => '["/product-images/ghee-cow-1kg.png"]', 'badges' => '["Pure"]',
+        'images' => '["/uploads/product-images/ghee-cow-1kg.png"]', 'badges' => '["Pure"]',
         'short_desc' => "High-quality Desi Ghee made from 100% carefully selected cow's milk.",
         'description' => "We use 100% cow's milk to make our Desi Ghee, very carefully chosen to suit our requirements and fulfill hygiene standards.",
         'benefits' => '["Helps increase bile production.","Improve insulin resistance by normalizing blood sugars.","Decrease inflammation.","Omega 3 Fatty Acids (Healthy Fats).","Vitamin A, D, E and K (Fat-soluble vitamins)."]',
@@ -432,7 +446,7 @@ $products = [
         'price' => 3500.00, 'original_price' => 3750.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 312, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g"]', 'variant_prices' => '{"500g":3500}', 'variant_original_prices' => '{"500g":3750}',
-        'images' => '["/product-images/honey 500 g.png"]', 'badges' => '["Best Seller","Pure"]',
+        'images' => '["/uploads/product-images/honey 500 g.png"]', 'badges' => '["Best Seller","Pure"]',
         'short_desc' => 'Cold-extracted, unfiltered raw honey taken directly from natural hives.',
         'description' => 'This honey is extracted by honeybees that collect nectar from flowers, making it naturally rich in vitamins, especially Vitamin C.',
         'benefits' => '["Loaded with natural antioxidants with anti-inflammatory and immune boosting properties.","Contains healthy minerals including zinc, boron, manganese, magnesium, calcium, and selenium.","Has healing properties for minor wound and burn treatment.","Contains antibacterial properties, soothes sore throat and treats cough.","Can help regulate blood sugar levels due to a low glycemic index."]',
@@ -448,7 +462,7 @@ $products = [
         'price' => 7000.00, 'original_price' => 7500.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 167, 'stock' => 1, 'featured' => 0,
         'variants' => '["1kg"]', 'variant_prices' => '{"1kg":7000}', 'variant_original_prices' => '{"1kg":7500}',
-        'images' => '["/product-images/honey-1kg.png"]', 'badges' => '["Organic"]',
+        'images' => '["/uploads/product-images/honey-1kg.png"]', 'badges' => '["Organic"]',
         'short_desc' => 'Cold-extracted, unfiltered raw honey taken directly from natural hives.',
         'description' => 'This honey is extracted by honeybees that collect nectar from flowers, making it naturally rich in vitamins, especially Vitamin C.',
         'benefits' => '["Loaded with natural antioxidants with anti-inflammatory, anti-allergy, and immune-boosting properties.","Contains antibacterial properties that help fight pathogens, soothe sore throat, and treat cough.","Can help regulate blood sugar levels due to a low glycemic index profile."]',
@@ -464,7 +478,7 @@ $products = [
         'price' => 3000.00, 'original_price' => 3250.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 131, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g"]', 'variant_prices' => '{"500g":3000}', 'variant_original_prices' => '{"500g":3250}',
-        'images' => '["/product-images/goat-ghee-500g.png"]', 'badges' => '["Best Seller","Organic"]',
+        'images' => '["/uploads/product-images/goat-ghee-500g.png"]', 'badges' => '["Best Seller","Organic"]',
         'short_desc' => 'Traditional clarified butter made from goat milk for rich flavor and aroma.',
         'description' => 'Our Pure Desi Goat Ghee is prepared in small batches using traditional methods for rich aroma, taste, and nutritional quality.',
         'benefits' => '["Naturally rich taste and aroma","Supports everyday cooking","Traditional small-batch quality"]',
@@ -480,7 +494,7 @@ $products = [
         'price' => 6000.00, 'original_price' => 6500.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 96, 'stock' => 1, 'featured' => 0,
         'variants' => '["1kg"]', 'variant_prices' => '{"1kg":6000}', 'variant_original_prices' => '{"1kg":6500}',
-        'images' => '["/product-images/ghee-goat-1kg.png"]', 'badges' => '["Pure"]',
+        'images' => '["/uploads/product-images/ghee-goat-1kg.png"]', 'badges' => '["Pure"]',
         'short_desc' => 'Family-size goat ghee with rich flavor and traditional quality.',
         'description' => 'Pure Desi Goat Ghee 1kg is ideal for regular home use with the same traditional quality and aroma.',
         'benefits' => '["Everyday cooking support","Naturally rich flavor","Premium traditional quality"]',
@@ -496,7 +510,7 @@ $products = [
         'price' => 1800.00, 'original_price' => 2050.00, 'discount' => 0,
         'rating' => 5.0, 'reviews' => 142, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g","1kg"]', 'variant_prices' => '{"500g":1800,"1kg":3400}', 'variant_original_prices' => '{"500g":2050,"1kg":3900}',
-        'images' => '["/product-images/buffalo-ghee-500g.png"]', 'badges' => '["Premium Quality","Pure Desi"]',
+        'images' => '["/uploads/product-images/buffalo-ghee-500g.png"]', 'badges' => '["Premium Quality","Pure Desi"]',
         'short_desc' => 'Arion premium creamy white clarified butter derived from healthy, grass-fed buffalo milk.',
         'description' => 'Our Arion Buffalo Desi Ghee is made using traditional methods to ensure an authentic taste and a thick, granular texture. It is 100% pure, free from harmful trans fats, chemicals, and hydrogenated oils.',
         'benefits' => '["Rich source of healthy Medium-Chain Triglycerides (MCTs) for immediate physical energy.","High smoke point (250°C), preventing the formation of dangerous free radicals during deep cooking.","Lubricates joints and deeply nourishes internal bodily tissues."]',
@@ -512,7 +526,7 @@ $products = [
         'price' => 3400.00, 'original_price' => 3900.00, 'discount' => 5,
         'rating' => 4.9, 'reviews' => 216, 'stock' => 1, 'featured' => 1,
         'variants' => '["500g","1kg"]', 'variant_prices' => '{"500g":1800,"1kg":3400}', 'variant_original_prices' => '{"500g":2050,"1kg":3900}',
-        'images' => '["/product-images/ghee-buff-1kg.png"]', 'badges' => '["Best Value","100% Organic"]',
+        'images' => '["/uploads/product-images/ghee-buff-1kg.png"]', 'badges' => '["Best Value","100% Organic"]',
         'short_desc' => 'Family-sized 1kg jar of Arion premium clarified butter. Slow-cooked from pure buffalo milk.',
         'description' => 'Our 1kg pack of Arion Buffalo Ghee is perfect for everyday cooking. Made using traditional methods, it keeps all its natural vitamins and healthy fats.',
         'benefits' => '["Provides sustained daily energy without causing rapid blood-glucose spikes.","Contains zero hydrogenated vegetable blends, chemical fillers, or artificial scent additives.","Slow-cooked in small batches to guarantee authentic, historic culinary quality."]',
@@ -561,38 +575,67 @@ foreach ($products as $p) {
 }
 $log[] = "&#10003; Seed: {$productsOk}/10 products inserted (INSERT IGNORE)";
 
-// ═════════════════════════════════════════════════════════════════════════════
-// 6. SEED: testimonials (6)
-// ═════════════════════════════════════════════════════════════════════════════
-$testimonials = [
-    ['name' => 'Ayesha Malik',    'role' => 'Mother of 3, Lahore',        'avatar' => '/avatar1.png', 'rating' => 5, 'sort_order' => 1, 'verified' => 1, 'product' => 'Pure Desi Ghee',       'quote' => "Since switching to Arion's ghee and honey, I've noticed a real difference in my family's health. The quality is unmistakable — you can literally taste the purity. This is the real thing."],
-    ['name' => 'Bilal Chaudhry', 'role' => 'Nutritionist, Islamabad',    'avatar' => '/avatar2.png', 'rating' => 5, 'sort_order' => 2, 'verified' => 1, 'product' => 'Raw Honey 500g',       'quote' => "As a nutritionist, I'm very particular about what I recommend. Arion's products are genuinely chemical-free and traditionally sourced. I recommend them to all my clients without hesitation."],
-    ['name' => 'Sadia Hussain',  'role' => 'Wellness Coach, Karachi',    'avatar' => '/avatar3.png', 'rating' => 5, 'sort_order' => 3, 'verified' => 1, 'product' => 'Himalayan Shilajit',   'quote' => "The Shilajit quality is exceptional. I've tried several brands but nothing compares to the purity and potency of Arion's product. My energy levels have improved noticeably."],
-    ['name' => 'Usman Tariq',    'role' => 'Fitness Trainer, Rawalpindi','avatar' => '',             'rating' => 5, 'sort_order' => 4, 'verified' => 1, 'product' => 'Arion Cow Desi Ghee',  'quote' => "I switched my clients to Arion Cow Ghee for their cooking and the feedback has been amazing. Pure, clean flavor and absolutely no compromise on quality. Highly recommended for athletes."],
-    ['name' => 'Fatima Zara',    'role' => 'Homemaker, Faisalabad',      'avatar' => '',             'rating' => 5, 'sort_order' => 5, 'verified' => 1, 'product' => 'Buffalo Desi Ghee',    'quote' => "The Buffalo Ghee reminds me of the ghee my grandmother used to make. That authentic desi aroma and thick, creamy texture — I haven't found anything like it in the market before."],
-    ['name' => 'Dr. Kamran Iqbal','role' => 'General Physician, Lahore', 'avatar' => '',             'rating' => 5, 'sort_order' => 6, 'verified' => 1, 'product' => 'Arion Honey 500g',     'quote' => "Medically, I've started recommending Arion's raw honey to patients for immune support and sore throat relief. It is genuinely unheated and unfiltered — which makes all the difference therapeutically."],
+// ── Fix image paths in existing records (old path → uploads path) ────────────
+$imageUpdates = [
+    'pure-himalayan-shilajit-5gm'    => '["/uploads/product-images/shilajit 5g.png"]',
+    'pure-himalayan-shilajit-10gm'   => '["/uploads/product-images/shilajit 10g.png"]',
+    'arion-cow-desi-ghee-500gm'      => '["/uploads/product-images/cow-ghee-500g.png"]',
+    'arion-cow-desi-ghee-1kg'        => '["/uploads/product-images/ghee-cow-1kg.png"]',
+    'arion-honey-500gm'              => '["/uploads/product-images/honey 500 g.png"]',
+    'arion-honey-1kg'                => '["/uploads/product-images/honey-1kg.png"]',
+    'arion-goat-desi-ghee-500gm'     => '["/uploads/product-images/goat-ghee-500g.png"]',
+    'arion-goat-desi-ghee-1kg'       => '["/uploads/product-images/ghee-goat-1kg.png"]',
+    'arion-buffalo-desi-ghee-500gm'  => '["/uploads/product-images/buffalo-ghee-500g.png"]',
+    'arion-buffalo-desi-ghee-1kg'    => '["/uploads/product-images/ghee-buff-1kg.png"]',
 ];
-
-$testStmt = $pdo->prepare("
-    INSERT IGNORE INTO `testimonials`
-        (`name`,`role`,`avatar`,`rating`,`quote`,`product`,`verified`,`sort_order`,`is_active`,`created_at`,`updated_at`)
-    VALUES (:name,:role,:avatar,:rating,:quote,:product,:verified,:sort_order,1,NOW(),NOW())
-");
-
-$testOk = 0;
-foreach ($testimonials as $t) {
+$imgStmt = $pdo->prepare("UPDATE `products` SET `images` = :images WHERE `slug` = :slug");
+$imgUpdated = 0;
+foreach ($imageUpdates as $slug => $images) {
     try {
-        $testStmt->execute([
-            ':name' => $t['name'], ':role' => $t['role'], ':avatar' => $t['avatar'],
-            ':rating' => $t['rating'], ':quote' => $t['quote'], ':product' => $t['product'],
-            ':verified' => $t['verified'], ':sort_order' => $t['sort_order'],
-        ]);
-        $testOk++;
+        $imgStmt->execute([':images' => $images, ':slug' => $slug]);
+        $imgUpdated++;
     } catch (PDOException $e) {
-        $errors[] = "&#10007; Testimonial '{$t['name']}': " . htmlspecialchars($e->getMessage());
+        $errors[] = "&#10007; Image update '{$slug}': " . htmlspecialchars($e->getMessage());
     }
 }
-$log[] = "&#10003; Seed: {$testOk}/6 testimonials inserted (INSERT IGNORE)";
+$log[] = "&#10003; Updated images for {$imgUpdated}/10 existing products";
+
+// ═════════════════════════════════════════════════════════════════════════════
+// 6. SEED: testimonials (4) — only insert if table is empty (never wipe admin data)
+// ═════════════════════════════════════════════════════════════════════════════
+$existingTestimonials = (int) $pdo->query("SELECT COUNT(*) FROM `testimonials`")->fetchColumn();
+
+if ($existingTestimonials === 0) {
+    $testimonials = [
+        ['name' => 'Ayesha Malik',   'role' => 'Mother of 3, Lahore',         'avatar' => '/avatar1.png', 'rating' => 5, 'sort_order' => 1, 'verified' => 1, 'product' => 'Pure Desi Ghee',      'quote' => "Since switching to Arion's ghee and honey, I've noticed a real difference in my family's health. The quality is unmistakable — you can literally taste the purity. This is the real thing."],
+        ['name' => 'Bilal Chaudhry', 'role' => 'Nutritionist, Islamabad',     'avatar' => '/avatar2.png', 'rating' => 5, 'sort_order' => 2, 'verified' => 1, 'product' => 'Raw Honey 500g',      'quote' => "As a nutritionist, I'm very particular about what I recommend. Arion's products are genuinely chemical-free and traditionally sourced. I recommend them to all my clients without hesitation."],
+        ['name' => 'Sadia Hussain',  'role' => 'Wellness Coach, Karachi',     'avatar' => '/avatar3.png', 'rating' => 5, 'sort_order' => 3, 'verified' => 1, 'product' => 'Himalayan Shilajit',  'quote' => "The Shilajit quality is exceptional. I've tried several brands but nothing compares to the purity and potency of Arion's product. My energy levels have improved noticeably."],
+        ['name' => 'Usman Tariq',    'role' => 'Fitness Trainer, Rawalpindi', 'avatar' => '',             'rating' => 5, 'sort_order' => 4, 'verified' => 1, 'product' => 'Arion Cow Desi Ghee', 'quote' => "I switched my clients to Arion Cow Ghee for their cooking and the feedback has been amazing. Pure, clean flavor and absolutely no compromise on quality. Highly recommended for athletes."],
+    ];
+
+    $testStmt = $pdo->prepare("
+        INSERT INTO `testimonials`
+            (`name`,`role`,`avatar`,`rating`,`quote`,`product`,`verified`,`sort_order`,`is_active`,`created_at`,`updated_at`)
+        VALUES (:name,:role,:avatar,:rating,:quote,:product,:verified,:sort_order,1,NOW(),NOW())
+    ");
+
+    $testOk = 0;
+    foreach ($testimonials as $t) {
+        try {
+            $testStmt->execute([
+                ':name' => $t['name'], ':role' => $t['role'], ':avatar' => $t['avatar'],
+                ':rating' => $t['rating'], ':quote' => $t['quote'], ':product' => $t['product'],
+                ':verified' => $t['verified'], ':sort_order' => $t['sort_order'],
+            ]);
+            $testOk++;
+        } catch (PDOException $e) {
+            $errors[] = "&#10007; Testimonial '{$t['name']}': " . htmlspecialchars($e->getMessage());
+        }
+    }
+    $log[] = "&#10003; Seed: {$testOk}/4 testimonials inserted";
+} else {
+    $log[] = "&#10003; Testimonials already exist ({$existingTestimonials} rows) — skipping seed";
+}
 
 // ═════════════════════════════════════════════════════════════════════════════
 // 7. SEED: blog post (1)

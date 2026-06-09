@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getBackendRoot } from "../api/runtimeApi";
 
 const ImageUpload = ({
   value = "",
@@ -11,8 +12,18 @@ const ImageUpload = ({
   const [objectUrl, setObjectUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const apiRoot = useMemo(() => getBackendRoot(), []);
 
-  const preview = objectUrl || value || "";
+  const resolveImageUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("blob:")) return url;
+    if (url.startsWith("http")) return url;
+    if (url.startsWith("/uploads/")) return apiRoot + url;
+    if (url.startsWith("/")) return url;
+    return `${apiRoot}/uploads/${url}`;
+  };
+
+  const preview = objectUrl || resolveImageUrl(value) || "";
 
   // prevents memory leaks when user changes image many times
   useEffect(() => {

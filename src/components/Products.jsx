@@ -26,10 +26,17 @@ const DEFAULTS = {
   btnLink: "/products",
 };
 
+const apiRoot = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
+const resolveImage = (path) => {
+  if (!path) return null;
+  if (path.startsWith("/uploads/")) return apiRoot + path;
+  return path;
+};
+
 function ProductCard({ product }) {
   const navigate = useNavigate();
   const images = typeof product.images === "string" ? JSON.parse(product.images || "[]") : (product.images || []);
-  const productImage = images[0] || "/product-images/cow-ghee-500g.png";
+  const productImage = resolveImage(images[0]) || resolveImage("/uploads/product-images/cow-ghee-500g.png");
   const variants = typeof product.variants === "string" ? JSON.parse(product.variants || "[]") : (product.variants || []);
   const variant = variants[0] ?? product.subtitle;
   const variantPrices = typeof product.variant_prices === "string" ? JSON.parse(product.variant_prices || "{}") : (product.variantPrices || {});

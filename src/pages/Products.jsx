@@ -12,6 +12,13 @@ const DEFAULT_PRODUCT_PAGE = {
   subtitle: "Pure, traditional, and naturally sourced wellness essentials for your everyday life.",
 };
 
+const apiRoot = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
+const resolveImage = (path) => {
+  if (!path) return null;
+  if (path.startsWith("/uploads/")) return apiRoot + path;
+  return path;
+};
+
 /* ─── Product Card ──────────────────────────────── */
 function ProductCard({ product }) {
   const navigate = useNavigate();
@@ -46,7 +53,7 @@ function ProductCard({ product }) {
         style={{ cursor: "pointer" }}
         onClick={() => navigate(`/products/${product.slug}`)}
       >
-        <img src={images[0] || "/product-images/cow-ghee-500g.png"} alt={product.name} className="prc-img" loading="lazy" />
+        <img src={resolveImage(images[0]) || resolveImage("/uploads/product-images/cow-ghee-500g.png")} alt={product.name} className="prc-img" loading="lazy" />
         <div className="prc-img-overlay" />
       </div>
 

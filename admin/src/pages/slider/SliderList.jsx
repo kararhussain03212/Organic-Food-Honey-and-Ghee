@@ -65,6 +65,9 @@ export default function SliderList() {
     try {
       await deleteSlider(id);
       setSliders((prev) => prev.filter((item) => item.id !== id));
+      // Refetch list to ensure consistency with server
+      const res = await getSliders();
+      setSliders(Array.isArray(res.data?.data) ? res.data.data : []);
     } catch (err) {
       console.error(err);
       setError(err?.response?.data?.message || "Delete failed.");
