@@ -431,6 +431,48 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
             return;
           }
 
+          // Migrate old individual social settings to new format
+          if (key === "footer_social_facebook") {
+            if (!nextFooterSocialLinks.some(l => l.label === "facebook") && rawValue) {
+              nextFooterSocialLinks.push({
+                label: "facebook",
+                url: String(rawValue),
+                icon: "facebook",
+              });
+            }
+            return;
+          }
+          if (key === "footer_social_instagram") {
+            if (!nextFooterSocialLinks.some(l => l.label === "instagram") && rawValue) {
+              nextFooterSocialLinks.push({
+                label: "instagram",
+                url: String(rawValue),
+                icon: "instagram",
+              });
+            }
+            return;
+          }
+          if (key === "footer_social_youtube") {
+            if (!nextFooterSocialLinks.some(l => l.label === "youtube") && rawValue) {
+              nextFooterSocialLinks.push({
+                label: "youtube",
+                url: String(rawValue),
+                icon: "youtube",
+              });
+            }
+            return;
+          }
+          if (key === "footer_social_tiktok") {
+            if (!nextFooterSocialLinks.some(l => l.label === "tiktok") && rawValue) {
+              nextFooterSocialLinks.push({
+                label: "tiktok",
+                url: String(rawValue),
+                icon: "tiktok",
+              });
+            }
+            return;
+          }
+
           if (key === "about_page_properties") {
             const parsed = asArray(rawValue);
             const normalized = parsed.map((item) => String(item || "")).filter(Boolean);

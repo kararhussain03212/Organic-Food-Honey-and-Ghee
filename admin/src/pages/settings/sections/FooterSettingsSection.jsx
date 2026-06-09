@@ -13,7 +13,10 @@ export default function FooterSettingsSection({
   footerSocialLinks,
   setFooterSocialLinks,
 }) {
-  const filteredFieldKeys = fieldKeys.filter((key) => key !== "footer_logo_alt");
+  const filteredFieldKeys = fieldKeys.filter((key) =>
+    key !== "footer_logo_alt" &&
+    !key.startsWith("footer_social_")
+  );
 
   return (
     <>

@@ -38,7 +38,7 @@ export default function Dashboard() {
     { title: "Products",         value: counts.products,        link: "/products",         cta: "Open Products"    },
     { title: "Testimonials",     value: counts.testimonials,    link: "/testimonials",     cta: "Open Testimonials"},
     { title: "Blog Posts",       value: counts.blog,            link: "/blogs",            cta: "Open Blog"        },
-    { title: "Unread Messages",  value: counts.contact_unread,  link: "/contact-messages", cta: "View Messages"    },
+    // { title: "Unread Messages",  value: counts.contact_unread,  link: "/contact-messages", cta: "View Messages"    },
   ];
 
   const quickActions = [

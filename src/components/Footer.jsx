@@ -1,6 +1,6 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { getSettings } from "../api/apiClient";
+import { getSettings, parseJsonField } from "../api/apiClient";
 import { footerContent as staticFooter } from "../data/siteContent";
 import { FiInstagram } from "react-icons/fi";
 import { FaFacebookSquare } from "react-icons/fa";
@@ -8,6 +8,13 @@ import { AiFillTikTok } from "react-icons/ai";
 import { IoLogoYoutube } from "react-icons/io5";
 
 const STATIC_LINKS = staticFooter.timings.links;
+
+const ICON_MAP = {
+  instagram: FiInstagram,
+  facebook: FaFacebookSquare,
+  tiktok: AiFillTikTok,
+  youtube: IoLogoYoutube,
+};
 
 const Footer = () => {
   const [s, setS] = useState(null);
@@ -26,10 +33,21 @@ const Footer = () => {
   const address      = s?.footer_address   || staticFooter.contact.items[2]?.value || "";
   const copyright    = s?.footer_copyright || staticFooter.bottom;
 
-  const fbUrl  = s?.footer_social_facebook  || "https://www.facebook.com/SSgeneraltradinguae";
-  const igUrl  = s?.footer_social_instagram || "https://www.instagram.com/ssarionorganicfood/";
-  const ytUrl  = s?.footer_social_youtube   || "https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing";
-  const tkUrl  = s?.footer_social_tiktok    || "https://www.tiktok.com/@ssarionorganicfood";
+  const footerLinks = useMemo(() => {
+    const parsed = parseJsonField(s?.footer_links, []);
+    return parsed.length > 0 ? parsed : STATIC_LINKS;
+  }, [s?.footer_links]);
+
+  const socialLinks = useMemo(() => {
+    const parsed = parseJsonField(s?.footer_social_links, []);
+    if (parsed.length > 0) return parsed;
+    return [
+      { label: "instagram", url: "https://www.instagram.com/ssarionorganicfood/", icon: "instagram" },
+      { label: "facebook", url: "https://www.facebook.com/SSgeneraltradinguae", icon: "facebook" },
+      { label: "youtube", url: "https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing", icon: "youtube" },
+      { label: "tiktok", url: "https://www.tiktok.com/@ssarionorganicfood", icon: "tiktok" },
+    ];
+  }, [s?.footer_social_links]);
 
   return (
     <footer className="site-footer">
@@ -51,10 +69,20 @@ const Footer = () => {
           {address && <p><strong>Address:</strong> {address}</p>}
           <p className="follow-label">Follow Us:</p>
           <div className="socials" aria-label="Social links">
-            <a href={igUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FiInstagram /></a>
-            <a href={fbUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FaFacebookSquare /></a>
-            <a href={ytUrl} target="_blank" rel="noopener noreferrer" aria-label="YouTube"><IoLogoYoutube /></a>
-            <a href={tkUrl} target="_blank" rel="noopener noreferrer" aria-label="TikTok"><AiFillTikTok /></a>
+            {socialLinks.map((link) => {
+              const IconComponent = ICON_MAP[link.icon] || FiInstagram;
+              return (
+                <a
+                  key={link.label}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                >
+                  <IconComponent />
+                </a>
+              );
+            })}
           </div>
         </div>
 
@@ -70,9 +98,22 @@ const Footer = () => {
 
         <div className="footer-poli">
           <div className="footer-links">
-            {STATIC_LINKS.map((link) => (
-              <Link to={link.path} key={link.label}>{link.label}</Link>
-            ))}
+            {footerLinks.map((link) => {
+              const isExternal = link.path?.startsWith("http://") || link.path?.startsWith("https://");
+              const target = link.target || "_self";
+              return isExternal ? (
+                <a
+                  key={link.label}
+                  href={link.path}
+                  target={target}
+                  rel={target === "_blank" ? "noopener noreferrer" : ""}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link to={link.path} key={link.label}>{link.label}</Link>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -36,7 +36,7 @@ const navItems = [
   { path: "/settings/home-blog",         label: "Home - Blog",         child: true, childGroup: "home" },
   { path: "/settings/product",  label: "Product Page" },
   { path: "/settings/blog",     label: "Blog Page" },
-  { path: "/settings/contact",  label: "Contact & WhatsApp" },
+  // { path: "/settings/contact",  label: "Contact & WhatsApp" },
 ];
 
 const pageTitleMap = {

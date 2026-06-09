@@ -172,9 +172,23 @@ const Navbar = () => {
         </Link>
 
         <nav className="nav-links desktop" aria-label="Main navigation">
-          {navItems.map((item) => (
-            <Link className="nav-link" to={item.path} key={item.label}>{item.label}</Link>
-          ))}
+          {navItems.map((item) => {
+            const isExternal = item.path?.startsWith("http://") || item.path?.startsWith("https://");
+            const target = item.target || "_self";
+            return isExternal ? (
+              <a
+                key={item.label}
+                className="nav-link"
+                href={item.path}
+                target={target}
+                rel={target === "_blank" ? "noopener noreferrer" : ""}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link className="nav-link" to={item.path} key={item.label}>{item.label}</Link>
+            );
+          })}
         </nav>
 
         <div className="nav-actions">
@@ -246,11 +260,26 @@ const Navbar = () => {
         </div>
 
         <nav className="nav-links mobile" aria-label="Mobile navigation">
-          {navItems.map((item) => (
-            <Link className="nav-link" to={item.path} key={`mob-${item.label}`} onClick={() => setIsOpen(false)}>
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isExternal = item.path?.startsWith("http://") || item.path?.startsWith("https://");
+            const target = item.target || "_self";
+            return isExternal ? (
+              <a
+                key={`mob-${item.label}`}
+                className="nav-link"
+                href={item.path}
+                target={target}
+                rel={target === "_blank" ? "noopener noreferrer" : ""}
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link className="nav-link" to={item.path} key={`mob-${item.label}`} onClick={() => setIsOpen(false)}>
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="mobile-contact">
