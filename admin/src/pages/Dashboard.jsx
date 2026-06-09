@@ -9,7 +9,7 @@ const QUICK = [
   { label: "New Hero Slide",   to: "/sliders/new",       icon: "pi-images",      color: "#e0b85c" },
   { label: "New Blog Post",    to: "/blogs/new",         icon: "pi-file-edit",   color: "#5cb96a" },
   { label: "New Testimonial",  to: "/testimonials/new",  icon: "pi-comments",    color: "#e0b85c" },
-  { label: "Contact Messages", to: "/contact-messages",  icon: "pi-envelope",    color: "#5cb96a" },
+  // { label: "Contact Messages", to: "/contact-messages",  icon: "pi-envelope",    color: "#5cb96a" },
   { label: "Site Settings",    to: "/settings/navbar",   icon: "pi-cog",         color: "#e0b85c" },
 ];
 
@@ -18,7 +18,7 @@ const STAT_META = [
   { key: "products",       label: "Products",      to: "/products",        icon: "pi-box",      glow: "rgba(224,184,92,0.18)"  },
   { key: "testimonials",   label: "Testimonials",  to: "/testimonials",    icon: "pi-comments", glow: "rgba(92,185,106,0.18)"  },
   { key: "blog",           label: "Blog Posts",    to: "/blogs",           icon: "pi-file-edit",glow: "rgba(224,184,92,0.18)"  },
-  { key: "contact_unread", label: "Unread Msgs",   to: "/contact-messages",icon: "pi-envelope", glow: "rgba(92,185,106,0.18)"  },
+  // { key: "contact_unread", label: "Unread Msgs",   to: "/contact-messages",icon: "pi-envelope", glow: "rgba(92,185,106,0.18)"  },
 ];
 
 function StatCard({ meta, value, loading }) {
@@ -119,7 +119,7 @@ export default function Dashboard() {
               {[
                 { label: "Products",     val: counts.products,     icon: "pi-box"      },
                 { label: "Blog Posts",   val: counts.blog,         icon: "pi-file-edit" },
-                { label: "Unread",       val: counts.contact_unread, icon: "pi-envelope" },
+                // { label: "Unread",       val: counts.contact_unread, icon: "pi-envelope" },
               ].map(({ label, val, icon }) => (
                 <div key={label} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 backdrop-blur-sm">
                   <span className={`pi ${icon} text-sm text-[var(--admin-accent)]`} />

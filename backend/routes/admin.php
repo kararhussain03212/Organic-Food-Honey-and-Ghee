@@ -6,6 +6,7 @@ use Backend\Controllers\AboutController;
 use Backend\Controllers\BlogController;
 use Backend\Controllers\CommitmentItemController;
 use Backend\Controllers\ContactController;
+use Backend\Controllers\CustomerAddressController;
 use Backend\Controllers\DashboardController;
 use Backend\Controllers\HeroController;
 use Backend\Controllers\ProductController;
@@ -29,6 +30,7 @@ require_once __DIR__ . '/../controllers/UserController.php';
 require_once __DIR__ . '/../controllers/DashboardController.php';
 require_once __DIR__ . '/../controllers/ContactController.php';
 require_once __DIR__ . '/../controllers/AboutController.php';
+require_once __DIR__ . '/../controllers/CustomerAddressController.php';
 require_once __DIR__ . '/../middleware/auth.php';
 require_once __DIR__ . '/../utils/Router.php';
 
@@ -135,4 +137,9 @@ function registerAdminRoutes(Router $router): void
     $router->post('/api/admin/about/comparison-cards',        [AboutController::class, 'adminStoreComparisonCards'],  $mw);
     $router->put('/api/admin/about/comparison-cards/{id}',    [AboutController::class, 'adminUpdateComparisonCards'], $mw);
     $router->delete('/api/admin/about/comparison-cards/{id}', [AboutController::class, 'adminDeleteComparisonCards'], $mw);
+
+    // Customer Addresses (admin)
+    $router->get('/api/admin/customers', [CustomerAddressController::class, 'index'], $mw);
+    $router->get('/api/admin/customers/{id}', [CustomerAddressController::class, 'show'], $mw);
+    $router->delete('/api/admin/addresses/{id}', [CustomerAddressController::class, 'deleteAddress'], $mw);
 }

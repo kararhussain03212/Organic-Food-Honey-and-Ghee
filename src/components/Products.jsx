@@ -42,6 +42,10 @@ function ProductCard({ product }) {
   const variantPrices = typeof product.variant_prices === "string" ? JSON.parse(product.variant_prices || "{}") : (product.variantPrices || {});
   const price = variantPrices[variant] ?? product.price;
 
+  const discountPercentage = product.discount
+    ? Number(product.discount)
+    : (product.original_price ? Math.round(((product.original_price - product.price) / product.original_price) * 100) : null);
+
   const handleShopNow = () => {
     const message = `🛍️ *ORDER REQUEST*\n\n*Product:* ${product.name}\n*Variant:* ${variant}\n*Price:* Rs ${Number(price).toLocaleString()}`;
     window.dispatchEvent(new CustomEvent("shop:requestLocation", { detail: { message } }));
@@ -56,6 +60,11 @@ function ProductCard({ product }) {
       <div className="prod-img-wrap" style={{ cursor: "pointer" }} onClick={goToProduct}>
         <img src={productImage} alt={product.name} className="prod-img" />
         <div className="prod-badges">
+          {discountPercentage && (
+            <span className="prod-badge" style={{ background: "#C7A66B", color: "#fff" }}>
+              {discountPercentage}% OFF
+            </span>
+          )}
           {badges.slice(0, 2).map((b) => (
             <span key={b} className="prod-badge" style={badgeColors[b]}>{b}</span>
           ))}

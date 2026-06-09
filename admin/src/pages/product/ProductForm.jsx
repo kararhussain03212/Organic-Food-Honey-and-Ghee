@@ -115,6 +115,17 @@ export default function ProductForm() {
     })();
   }, [id, isEditMode, toImageUrl]);
 
+  // Auto-calculate discount percentage when price or original_price changes
+  useEffect(() => {
+    const price = Number(form.price || 0);
+    const originalPrice = Number(form.original_price || 0);
+
+    if (price > 0 && originalPrice > price) {
+      const calculatedDiscount = Math.round(((originalPrice - price) / originalPrice) * 100);
+      setField("discount", String(calculatedDiscount));
+    }
+  }, [form.price, form.original_price]);
+
   const handleNameChange = (val) => {
     setField("name", val);
     if (!isEditMode || !form.slug) setField("slug", slugify(val));

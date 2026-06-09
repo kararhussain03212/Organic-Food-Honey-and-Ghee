@@ -10,8 +10,26 @@ const EMPTY = {
   form_title: "", name_placeholder: "", email_placeholder: "", phone_placeholder: "",
   subject_placeholder: "", message_placeholder: "", submit_button_text: "",
   availability_text: "", contact_heading: "", contact_description: "",
-  whatsapp_number: "", phone_number: "", email: "", address: "", google_map_url: "",
+  whatsapp_number: "", phone_number: "", email: "",
+  locations: [{ address: "", google_map_url: "" }],
   facebook_url: "", instagram_url: "", youtube_url: "", tiktok_url: "",
+};
+
+const parseLocations = (locStr) => {
+  if (!locStr) return [{ address: "", google_map_url: "" }];
+  if (Array.isArray(locStr)) {
+    return locStr.length > 0 ? locStr : [{ address: "", google_map_url: "" }];
+  }
+  try {
+    const parsed = JSON.parse(locStr);
+    return Array.isArray(parsed) ? parsed : [{ address: "", google_map_url: "" }];
+  } catch {
+    return [{ address: locStr, google_map_url: "" }];
+  }
+};
+
+const stringifyLocations = (locations) => {
+  return JSON.stringify(locations.filter((l) => l.address || l.google_map_url));
 };
 
 export default function ContactPageSettings() {
@@ -43,8 +61,7 @@ export default function ContactPageSettings() {
           whatsapp_number:      d.whatsapp_number      || "",
           phone_number:         d.phone_number         || "",
           email:                d.email                || "",
-          address:              d.address              || "",
-          google_map_url:       d.google_map_url       || "",
+          locations:            parseLocations(d.locations || d.address),
           facebook_url:         d.facebook_url         || "",
           instagram_url:        d.instagram_url        || "",
           youtube_url:          d.youtube_url          || "",
@@ -68,7 +85,11 @@ export default function ContactPageSettings() {
     setError("");
     setSaving(true);
     try {
-      await updateContactPageSettings(form);
+      const dataToSave = {
+        ...form,
+        locations: stringifyLocations(form.locations),
+      };
+      await updateContactPageSettings(dataToSave);
       setToast("Contact page settings saved!");
     } catch {
       setError("Save failed. Please try again.");
@@ -181,12 +202,57 @@ export default function ContactPageSettings() {
             </div>
           </div>
           <div>
-            <label className={labelCls}>Address</label>
-            <textarea rows={2} className={inputCls} value={form.address} onChange={(e) => setField("address", e.target.value)} placeholder="Office 22, 4th Floor, Pakland City Center…" />
-          </div>
-          <div>
-            <label className={labelCls}>Google Maps URL</label>
-            <input className={inputCls} value={form.google_map_url} onChange={(e) => setField("google_map_url", e.target.value)} placeholder="https://maps.google.com/…" />
+            <div className="mb-3 flex items-center justify-between">
+              <label className="font-semibold text-white/90">Locations / Addresses</label>
+              <button
+                type="button"
+                onClick={() => setField("locations", [...form.locations, { address: "", google_map_url: "" }])}
+                className="rounded-lg bg-[var(--admin-primary)] px-3 py-1.5 text-sm font-semibold text-black hover:bg-[var(--admin-primary-strong)]"
+              >
+                + Add Location
+              </button>
+            </div>
+            <div className="space-y-4">
+              {form.locations.map((location, index) => (
+                <div key={`location-${index}`} className="rounded-lg border border-white/10 bg-[var(--admin-card)] p-3 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-white/70">Location {index + 1}</span>
+                    {form.locations.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => setField("locations", form.locations.filter((_, i) => i !== index))}
+                        className="rounded-lg border border-red-500 bg-red-500/10 px-2.5 py-1 text-xs font-medium text-red-400 hover:bg-red-500/20"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <div>
+                    <label className={labelCls}>Address</label>
+                    <textarea
+                      rows={2}
+                      className={inputCls}
+                      value={location.address}
+                      onChange={(e) =>
+                        setField("locations", form.locations.map((loc, i) => (i === index ? { ...loc, address: e.target.value } : loc)))
+                      }
+                      placeholder="Office 22, 4th Floor, Pakland City Center…"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Google Maps URL</label>
+                    <input
+                      className={inputCls}
+                      value={location.google_map_url}
+                      onChange={(e) =>
+                        setField("locations", form.locations.map((loc, i) => (i === index ? { ...loc, google_map_url: e.target.value } : loc)))
+                      }
+                      placeholder="https://maps.google.com/…"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

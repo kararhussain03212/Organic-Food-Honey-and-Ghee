@@ -178,6 +178,29 @@ CREATE TABLE IF NOT EXISTS `contact_messages` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ------------------------------------------------------------
+-- addresses (customer addresses)
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `addresses` (
+  `id`              INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `user_id`         INT UNSIGNED NOT NULL,
+  `label`           VARCHAR(120) DEFAULT NULL,
+  `first_name`      VARCHAR(120) NOT NULL,
+  `last_name`       VARCHAR(120) DEFAULT NULL,
+  `phone`           VARCHAR(30) NOT NULL,
+  `email`           VARCHAR(180) DEFAULT NULL,
+  `street_address`  VARCHAR(255) NOT NULL,
+  `apartment`       VARCHAR(120) DEFAULT NULL,
+  `city`            VARCHAR(120) NOT NULL,
+  `state`           VARCHAR(120) DEFAULT NULL,
+  `postal_code`     VARCHAR(20) DEFAULT NULL,
+  `country`         VARCHAR(120) NOT NULL,
+  `is_default`      TINYINT(1) NOT NULL DEFAULT 0,
+  `created_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ============================================================
 -- Settings seed — all keys used by frontend & admin
 -- ============================================================
@@ -512,6 +535,7 @@ CREATE TABLE IF NOT EXISTS `contact_page_settings` (
   `email`                VARCHAR(255)  DEFAULT NULL,
   `address`              TEXT          DEFAULT NULL,
   `google_map_url`       TEXT          DEFAULT NULL,
+  `locations`            JSON          DEFAULT NULL,
   `facebook_url`         VARCHAR(500)  DEFAULT NULL,
   `instagram_url`        VARCHAR(500)  DEFAULT NULL,
   `youtube_url`          VARCHAR(500)  DEFAULT NULL,

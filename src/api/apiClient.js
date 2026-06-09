@@ -146,3 +146,41 @@ export function parseJsonField(value, fallback = []) {
   }
   return fallback;
 }
+
+// Address API
+export async function getAddresses() {
+  try {
+    const result = await fetchApi("/api/addresses");
+    return Array.isArray(result) ? result : (result?.data ?? []);
+  } catch {
+    return [];
+  }
+}
+
+export async function getAddress(id) {
+  try {
+    return await fetchApi(`/api/addresses/${id}`);
+  } catch {
+    return null;
+  }
+}
+
+export async function createAddress(data) {
+  return fetchApi("/api/addresses", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateAddress(id, data) {
+  return fetchApi(`/api/addresses/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteAddress(id) {
+  return fetchApi(`/api/addresses/${id}`, {
+    method: "DELETE",
+  });
+}

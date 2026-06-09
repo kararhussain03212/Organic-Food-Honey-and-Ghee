@@ -178,12 +178,21 @@ function InfoCard({ settings }) {
   const address     = settings.address      || STATIC.address;
   const whatsapp    = settings.whatsapp_number || STATIC.whatsapp_number;
   const phone       = settings.phone_number || STATIC.phone_number;
-  const mapsUrl     = settings.google_map_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   const gmailUrl    = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
   const waNumber    = whatsapp.replace(/\D/g, "");
   const availability = settings.availability_text || STATIC.availability_text;
   const heading     = settings.contact_heading    || STATIC.contact_heading;
   const description = settings.contact_description || STATIC.contact_description;
+
+  const locations = useMemo(() => {
+    if (settings.locations && Array.isArray(settings.locations) && settings.locations.length > 0) {
+      return settings.locations.filter(loc => loc.address || loc.google_map_url);
+    }
+    if (address || settings.google_map_url) {
+      return [{ address, google_map_url: settings.google_map_url || "" }];
+    }
+    return [];
+  }, [settings, address]);
 
   const socials = useMemo(() => {
     const list = [];
@@ -257,19 +266,24 @@ function InfoCard({ settings }) {
           </div>
         </div>
 
-        {/* Address */}
-        <div className="cu-info-item">
-          <div className="cu-info-item-icon cu-info-item-icon--sage">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-          </div>
-          <div className="cu-info-item-body">
-            <span className="cu-info-item-label">Address</span>
-            <a className="cu-info-item-value cu-info-item-link" href={mapsUrl} target="_blank" rel="noopener noreferrer">{address}</a>
-          </div>
-        </div>
+        {/* Addresses */}
+        {locations.map((loc, idx) => {
+          const mapsUrl = loc.google_map_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`;
+          return (
+            <div key={idx} className="cu-info-item">
+              <div className="cu-info-item-icon cu-info-item-icon--sage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <div className="cu-info-item-body">
+                <span className="cu-info-item-label">{locations.length > 1 ? `Address ${idx + 1}` : "Address"}</span>
+                <a className="cu-info-item-value cu-info-item-link" href={mapsUrl} target="_blank" rel="noopener noreferrer">{loc.address}</a>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <div className="cu-info-divider" />

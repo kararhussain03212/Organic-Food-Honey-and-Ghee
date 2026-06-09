@@ -15,6 +15,6 @@ final class ContactPageSetting extends BaseModel
         'subject_placeholder', 'message_placeholder', 'submit_button_text',
         'availability_text', 'contact_heading', 'contact_description',
         'whatsapp_number', 'phone_number', 'email', 'address', 'google_map_url',
-        'facebook_url', 'instagram_url', 'youtube_url', 'tiktok_url',
+        'locations', 'facebook_url', 'instagram_url', 'youtube_url', 'tiktok_url',
     ];
 }

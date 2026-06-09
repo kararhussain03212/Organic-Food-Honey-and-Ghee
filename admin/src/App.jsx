@@ -29,6 +29,7 @@ import ProblemCardList from "./pages/about/ProblemCardList";
 import ProblemCardForm from "./pages/about/ProblemCardForm";
 import CoreValueList from "./pages/about/CoreValueList";
 import CoreValueForm from "./pages/about/CoreValueForm";
+import CustomerAddresses from "./pages/addresses/CustomerAddresses";
 import { useAuth } from "./context/useAuth";
 
 function Forbidden403() {
@@ -447,6 +448,15 @@ export default function App() {
                   <UserManagement />
                 </ProtectedPage>
               </PermissionPage>
+            }
+          />
+
+          <Route
+            path="/addresses"
+            element={
+              <ProtectedPage>
+                <CustomerAddresses />
+              </ProtectedPage>
             }
           />
 

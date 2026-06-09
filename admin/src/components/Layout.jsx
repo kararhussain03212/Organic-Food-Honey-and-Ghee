@@ -8,11 +8,11 @@ import { getSettings } from "../api/settingApi";
 const NAV = [
   { path: "/dashboard",         label: "Dashboard" },
   { path: "/users",             label: "User Management", adminOnly: true },
+  { path: "/addresses",         label: "Customer Addresses" },
   { path: "/sliders",           label: "Hero Slides" },
   { path: "/products",          label: "Products" },
   { path: "/blogs",             label: "Blogs" },
   { path: "/testimonials",      label: "Testimonials" },
-  { path: "/contact-messages",  label: "Contact Messages" },
   { path: "/settings/navbar",   label: "Navbar" },
   { path: "/settings/footer",   label: "Footer" },
   // About Us
@@ -64,6 +64,7 @@ const PAGE_TITLES = {
   "/settings/blog":                  "Blog Page Settings",
   "/profile":                        "Admin Profile",
   "/users":                          "User Management",
+  "/addresses":                      "Customer Addresses",
 };
 
 /* nav-link class helpers */
@@ -194,10 +195,10 @@ export default function Layout({ children }) {
             onClick={closeSidebar}
             className="group flex min-w-0 flex-1 items-center gap-3 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card)] px-3 py-2.5 transition-all hover:border-[var(--admin-border-amber)] hover:shadow-[0_0_16px_rgba(224,184,92,0.15)]"
           >
-            <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-green-deep)] shadow-[0_4px_14px_rgba(73,99,72,0.5)]">
+            <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[var(--brand-green)] to-[var(--brand-green-deep)] shadow-[0_4px_14px_rgba(73,99,72,0.5)]">
               <img
                 src="/public/logo/General trading white storke.png"
-                alt="Arion Organic"
+                alt="Swift Sign"
                 className="h-full w-full object-cover"
                 onError={(e) => { e.currentTarget.src = fallbackLogo; }}
               />
@@ -205,7 +206,7 @@ export default function Layout({ children }) {
             <div className="min-w-0">
               <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-[var(--admin-muted)]">Admin Panel</p>
               <p className="truncate text-sm font-bold text-white transition-colors group-hover:text-[var(--admin-accent)]">
-                Arion Organic
+                Swift Sign
               </p>
             </div>
           </Link>

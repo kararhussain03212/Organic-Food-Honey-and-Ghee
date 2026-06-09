@@ -1,0 +1,373 @@
+.user-addresses {
+  padding: 2rem 0;
+}
+
+.addresses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.addresses-header h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  color: #5B5248;
+  margin: 0;
+}
+
+.btn-add-address {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.5rem;
+  background: linear-gradient(120deg, #496348, #3a4e39);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.btn-add-address:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(73, 99, 72, 0.3);
+}
+
+.alert {
+  padding: 1rem 1.2rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.alert-error {
+  background: #fee;
+  color: #c0392b;
+  border: 1px solid #f5b3b1;
+}
+
+.alert-success {
+  background: #f1f8f2;
+  color: #27ae60;
+  border: 1px solid #d4edda;
+}
+
+/* Address Form */
+.address-form-container {
+  background: #f9f8f6;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e0d8ce;
+}
+
+.address-form h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.3rem;
+  color: #5B5248;
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.form-row.full {
+  grid-template-columns: 1fr;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #5B5248;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid #ccc5bb;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #5B5248;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #496348;
+  box-shadow: 0 0 0 3px rgba(73, 99, 72, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #a9a19b;
+}
+
+.form-group.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+
+.form-group.checkbox input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.form-group.checkbox label {
+  cursor: pointer;
+  margin: 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.btn {
+  padding: 0.8rem 1.6rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, #496348, #3a4e39);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(73, 99, 72, 0.3);
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #5B5248;
+  border: 1.5px solid #ccc5bb;
+}
+
+.btn-secondary:hover {
+  background: #f9f8f6;
+  border-color: #496348;
+}
+
+/* Addresses Grid */
+.addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.address-card {
+  background: #fff;
+  border: 1.5px solid #e0d8ce;
+  border-radius: 14px;
+  padding: 1.5rem;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.address-card:hover {
+  box-shadow: 0 8px 24px rgba(20, 40, 30, 0.1);
+  border-color: #496348;
+}
+
+.address-card.default {
+  background: linear-gradient(135deg, rgba(73, 99, 72, 0.03), rgba(199, 166, 107, 0.03));
+  border-color: #496348;
+}
+
+.badge-default {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #496348;
+  color: #fff;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.address-label {
+  font-weight: 700;
+  color: #C7A66B;
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+}
+
+.address-content {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid #e0d8ce;
+}
+
+.address-name {
+  font-weight: 700;
+  color: #5B5248;
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.address-street {
+  color: #5B5248;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.address-apartment {
+  color: #8a7d76;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.address-city {
+  color: #5B5248;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.address-country {
+  color: #8a7d76;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.address-phone {
+  color: #496348;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.address-email {
+  color: #8a7d76;
+  font-size: 0.85rem;
+}
+
+.address-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.6rem;
+  transition: color 0.2s ease;
+  text-decoration: underline;
+}
+
+.btn-link {
+  color: #496348;
+}
+
+.btn-link:hover {
+  color: #3a4e39;
+}
+
+.btn-link.edit {
+  color: #496348;
+}
+
+.btn-link.edit:hover {
+  color: #3a4e39;
+}
+
+.btn-link.delete {
+  color: #c0392b;
+}
+
+.btn-link.delete:hover {
+  color: #a93226;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #f9f8f6;
+  border-radius: 14px;
+  border: 1.5px dashed #ccc5bb;
+}
+
+.empty-state p {
+  color: #8a7d76;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state .btn {
+  margin-top: 1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #8a7d76;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .addresses-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .addresses-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .btn-add-address {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .addresses-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .address-form-container {
+    padding: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+}
