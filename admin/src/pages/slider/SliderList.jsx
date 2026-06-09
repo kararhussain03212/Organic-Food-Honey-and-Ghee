@@ -105,13 +105,13 @@ export default function SliderList() {
           <h2 className="text-3xl font-bold text-white">Sliders</h2>
           <p className="text-sm text-white/65">Manage hero sliders on website home page.</p>
         </div>
-        <button
+        {/* <button
           type="button"
           onClick={() => (canAdd ? navigate("/sliders/new") : showNoPerm("add sliders"))}
           className="inline-flex w-fit rounded-xl bg-[var(--admin-primary)] px-5 py-2.5 text-black hover:bg-[var(--admin-primary-strong)]"
         >
           + Add Slider
-        </button>
+        </button> */}
       </header>
 
       {toast.show ? (

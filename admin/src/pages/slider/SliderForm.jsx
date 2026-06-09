@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ImageUpload from "../../components/ImageUpload";
 import { createSlider, getSlider, updateSlider } from "../../api/sliderApi";
-import { uploadImage } from "../../api/uploadApi";
-import { getBackendRoot } from "../../api/runtimeApi";
+import { uploadVideo } from "../../api/uploadApi";
+import VideoUpload from "../../components/VideoUpload";
 
 const getInitialForm = () => ({
   kicker: "Arion Organic Food",
@@ -15,10 +14,8 @@ const getInitialForm = () => ({
   secondary_button_link: "/about",
   sort_order: 1,
   is_active: true,
-  media_type: "image",   // "image" | "video"
-  imageFile: null,
-  imagePreview: "",
-  video_url: "",
+  videoFile: null,
+  videoPreview: "",
 });
 
 export default function SliderForm() {
@@ -30,16 +27,6 @@ export default function SliderForm() {
   const [saving, setSaving]   = useState(false);
   const [error, setError]     = useState("");
   const [form, setForm]       = useState(getInitialForm);
-
-  const apiRoot = useMemo(() => getBackendRoot(), []);
-
-  const toImageUrl = useCallback((value) => {
-    if (!value) return "";
-    if (value.startsWith("http")) return value;
-    if (value.startsWith("/uploads/")) return apiRoot + value;
-    if (value.startsWith("/")) return value;
-    return `${apiRoot}/uploads/${value}`;
-  }, [apiRoot]);
 
   const setField = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -59,10 +46,8 @@ export default function SliderForm() {
           secondary_button_link: item.secondary_button_link || "/about",
           sort_order:            Number(item.sort_order ?? 1),
           is_active:             item.is_active === 1 || item.is_active === true,
-          media_type:            item.video_url ? "video" : "image",
-          imageFile:             null,
-          imagePreview:          toImageUrl(item.image || ""),
-          video_url:             item.video_url || "",
+          videoFile:             null,
+          videoPreview:          item.video_url || "",
         });
       } catch {
         setError("Failed to load slider.");
@@ -70,14 +55,14 @@ export default function SliderForm() {
         setLoading(false);
       }
     })();
-  }, [id, isEditMode, toImageUrl]);
+  }, [id, isEditMode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     if (!form.title.trim()) { setError("Title is required."); return; }
-    if (form.media_type === "video" && !form.video_url.trim()) {
-      setError("Please enter a video URL."); return;
+    if (!form.videoFile && !form.videoPreview) {
+      setError("Please upload a video."); return;
     }
 
     try {
@@ -93,16 +78,13 @@ export default function SliderForm() {
         secondary_button_link: form.secondary_button_link.trim() || "/about",
         sort_order:            Number(form.sort_order || 1),
         is_active:             form.is_active ? 1 : 0,
-        video_url:             form.media_type === "video" ? form.video_url.trim() : "",
       };
 
-      if (form.media_type === "image") {
-        if (form.imageFile) {
-          const oldPath = isEditMode && form.imagePreview ? form.imagePreview.replace(apiRoot, "") : "";
-          payload.image = await uploadImage(form.imageFile, "hero", oldPath);
-        } else if (form.imagePreview) {
-          payload.image = form.imagePreview.replace(apiRoot, "");
-        }
+      if (form.videoFile) {
+        const oldPath = isEditMode && form.videoPreview ? form.videoPreview.replace(/^.*\/uploads\//, "") : "";
+        payload.video_url = await uploadVideo(form.videoFile, "hero", oldPath);
+      } else if (form.videoPreview) {
+        payload.video_url = form.videoPreview.replace(/.*\/uploads\//, "");
       }
 
       if (isEditMode) await updateSlider(id, payload);
@@ -188,47 +170,13 @@ export default function SliderForm() {
           </label>
         </div>
 
-        {/* Media type toggle */}
-        <div>
-          <label className={labelCls}>Background Media</label>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => setField("media_type", "image")}
-              className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${form.media_type === "image" ? "border-[var(--admin-primary)] bg-[var(--admin-primary)] text-black" : "border-white/20 text-white/70 hover:border-white/40"}`}
-            >
-              Image
-            </button>
-            <button
-              type="button"
-              onClick={() => setField("media_type", "video")}
-              className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${form.media_type === "video" ? "border-[var(--admin-primary)] bg-[var(--admin-primary)] text-black" : "border-white/20 text-white/70 hover:border-white/40"}`}
-            >
-              Video URL
-            </button>
-          </div>
-        </div>
-
-        {form.media_type === "image" ? (
-          <ImageUpload
-            value={form.imagePreview}
-            onFileSelect={(file) => setField("imageFile", file)}
-            label="Upload Slide Image"
-            helperText={isEditMode ? "Upload to replace the current background image" : "Optional background image for this slide"}
-          />
-        ) : (
-          <div>
-            <label className={labelCls}>Video URL (mp4 or YouTube embed)</label>
-            <input
-              type="url"
-              value={form.video_url}
-              onChange={(e) => setField("video_url", e.target.value)}
-              placeholder="https://example.com/video.mp4"
-              className={inputCls}
-            />
-            <p className="mt-1 text-xs text-white/40">Use a direct .mp4 link or a YouTube embed URL.</p>
-          </div>
-        )}
+        {/* Video Upload */}
+        <VideoUpload
+          value={form.videoPreview}
+          onFileSelect={(file) => setField("videoFile", file)}
+          label="Upload Background Video"
+          helperText={isEditMode ? "Upload to replace the current background video" : "MP4, WebM, or other video formats"}
+        />
 
         {/* Submit */}
         <div className="flex flex-col gap-3 sm:flex-row">

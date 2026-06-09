@@ -8,7 +8,7 @@ use RuntimeException;
 
 final class FileUpload
 {
-    private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'svg'];
+    private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'svg', 'mp4', 'webm', 'mov', 'avi', 'mkv', 'flv', 'm4v'];
     private const ALLOWED_MIME = [
         'image/jpeg',
         'image/pjpeg',
@@ -19,8 +19,15 @@ final class FileUpload
         'text/xml',
         'application/xml',
         'application/octet-stream',
+        'video/mp4',
+        'video/webm',
+        'video/quicktime',
+        'video/x-msvideo',
+        'video/x-matroska',
+        'video/x-flv',
+        'video/mp4',
     ];
-    private const MAX_SIZE = 5242880;
+    private const MAX_SIZE = 104857600;
     private const ALLOWED_FOLDERS = [
         'misc',
         'hero',
@@ -48,14 +55,14 @@ final class FileUpload
 
         $size = (int) ($file['size'] ?? 0);
         if ($size > self::MAX_SIZE) {
-            Response::error('File exceeds 5MB size limit', 422);
+            Response::error('File exceeds 100MB size limit', 422);
         }
 
         $name = (string) ($file['name'] ?? '');
         $tmpPath = (string) ($file['tmp_name'] ?? '');
         $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         if (!in_array($ext, self::ALLOWED_EXTENSIONS, true)) {
-            Response::error('Invalid file extension. Allowed: jpg, jpeg, png, webp, avif, svg', 422);
+            Response::error('Invalid file extension. Allowed: jpg, jpeg, png, webp, avif, svg, mp4, webm, mov, avi, mkv, flv, m4v', 422);
         }
 
         if ($tmpPath === '' || !is_file($tmpPath)) {
@@ -77,9 +84,10 @@ final class FileUpload
             Response::error('Unable to create upload directory', 500);
         }
 
-        $canConvertToWebp = self::isWebpAvailable();
+        $isVideo = self::isVideoFile($ext);
+        $canConvertToWebp = !$isVideo && self::isWebpAvailable();
         $targetExt = $canConvertToWebp ? 'webp' : $ext;
-        $newName = uniqid('img_', true) . '.' . $targetExt;
+        $newName = uniqid($isVideo ? 'vid_' : 'img_', true) . '.' . $targetExt;
         $target = $dir . '/' . $newName;
         $actualMime = $canConvertToWebp ? 'image/webp' : $mime;
 
@@ -112,6 +120,12 @@ final class FileUpload
             'size' => (int) (filesize($target) ?: 0),
             'mime' => $actualMime,
         ];
+    }
+
+    private static function isVideoFile(string $ext): bool
+    {
+        $videoExtensions = ['mp4', 'webm', 'mov', 'avi', 'mkv', 'flv', 'm4v'];
+        return in_array(strtolower($ext), $videoExtensions, true);
     }
 
     private static function isWebpAvailable(): bool
