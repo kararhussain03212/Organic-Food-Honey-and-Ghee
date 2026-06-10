@@ -1,16 +1,8 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBlogs, getBlogSettings, parseJsonField } from "../api/apiClient";
-import { blogs as staticBlogs } from "../data/blogData";
 import "../styles/Blog.css";
 
-const STATIC_HERO = {
-  badgeText: "Wellness Journal",
-  title: "Nourish Your Mind &",
-  titleAccent: "Body",
-  description: "Explore healthy living, natural nutrition, traditional wellness, and organic lifestyle knowledge — curated by our expert team.",
-  searchPlaceholder: "Search articles, topics, ingredients…",
-};
 
 const POSTS_PER_PAGE = 6;
 
@@ -195,26 +187,28 @@ export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [visible, setVisible] = useState(false);
-  const [hero, setHero] = useState(STATIC_HERO);
+  const [hero, setHero] = useState(null);
   const heroRef = useRef(null);
 
   useEffect(() => { setVisible(true); }, []);
 
   useEffect(() => {
     getBlogSettings().then((s) => {
-      setHero({
-        badgeText:         s.blog_badge_text          || STATIC_HERO.badgeText,
-        title:             s.blog_hero_title           || STATIC_HERO.title,
-        titleAccent:       s.blog_hero_title_accent    || STATIC_HERO.titleAccent,
-        description:       s.blog_hero_description     || STATIC_HERO.description,
-        searchPlaceholder: s.blog_search_placeholder   || STATIC_HERO.searchPlaceholder,
-      });
+      if (s && (s.blog_hero_title || s.blog_badge_text)) {
+        setHero({
+          badgeText:         s.blog_badge_text,
+          title:             s.blog_hero_title,
+          titleAccent:       s.blog_hero_title_accent,
+          description:       s.blog_hero_description,
+          searchPlaceholder: s.blog_search_placeholder,
+        });
+      }
     });
   }, []);
 
   useEffect(() => {
     getBlogs().then((data) => {
-      setBlogs(Array.isArray(data) && data.length > 0 ? data : staticBlogs);
+      setBlogs(Array.isArray(data) ? data : []);
       setLoading(false);
     });
   }, []);
@@ -270,46 +264,50 @@ export default function Blog() {
       <div className="bl-bg-blob bl-bg-blob-2" />
 
       {/* ── Hero ───────────────────────────────── */}
-      <section className={`bl-hero${visible ? " visible" : ""}`} ref={heroRef}>
-        <div className="bl-hero-inner">
-          <div className="bl-hero-text">
-            <div className="bl-eyebrow"><span>✦</span> {hero.badgeText}</div>
-            <h1 className="bl-hero-title">
-              {hero.title} <span className="bl-hero-accent">{hero.titleAccent}</span>
-            </h1>
-            <p className="bl-hero-subtitle">{hero.description}</p>
-          </div>
-
-          <div className="bl-hero-search-wrap">
-            <div className="bl-hero-search">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input
-                type="text"
-                placeholder={hero.searchPlaceholder}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bl-hero-search-input"
-              />
-              {searchQuery && (
-                <button className="bl-search-clear" onClick={() => setSearchQuery("")}>✕</button>
+      {hero && (
+        <section className={`bl-hero${visible ? " visible" : ""}`} ref={heroRef}>
+          <div className="bl-hero-inner">
+            <div className="bl-hero-text">
+              {hero.badgeText && <div className="bl-eyebrow"><span>✦</span> {hero.badgeText}</div>}
+              {hero.title && (
+                <h1 className="bl-hero-title">
+                  {hero.title} {hero.titleAccent && <span className="bl-hero-accent">{hero.titleAccent}</span>}
+                </h1>
               )}
+              {hero.description && <p className="bl-hero-subtitle">{hero.description}</p>}
+            </div>
+
+            <div className="bl-hero-search-wrap">
+              <div className="bl-hero-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input
+                  type="text"
+                  placeholder={hero.searchPlaceholder || ""}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bl-hero-search-input"
+                />
+                {searchQuery && (
+                  <button className="bl-search-clear" onClick={() => setSearchQuery("")}>✕</button>
+                )}
+              </div>
+            </div>
+
+            <div className="bl-hero-pills">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  className={`bl-pill${activeCategory === cat.id ? " active" : ""}`}
+                  onClick={() => setActiveCategory(cat.id)}
+                >
+                  {cat.label}
+                  <span className="bl-pill-count">{cat.count}</span>
+                </button>
+              ))}
             </div>
           </div>
-
-          <div className="bl-hero-pills">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                className={`bl-pill${activeCategory === cat.id ? " active" : ""}`}
-                onClick={() => setActiveCategory(cat.id)}
-              >
-                {cat.label}
-                <span className="bl-pill-count">{cat.count}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── Featured Article ───────────────────── */}
       {!loading && featuredPost && activeCategory === "all" && !searchQuery && (

@@ -2,56 +2,12 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { getSettings, getCommitmentItems } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
-const STATIC_PROMISES = [
-  {
-    icon: "check-circle",
-    tag: "100% Natural",
-    title: "Naturally Sourced Quality",
-    desc: "Every product begins its journey in pristine natural environments—no shortcuts, no compromises. We trace every ingredient from source to shelf.",
-    color: "#4a7c59",
-    bg: "rgba(74,124,89,0.08)",
-  },
-  {
-    icon: "house",
-    tag: "Sources Fresh",
-    title: "Traditional Purity",
-    desc: "Rooted in generations of artisan knowledge, our methods honor the land. Time-tested traditions preserve the natural goodness in every jar.",
-    color: "#b8860b",
-    bg: "rgba(184,134,11,0.08)",
-  },
-  {
-    icon: "check-circle",
-    tag: "Chemical Free",
-    title: "No Artificial Compromise",
-    desc: "Zero preservatives, zero additives, zero artificial flavors. Pure as nature intended—what you see is exactly what goes in.",
-    color: "#8b4513",
-    bg: "rgba(139,69,19,0.08)",
-  },
-  {
-    icon: "shield",
-    tag: "Premium Quality",
-    title: "Our Quality Commitment",
-    desc: "Rigorous testing at every stage of production. Our quality promise isn't just a label—it's the foundation everything we do is built upon.",
-    color: "#2e6b4f",
-    bg: "rgba(46,107,79,0.08)",
-  },
-];
-
 const COLORS = [
   { color: "#4a7c59", bg: "rgba(74,124,89,0.08)" },
   { color: "#b8860b", bg: "rgba(184,134,11,0.08)" },
   { color: "#8b4513", bg: "rgba(139,69,19,0.08)" },
   { color: "#2e6b4f", bg: "rgba(46,107,79,0.08)" },
 ];
-
-const STATIC_HEADER = {
-  eyebrow: "Our Commitment to You",
-  heading: "We Take Quality",
-  headingAccent: "Seriously.",
-  subtext: "Every product we craft carries our unyielding promise — pure, honest, and made with the reverence nature deserves.",
-  btnText: "Explore Our Products",
-  btnLink: "#products",
-};
 
 const resolveIconUrl = (value, apiRoot) => {
   if (!value) return null;
@@ -93,36 +49,38 @@ export default function PurityPromise() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [activeBadge, setActiveBadge] = useState(0);
-  const [promises, setPromises] = useState(STATIC_PROMISES);
-  const [header, setHeader] = useState(STATIC_HEADER);
+  const [promises, setPromises] = useState([]);
+  const [header, setHeader] = useState(null);
+  const [loading, setLoading] = useState(true);
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
-    getSettings().then((s) => {
-      if (!s) return;
-      setHeader({
-        eyebrow: s.home_commitment_eyebrow || STATIC_HEADER.eyebrow,
-        heading: s.home_commitment_heading || STATIC_HEADER.heading,
-        headingAccent: s.home_commitment_heading_accent || STATIC_HEADER.headingAccent,
-        subtext: s.home_commitment_subtext || STATIC_HEADER.subtext,
-        btnText: s.home_commitment_btn_text ?? STATIC_HEADER.btnText,
-        btnLink: s.home_commitment_btn_link || STATIC_HEADER.btnLink,
-      });
-    });
+    Promise.all([getSettings(), getCommitmentItems()]).then(([s, items]) => {
+      if (s && s.home_commitment_heading) {
+        setHeader({
+          eyebrow: s.home_commitment_eyebrow,
+          heading: s.home_commitment_heading,
+          headingAccent: s.home_commitment_heading_accent,
+          subtext: s.home_commitment_subtext,
+          btnText: s.home_commitment_btn_text,
+          btnLink: s.home_commitment_btn_link,
+        });
+      }
 
-    getCommitmentItems().then((items) => {
-      if (!Array.isArray(items) || items.length === 0) return;
-      setPromises(
-        items.map((item, i) => ({
-          icon: item.icon || "check-circle",
-          icon_url: item.icon_url ? resolveIconUrl(item.icon_url, apiRoot) : null,
-          tag: item.tag || item.title || "",
-          title: item.title || "",
-          desc: item.description || "",
-          ...COLORS[i % COLORS.length],
-        }))
-      );
-    });
+      if (Array.isArray(items) && items.length > 0) {
+        setPromises(
+          items.map((item, i) => ({
+            icon: item.icon || "check-circle",
+            icon_url: item.icon_url ? resolveIconUrl(item.icon_url, apiRoot) : null,
+            tag: item.tag || item.title || "",
+            title: item.title || "",
+            desc: item.description || "",
+            ...COLORS[i % COLORS.length],
+          }))
+        );
+      }
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, [apiRoot]);
 
   useEffect(() => {
@@ -139,6 +97,10 @@ export default function PurityPromise() {
     const t = setInterval(() => setActiveBadge((p) => (p + 1) % promises.length), 2000);
     return () => clearInterval(t);
   }, [promises.length]);
+
+  if (!header || promises.length === 0) {
+    return null;
+  }
 
   return (
     <section className="purity-section" ref={sectionRef}>

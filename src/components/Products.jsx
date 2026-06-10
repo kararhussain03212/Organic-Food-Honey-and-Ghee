@@ -65,11 +65,11 @@ function ProductCard({ product }) {
               {discountPercentage}% OFF
             </span>
           )}
-          {badges.slice(0, 2).map((b) => (
+          {/* {badges.slice(0, 2).map((b) => (
             <span key={b} className="prod-badge" style={badgeColors[b]}>{b}</span>
-          ))}
+          ))} */}
         </div>
-        {product.original_price && <div className="prod-sale-tag">SALE</div>}
+        {/* {product.original_price && <div className="prod-sale-tag">SALE</div>} */}
       </div>
 
       <div className="prod-info">

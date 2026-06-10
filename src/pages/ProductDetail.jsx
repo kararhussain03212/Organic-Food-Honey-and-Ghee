@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProductBySlug, getRelatedProducts } from "../data/productsData";
+import { getProductBySlug, getProducts } from "../api/apiClient";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
 
@@ -20,29 +20,45 @@ function FAQAccordion({ faqs }) {
   const [openIndex, setOpenIndex] = useState(null);
   return (
     <div className="pd-faqs">
-      {faqs.map((faq, i) => (
-        <div key={i} className={`pd-faq-item${openIndex === i ? " open" : ""}`}>
-          <button
-            className="pd-faq-toggle"
-            onClick={() => setOpenIndex(openIndex === i ? null : i)}
-          >
-            <span>{faq.q}</span>
-            <svg className="pd-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-          <div className="pd-faq-body">
-            <p>{faq.a}</p>
+      {faqs.map((faq, i) => {
+        const question = faq.q || faq.question;
+        const answer = faq.a || faq.answer;
+        return (
+          <div key={i} className={`pd-faq-item${openIndex === i ? " open" : ""}`}>
+            <button
+              className="pd-faq-toggle"
+              onClick={() => setOpenIndex(openIndex === i ? null : i)}
+            >
+              <span>{question}</span>
+              <svg className="pd-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div className="pd-faq-body">
+              <p>{answer}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
 
 /* ─── Related Card ──────────────────────────────── */
 function RelatedCard({ product, navigate }) {
-  const hasOriginal = Boolean(product.originalPrice);
+  const parseImages = (images) => {
+    if (Array.isArray(images)) return images;
+    if (typeof images === "string") {
+      try { return JSON.parse(images); } catch { return []; }
+    }
+    return [];
+  };
+
+  const images = parseImages(product.images) || [product.img] || [];
+  const originalPrice = product.original_price || product.originalPrice;
+  const hasOriginal = Boolean(originalPrice);
+  const price = Number(product.price);
+
   return (
     <article
       className="pd-related-card"
@@ -50,15 +66,15 @@ function RelatedCard({ product, navigate }) {
       onClick={() => navigate(`/products/${product.slug}`)}
     >
       <div className="pd-related-img-wrap">
-        <img src={product.images[0]} alt={product.name} className="pd-related-img" />
+        <img src={images[0]} alt={product.name} className="pd-related-img" />
       </div>
       <div className="pd-related-body">
         <h4 className="pd-related-name">{product.name}</h4>
         <div className="pd-related-price">
-          Rs {product.price.toLocaleString()}
+          Rs {price.toLocaleString()}
           {hasOriginal && (
             <span className="pd-related-original">
-              Rs {product.originalPrice.toLocaleString()}
+              Rs {Number(originalPrice).toLocaleString()}
             </span>
           )}
         </div>
@@ -72,26 +88,57 @@ function RelatedCard({ product, navigate }) {
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const product = getProductBySlug(slug);
-  const related = getRelatedProducts(slug);
-
-  const selectedVariant = product.size || product.variants[0];
+  const [product, setProduct] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
-  const selectedPrice = product.variantPrices?.[selectedVariant] ?? product.price;
-  const selectedOriginal = product.variantOriginalPrices?.[selectedVariant] ?? product.originalPrice;
+  useEffect(() => {
+    Promise.all([getProductBySlug(slug), getProducts()]).then(([prod, products]) => {
+      setProduct(prod);
+      setAllProducts(Array.isArray(products) ? products : []);
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [slug]);
+
+  const related = useMemo(() => {
+    if (!product || allProducts.length === 0) return [];
+    return allProducts
+      .filter((p) => p.slug !== product.slug && p.category === product.category)
+      .concat(allProducts.filter((p) => p.slug !== product.slug && p.category !== product.category))
+      .slice(0, 4);
+  }, [product, allProducts]);
+
+  if (loading || !product) {
+    return <main className="pd-page"><div style={{ padding: "2rem", textAlign: "center" }}>Loading...</div></main>;
+  }
+
+  const parseImages = (images) => {
+    if (Array.isArray(images)) return images;
+    if (typeof images === "string") {
+      try { return JSON.parse(images); } catch { return []; }
+    }
+    return [];
+  };
+
+  const productImages = parseImages(product.images) || [product.img] || [];
+  const selectedVariant = product.size || product.variants?.[0] || "";
+  const variantPrices = typeof product.variant_prices === "string" ? JSON.parse(product.variant_prices || "{}") : (product.variantPrices || {});
+  const variantOriginalPrices = typeof product.variant_original_prices === "string" ? JSON.parse(product.variant_original_prices || "{}") : (product.variantOriginalPrices || {});
+
+  const selectedPrice = variantPrices[selectedVariant] ?? Number(product.price);
+  const selectedOriginal = variantOriginalPrices[selectedVariant] ?? (product.original_price ? Number(product.original_price) : null);
   const hasOriginal = Boolean(selectedOriginal);
   const totalPrice = selectedPrice * qty;
   const totalOriginal = hasOriginal ? selectedOriginal * qty : 0;
   const totalSavings = hasOriginal ? (selectedOriginal - selectedPrice) * qty : 0;
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [slug]);
-
   const handleAddToCart = () => {
-    addToCart({ id: product.id, name: product.name, price: selectedPrice, qty, image: product.images[0], variant: selectedVariant });
+    addToCart({ id: product.id, name: product.name, price: selectedPrice, qty, image: productImages[0], variant: selectedVariant });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -123,7 +170,7 @@ export default function ProductDetail() {
       <section className="pd-hero">
         <div className="pd-container">
           <div className="pd-hero-grid">
-            <ImageGallery images={product.images} name={product.name} />
+            <ImageGallery images={productImages} name={product.name} />
 
             <div className="pd-info">
               <span className="pd-cat-badge">Health &amp; Wellness — Arion Organic Food</span>
@@ -132,6 +179,7 @@ export default function ProductDetail() {
               )}
 
               <h1 className="pd-name">{product.name}</h1>
+              {product.subtitle && <p className="pd-subtitle">{product.subtitle}</p>}
 
               <div className="pd-stock">
                 <span className={`pd-stock-dot ${product.stock ? "in" : "out"}`} />
@@ -214,29 +262,33 @@ export default function ProductDetail() {
               )}
             </div>
 
-            <div className="pd-benefits-card">
-              <h2 className="pd-card-title">Key Benefits</h2>
-              <ul className="pd-benefits-list">
-                {product.benefits.map((b, i) => (
-                  <li key={i}>
-                    <span className="pd-benefit-dot" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {product.benefits && product.benefits.length > 0 && (
+              <div className="pd-benefits-card">
+                <h2 className="pd-card-title">Key Benefits</h2>
+                <ul className="pd-benefits-list">
+                  {product.benefits.map((b, i) => (
+                    <li key={i}>
+                      <span className="pd-benefit-dot" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* ── FAQs ─────────────────────────────────── */}
-      <section className="pd-faq-section">
-        <div className="pd-container">
-          <div className="pd-section-label">Common Questions</div>
-          <h2 className="pd-section-title">Frequently Asked Questions</h2>
-          <FAQAccordion faqs={product.faqs} />
-        </div>
-      </section>
+      {product.faqs && product.faqs.length > 0 && (
+        <section className="pd-faq-section">
+          <div className="pd-container">
+            <div className="pd-section-label">Common Questions</div>
+            <h2 className="pd-section-title">Frequently Asked Questions</h2>
+            <FAQAccordion faqs={product.faqs} />
+          </div>
+        </section>
+      )}
 
       {/* ── Related Products ─────────────────────── */}
       <section className="pd-related-section">

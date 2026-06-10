@@ -10,37 +10,26 @@ const floatingLeaves = [
   { id: 6, emoji: "🍃", style: { top: "40%", left: "3%", fontSize: "1.3rem", animationDelay: "0.4s", animationDuration: "9s" } },
 ];
 
-const DEFAULTS = {
-  eyebrow: "Pure. Natural. Authentic.",
-  heading: "Experience Real Purity",
-  headingAccent: "in Every Product",
-  subtext: "Fresh, natural, and traditionally crafted products delivered to your home. No preservatives. No shortcuts. Just the honest goodness of nature.",
-  btnText: "Shop Now",
-  btnLink: "#products",
-  btn2Text: "Our Story",
-  btn2Link: "/about",
-  badgeText: "Authenticity Guaranteed",
-};
-
 export default function CTASection() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
-  const [data, setData] = useState(DEFAULTS);
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     getSettings().then((s) => {
-      if (!s) return;
-      setData({
-        eyebrow: s.home_cta_eyebrow || DEFAULTS.eyebrow,
-        heading: s.home_cta_heading || DEFAULTS.heading,
-        headingAccent: s.home_cta_heading_accent || DEFAULTS.headingAccent,
-        subtext: s.home_cta_subtext || DEFAULTS.subtext,
-        btnText: s.home_cta_btn_text || DEFAULTS.btnText,
-        btnLink: s.home_cta_btn_link || DEFAULTS.btnLink,
-        btn2Text: s.home_cta_btn2_text || DEFAULTS.btn2Text,
-        btn2Link: s.home_cta_btn2_link || DEFAULTS.btn2Link,
-        badgeText: s.home_cta_badge_text || DEFAULTS.badgeText,
-      });
+      if (s && s.home_cta_heading) {
+        setData({
+          eyebrow: s.home_cta_eyebrow,
+          heading: s.home_cta_heading,
+          headingAccent: s.home_cta_heading_accent,
+          subtext: s.home_cta_subtext,
+          btnText: s.home_cta_btn_text,
+          btnLink: s.home_cta_btn_link,
+          btn2Text: s.home_cta_btn2_text,
+          btn2Link: s.home_cta_btn2_link,
+          badgeText: s.home_cta_badge_text,
+        });
+      }
     });
   }, []);
 
@@ -52,6 +41,8 @@ export default function CTASection() {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  if (!data) return null;
 
   return (
     <section className="cta-section" ref={sectionRef}>
@@ -66,12 +57,14 @@ export default function CTASection() {
 
       <div className="cta-inner">
         <div className={`cta-content ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.1s" }}>
-          <div className="cta-eyebrow">🌿 {data.eyebrow}</div>
-          <h2 className="cta-heading">
-            {data.heading}<br />
-            <span className="cta-accent">{data.headingAccent}</span>
-          </h2>
-          <p className="cta-subtext">{data.subtext}</p>
+          {data.eyebrow && <div className="cta-eyebrow">🌿 {data.eyebrow}</div>}
+          {data.heading && (
+            <h2 className="cta-heading">
+              {data.heading}<br />
+              {data.headingAccent && <span className="cta-accent">{data.headingAccent}</span>}
+            </h2>
+          )}
+          {data.subtext && <p className="cta-subtext">{data.subtext}</p>}
 
           <div className="cta-actions">
             <a href={data.btnLink} className="cta-primary-btn" id="cta-shop-now">

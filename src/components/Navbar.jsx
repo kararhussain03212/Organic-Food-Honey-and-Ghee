@@ -21,20 +21,6 @@ const SOCIAL_ICON_MAP = {
   tiktok:    <AiFillTikTok />,
 };
 
-const DEFAULT_SOCIAL_LINKS = [
-  { label: "Instagram", url: "https://www.instagram.com/ssarionorganicfood/", icon: "instagram" },
-  { label: "Facebook",  url: "https://www.facebook.com/SSgeneraltradinguae",  icon: "facebook"  },
-  { label: "YouTube",   url: "https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw", icon: "youtube" },
-  { label: "TikTok",   url: "https://www.tiktok.com/@ssarionorganicfood",    icon: "tiktok"    },
-];
-
-const DEFAULT_NAV_ITEMS = [
-  { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
-  { label: "Products", path: "/products" },
-  { label: "Blog", path: "/blog" },
-  { label: "Contact", path: "/contact" },
-];
 
 
 function loadSaved() {
@@ -58,28 +44,26 @@ const Navbar = () => {
     });
   }, []);
 
-  const brandTitle    = settings.navbar_brand_title    || "Arion Organic Food";
-  const brandSubtitle = settings.navbar_brand_subtitle || "Organic Foods";
-  const navPhone      = settings.navbar_phone          || "+92 333 8399480";
-  const navEmail      = settings.navbar_email          || "info@arionorganic.com";
-  const welcomeText   = settings.navbar_welcome_text   || "Welcome to Arion Organic Food";
-  const waNumber      = settings.whatsapp_number       || "923338399480";
+  const brandTitle    = settings.navbar_brand_title;
+  const brandSubtitle = settings.navbar_brand_subtitle;
+  const navPhone      = settings.navbar_phone;
+  const navEmail      = settings.navbar_email;
+  const welcomeText   = settings.navbar_welcome_text;
+  const waNumber      = settings.whatsapp_number;
 
   const navItems = useMemo(() => {
-    const parsed = parseJsonField(settings.nav_links, []);
-    return parsed.length > 0 ? parsed : DEFAULT_NAV_ITEMS;
+    return parseJsonField(settings.nav_links, []);
   }, [settings.nav_links]);
 
   const socialLinks = useMemo(() => {
     const parsed = parseJsonField(settings.footer_social_links, []);
     if (parsed.length > 0) return parsed;
-    // fall back to individual contact settings
     const fallback = [];
     if (settings.contact_instagram) fallback.push({ label: "Instagram", url: settings.contact_instagram, icon: "instagram" });
     if (settings.contact_facebook)  fallback.push({ label: "Facebook",  url: settings.contact_facebook,  icon: "facebook"  });
     if (settings.contact_youtube)   fallback.push({ label: "YouTube",   url: settings.contact_youtube,   icon: "youtube"   });
     if (settings.contact_tiktok)    fallback.push({ label: "TikTok",    url: settings.contact_tiktok,    icon: "tiktok"    });
-    return fallback.length > 0 ? fallback : DEFAULT_SOCIAL_LINKS;
+    return fallback;
   }, [settings.footer_social_links, settings.contact_instagram, settings.contact_facebook, settings.contact_youtube, settings.contact_tiktok]);
 
   const saved = loadSaved();

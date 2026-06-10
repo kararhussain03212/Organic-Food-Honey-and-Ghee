@@ -2,55 +2,6 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { getTestimonials, getSettings } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
-const STATIC_TESTIMONIALS = [
-  {
-    id: 1,
-    name: "Ayesha Malik",
-    role: "Mother of 3, Lahore",
-    avatar: "/avatar1.png",
-    rating: 5,
-    quote: "Since switching to Arion's ghee and honey, I've noticed a real difference in my family's health. The quality is unmistakable — you can literally taste the purity. This is the real thing.",
-    product: "Pure Desi Ghee",
-    verified: true,
-  },
-  {
-    id: 2,
-    name: "Bilal Chaudhry",
-    role: "Nutritionist, Islamabad",
-    avatar: "/avatar2.png",
-    rating: 5,
-    quote: "As a nutritionist, I'm very particular about what I recommend. Arion's products are genuinely chemical-free and traditionally sourced. I recommend them to all my clients without hesitation.",
-    product: "Raw Honey 500g",
-    verified: true,
-  },
-  {
-    id: 3,
-    name: "Sadia Hussain",
-    role: "Wellness Coach, Karachi",
-    avatar: "/avatar3.png",
-    rating: 5,
-    quote: "The Shilajit has been life-changing for my energy levels. And the packaging tells you everything — premium, careful, and respectful of the product inside. I'm a loyal customer for life.",
-    product: "Himalayan Shilajit",
-    verified: true,
-  },
-  {
-    id: 4,
-    name: "Usman Tariq",
-    role: "Chef & Food Blogger",
-    avatar: "/avatar2.png",
-    rating: 5,
-    quote: "I use Arion ghee in my restaurant. Customers always ask what makes the food taste so rich and wholesome. The answer is always the same — quality ingredients from quality people.",
-    product: "Premium Ghee",
-    verified: true,
-  },
-];
-
-const STATIC_HEADER = {
-  eyebrow: "Customer Stories",
-  heading: "Trusted by Families Who",
-  headingAccent: "Value Purity.",
-  subtext: "Real experiences from real people — because our greatest achievement is the trust of the families we serve.",
-};
 
 function Stars({ rating }) {
   return (
@@ -76,37 +27,38 @@ export default function Testimonials() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(0);
-  const [testimonials, setTestimonials] = useState(STATIC_TESTIMONIALS);
-  const [header, setHeader] = useState(STATIC_HEADER);
+  const [testimonials, setTestimonials] = useState([]);
+  const [header, setHeader] = useState(null);
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
-    getSettings().then((s) => {
-      if (!s) return;
-      setHeader({
-        eyebrow: s.home_testimonials_eyebrow || STATIC_HEADER.eyebrow,
-        heading: s.home_testimonials_heading || STATIC_HEADER.heading,
-        headingAccent: s.home_testimonials_heading_accent || STATIC_HEADER.headingAccent,
-        subtext: s.home_testimonials_subtext || STATIC_HEADER.subtext,
-      });
-    });
+    Promise.all([getSettings(), getTestimonials()]).then(([s, items]) => {
+      if (s && s.home_testimonials_heading) {
+        setHeader({
+          eyebrow: s.home_testimonials_eyebrow,
+          heading: s.home_testimonials_heading,
+          headingAccent: s.home_testimonials_heading_accent,
+          subtext: s.home_testimonials_subtext,
+        });
+      }
 
-    getTestimonials().then((items) => {
-      if (!Array.isArray(items) || items.length === 0) return;
-      const active = items.filter((t) => t.is_active === 1 || t.is_active === true);
-      if (active.length === 0) return;
-      setTestimonials(
-        active.map((t) => ({
-          id: t.id,
-          name: t.name || "",
-          role: t.role || "Verified Customer",
-          avatar: resolveAvatar(t.avatar, apiRoot) || "/avatar1.png",
-          rating: Number(t.rating ?? 5),
-          quote: t.quote || "",
-          product: t.product || "",
-          verified: t.verified === 1 || t.verified === true,
-        }))
-      );
+      if (Array.isArray(items) && items.length > 0) {
+        const active = items.filter((t) => t.is_active === 1 || t.is_active === true);
+        if (active.length > 0) {
+          setTestimonials(
+            active.map((t) => ({
+              id: t.id,
+              name: t.name || "",
+              role: t.role || "Verified Customer",
+              avatar: resolveAvatar(t.avatar, apiRoot),
+              rating: Number(t.rating ?? 5),
+              quote: t.quote || "",
+              product: t.product || "",
+              verified: t.verified === 1 || t.verified === true,
+            }))
+          );
+        }
+      }
     });
   }, [apiRoot]);
 
@@ -128,6 +80,8 @@ export default function Testimonials() {
   const prev = () => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
   const next = () => setCurrent((p) => (p + 1) % testimonials.length);
 
+  if (!header || testimonials.length === 0) return null;
+
   return (
     <section className="test-section" ref={sectionRef}>
       <div className="test-blob test-blob-1" />
@@ -135,11 +89,13 @@ export default function Testimonials() {
 
       <div className="test-inner">
         <div className={`test-header ${visible ? "fade-up" : "fade-hidden"}`}>
-          <div className="test-eyebrow">💬 {header.eyebrow}</div>
-          <h2 className="test-heading">
-            {header.heading} <span className="test-accent">{header.headingAccent}</span>
-          </h2>
-          <p className="test-subtext">{header.subtext}</p>
+          {header.eyebrow && <div className="test-eyebrow">💬 {header.eyebrow}</div>}
+          {header.heading && (
+            <h2 className="test-heading">
+              {header.heading} {header.headingAccent && <span className="test-accent">{header.headingAccent}</span>}
+            </h2>
+          )}
+          {header.subtext && <p className="test-subtext">{header.subtext}</p>}
         </div>
 
         <div className={`test-carousel-wrap ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.4s" }}>

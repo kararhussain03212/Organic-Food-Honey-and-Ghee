@@ -7,18 +7,6 @@ import Products from "../components/Products";
 import Testimonials from "../components/Testimonials";
 import CTASection from "../components/CTASection";
 
-const STATIC_HERO = {
-  kicker: "Arion Organic Food",
-  title: "Pure by Nature - Proven by Integrity.",
-  text: "Discover Natural Arion Honey, Ghee, and Shilajit.",
-  btnText: "Shop Now",
-  btnLink: "#products",
-  secondaryBtnText: "Our Story",
-  secondaryBtnLink: "/about",
-  media: "/Banner_Hero.mp4",
-  isVideo: true,
-};
-
 const resolveMedia = (value, apiRoot) => {
   if (!value) return null;
   if (value.startsWith("http")) return value;
@@ -28,7 +16,8 @@ const resolveMedia = (value, apiRoot) => {
 };
 
 const Home = () => {
-  const [hero, setHero] = useState(STATIC_HERO);
+  const [hero, setHero] = useState(null);
+  const [loading, setLoading] = useState(true);
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
@@ -37,62 +26,77 @@ const Home = () => {
       if (active) {
         const videoUrl = active.video_url ? resolveMedia(active.video_url, apiRoot) : null;
         const imageUrl = active.image ? resolveMedia(active.image, apiRoot) : null;
-        const mediaUrl = videoUrl || imageUrl || STATIC_HERO.media;
+        const mediaUrl = videoUrl || imageUrl;
         const isVideo = Boolean(videoUrl) || (mediaUrl && /\.(mp4|webm|ogg)$/i.test(mediaUrl));
 
         setHero({
-          kicker: active.kicker || STATIC_HERO.kicker,
-          title: active.title || STATIC_HERO.title,
-          text: active.subtitle || STATIC_HERO.text,
-          btnText: active.button_text || STATIC_HERO.btnText,
-          btnLink: active.button_link || STATIC_HERO.btnLink,
-          secondaryBtnText: active.secondary_button_text || STATIC_HERO.secondaryBtnText,
-          secondaryBtnLink: active.secondary_button_link || STATIC_HERO.secondaryBtnLink,
+          kicker: active.kicker,
+          title: active.title,
+          text: active.subtitle,
+          btnText: active.button_text,
+          btnLink: active.button_link,
+          secondaryBtnText: active.secondary_button_text,
+          secondaryBtnLink: active.secondary_button_link,
           media: mediaUrl,
           isVideo: isVideo,
         });
       }
-    });
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, [apiRoot]);
+
+  if (loading) {
+    return <main style={{ padding: "2rem", textAlign: "center" }}>Loading...</main>;
+  }
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="hero" id="home">
-        {hero.isVideo ? (
-          <video
-            className="hero-video"
-            src={hero.media}
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        ) : (
-          <img
-            className="hero-video"
-            src={hero.media}
-            alt="Hero Background"
-            style={{ objectFit: "cover" }}
-          />
-        )}
-        <div className="hero-overlay" />
-        <div className="hero-content">
-          <div className="hero-copy">
-            <p className="hero-kicker">{hero.kicker}</p>
-            <h1 className="hero-title">{hero.title}</h1>
-            <p className="hero-text">{hero.text}</p>
-            <div className="hero-actions">
-              <a href={hero.btnLink} className="hero-btn-primary">
-                {hero.btnText}
-              </a>
-              <a href={hero.secondaryBtnLink} className="hero-btn-secondary">
-                {hero.secondaryBtnText}
-              </a>
+      {/* Hero Section - Only show if data is available */}
+      {hero && (
+        <section className="hero" id="home">
+          {hero.isVideo ? (
+            <video
+              className="hero-video"
+              src={hero.media}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : hero.media ? (
+            <img
+              className="hero-video"
+              src={hero.media}
+              alt="Hero Background"
+              style={{ objectFit: "cover" }}
+            />
+          ) : (
+            <div className="hero-video" style={{ background: "#f0f0f0" }} />
+          )}
+          <div className="hero-overlay" />
+          <div className="hero-content">
+            <div className="hero-copy">
+              {hero.kicker && <p className="hero-kicker">{hero.kicker}</p>}
+              {hero.title && <h1 className="hero-title">{hero.title}</h1>}
+              {hero.text && <p className="hero-text">{hero.text}</p>}
+              {(hero.btnText || hero.secondaryBtnText) && (
+                <div className="hero-actions">
+                  {hero.btnText && hero.btnLink && (
+                    <a href={hero.btnLink} className="hero-btn-primary">
+                      {hero.btnText}
+                    </a>
+                  )}
+                  {hero.secondaryBtnText && hero.secondaryBtnLink && (
+                    <a href={hero.secondaryBtnLink} className="hero-btn-secondary">
+                      {hero.secondaryBtnText}
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* All premium sections */}
       <PurityPromise />

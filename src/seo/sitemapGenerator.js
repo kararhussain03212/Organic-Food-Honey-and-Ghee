@@ -1,6 +1,5 @@
 // Sitemap Generator for SEO
-import { products } from "../data/productsData";
-import { blogPosts } from "../data/blogData";
+// Note: To use this with dynamic data, pass products and blogs as parameters
 import { seoData } from "./seoData";
 
 const siteUrl = seoData.default.siteUrl;
@@ -15,7 +14,7 @@ const generateSitemapEntry = (url, lastModified = new Date().toISOString(), prio
   </url>`;
 
 // Build complete sitemap XML
-export const generateSitemap = () => {
+export const generateSitemap = (products = [], blogPosts = []) => {
   let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"

@@ -6,11 +6,6 @@ import "../styles/Products.css";
 
 const PRODUCTS_PER_PAGE = 9;
 
-const DEFAULT_PRODUCT_PAGE = {
-  badge_text: "✦ Arion Organics",
-  title: "Our Products",
-  subtitle: "Pure, traditional, and naturally sourced wellness essentials for your everyday life.",
-};
 
 const apiRoot = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
 const resolveImage = (path) => {
@@ -108,7 +103,7 @@ export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [productPageSettings, setProductPageSettings] = useState(DEFAULT_PRODUCT_PAGE);
+  const [productPageSettings, setProductPageSettings] = useState(null);
 
   useEffect(() => {
     getProducts().then((data) => {
@@ -173,27 +168,30 @@ export default function Products() {
       <div className="prl-blob prl-blob-2" />
 
       {/* ── Hero ────────────────────────────────── */}
-      <section className="prl-hero">
-        <div className="prl-container">
-          <div className="prl-hero-text">
-            <div className="prl-eyebrow">{productPageSettings.badge_text}</div>
-            <h1 className="prl-hero-title">
-              {productPageSettings.title.split(' ').slice(0, -1).join(' ')} <span className="prl-accent">{productPageSettings.title.split(' ').pop()}</span>
-            </h1>
-            <p className="prl-hero-sub">
-              {productPageSettings.subtitle}
-            </p>
-          </div>
-          {searchQuery && (
-            <div className="prl-search-result-banner">
-              Showing results for: <strong>"{searchQuery}"</strong>
-              <button className="prl-search-clear-link" onClick={clearFilters}>
-                ✕ Clear
-              </button>
+      {productPageSettings && (
+        <section className="prl-hero">
+          <div className="prl-container">
+            <div className="prl-hero-text">
+              {productPageSettings.badge_text && <div className="prl-eyebrow">{productPageSettings.badge_text}</div>}
+              {productPageSettings.title && (
+                <h1 className="prl-hero-title">
+                  {productPageSettings.title.split(' ').slice(0, -1).join(' ')}{' '}
+                  <span className="prl-accent">{productPageSettings.title.split(' ').pop()}</span>
+                </h1>
+              )}
+              {productPageSettings.subtitle && <p className="prl-hero-sub">{productPageSettings.subtitle}</p>}
             </div>
-          )}
-        </div>
-      </section>
+            {searchQuery && (
+              <div className="prl-search-result-banner">
+                Showing results for: <strong>"{searchQuery}"</strong>
+                <button className="prl-search-clear-link" onClick={clearFilters}>
+                  ✕ Clear
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ── Product Grid ─────────────────────────── */}
       <section className="prl-grid-section">
