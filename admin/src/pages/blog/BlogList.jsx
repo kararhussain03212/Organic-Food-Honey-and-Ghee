@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteBlog, getBlogs, updateBlog } from "../../api/blogApi";
 import { getBackendRoot } from "../../api/runtimeApi";
+import { useAuth } from "../../context/useAuth";
+import { hasPermission } from "../../modules/users/constants";
 
 const API_ROOT = getBackendRoot();
 
@@ -16,9 +18,24 @@ function toImageUrl(value) {
 
 export default function BlogList() {
   const navigate = useNavigate();
+  const { user }  = useAuth();
   const [blogs, setBlogs]     = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState("");
+  const [toast, setToast]     = useState({ show: false, text: "" });
+
+  const canAdd     = hasPermission(user, "create_content");
+  const canEdit    = hasPermission(user, "edit_content");
+  const canDelete  = hasPermission(user, "delete_content");
+  const canPublish = hasPermission(user, "publish_content");
+
+  const showNoPerm = (action) => setToast({ show: true, text: `You do not have permission to ${action}.` });
+
+  useEffect(() => {
+    if (!toast.show) return;
+    const t = setTimeout(() => setToast({ show: false, text: "" }), 2200);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   useEffect(() => {
     (async () => {
@@ -35,6 +52,7 @@ export default function BlogList() {
   }, []);
 
   const handleDelete = async (id) => {
+    if (!canDelete) { showNoPerm("delete blog posts"); return; }
     if (!window.confirm("Delete this blog post?")) return;
     try {
       await deleteBlog(id);
@@ -45,6 +63,7 @@ export default function BlogList() {
   };
 
   const togglePublished = async (item) => {
+    if (!canPublish) { showNoPerm("publish blog posts"); return; }
     try {
       const next = item.is_published ? 0 : 1;
       const res = await updateBlog(item.id, { is_published: next });
@@ -66,12 +85,18 @@ export default function BlogList() {
         </div>
         <button
           type="button"
-          onClick={() => navigate("/blogs/new")}
+          onClick={() => canAdd ? navigate("/blogs/new") : showNoPerm("add blog posts")}
           className="inline-flex w-fit rounded-xl bg-[var(--admin-primary)] px-5 py-2.5 text-black hover:bg-[var(--admin-primary-strong)]"
         >
           + Add Blog
         </button>
       </header>
+
+      {toast.show && (
+        <div className="fixed right-5 top-5 z-[220] rounded-xl border border-red-400/30 bg-red-500/90 px-4 py-2 text-sm font-medium text-white shadow-lg">
+          {toast.text}
+        </div>
+      )}
 
       {error && (
         <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-300">{error}</div>
@@ -123,7 +148,7 @@ export default function BlogList() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => navigate(`/blogs/edit/${item.id}`)}
+                      onClick={() => canEdit ? navigate(`/blogs/edit/${item.id}`) : showNoPerm("edit blog posts")}
                       className="rounded-lg bg-[#1f8b4c] px-4 py-2 text-sm text-white hover:bg-[var(--admin-primary-strong)]"
                     >
                       Edit

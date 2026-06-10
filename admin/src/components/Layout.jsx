@@ -8,7 +8,6 @@ import { getSettings } from "../api/settingApi";
 const NAV = [
   { path: "/dashboard",         label: "Dashboard" },
   { path: "/users",             label: "User Management", adminOnly: true },
-  { path: "/addresses",         label: "Customer Addresses" },
   { path: "/sliders",           label: "Hero Slides" },
   { path: "/products",          label: "Products" },
   { path: "/blogs",             label: "Blogs" },

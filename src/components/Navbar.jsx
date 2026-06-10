@@ -265,13 +265,13 @@ const Navbar = () => {
             <div className="info-item info-right">
               <span className="info-text">{welcomeText}</span>
             </div>
-            <div className="info-socials">
+            {/* <div className="info-socials">
               {socialLinks.map((link) => (
                 <a key={link.icon} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={link.label || link.icon} className="info-social-link">
                   {SOCIAL_ICON_MAP[link.icon] ?? null}
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -315,7 +315,7 @@ const Navbar = () => {
           })}
         </nav>
 
-        <div className="mobile-contact">
+        {/* <div className="mobile-contact">
           <div>
             <FaLocationDot />
             <div><span>Office 22, 4th Floor, Pakland City Center, I-8 Markaz, Islamabad, Pakistan.</span></div>
@@ -324,7 +324,7 @@ const Navbar = () => {
             <IoCall />
             <div><span>{navPhone}</span><small>Call support</small></div>
           </div>
-        </div>
+        </div> */}
 
         <div className="mobile-socials" aria-label="Social links">
           {socialLinks.map((link) => (

@@ -52,11 +52,11 @@ export default function Login() {
           {/* Logo + brand */}
           <div className="flex flex-col items-center gap-3">
             <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#496348] via-[#5a7a5a] to-[#C7A66B] shadow-[0_8px_24px_rgba(73,99,72,0.45)] sm:h-24 sm:w-24">
-              <img src={logo} alt="Arion Organic" className="h-14 w-14 rounded-xl object-cover sm:h-16 sm:w-16" />
+              <img src={logo} alt="Swift Sign" className="h-14 w-14 rounded-xl object-cover sm:h-16 sm:w-16" />
             </div>
             <div className="text-center">
               <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[var(--admin-muted)]">Admin Panel</p>
-              <h1 className="mt-0.5 text-2xl font-bold text-white sm:text-3xl">Arion Organic</h1>
+              <h1 className="mt-0.5 text-2xl font-bold text-white sm:text-3xl">Swift Sign</h1>
             </div>
           </div>
 
@@ -140,7 +140,7 @@ export default function Login() {
 
         {/* Footer note */}
         <p className="mt-5 text-center text-xs text-[var(--admin-muted)]">
-          Arion Organic Food &mdash; Secure Admin Access
+          Swift Sign Food &mdash; Secure Admin Access
         </p>
       </div>
     </div>

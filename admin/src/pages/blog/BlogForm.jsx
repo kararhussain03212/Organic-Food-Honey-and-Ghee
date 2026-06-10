@@ -6,6 +6,8 @@ import ImageUpload from "../../components/ImageUpload";
 import RichTextEditor from "../../components/RichTextEditor";
 import { uploadImage } from "../../api/uploadApi";
 import { getBackendRoot } from "../../api/runtimeApi";
+import { useAuth } from "../../context/useAuth";
+import { hasPermission } from "../../modules/users/constants";
 
 const initialForm = {
   title: "",
@@ -51,6 +53,11 @@ export default function BlogForm() {
   const navigate = useNavigate();
   const isEditMode = Boolean(id);
   const apiRoot = useMemo(() => getBackendRoot(), []);
+  const { user } = useAuth();
+
+  const canCreate = hasPermission(user, "create_content");
+  const canEdit   = hasPermission(user, "edit_content");
+  const canSave   = isEditMode ? canEdit : canCreate;
 
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(isEditMode);
@@ -110,6 +117,11 @@ export default function BlogForm() {
     event.preventDefault();
     setError("");
 
+    if (!canSave) {
+      setError(`You do not have permission to ${isEditMode ? "edit" : "create"} blog posts.`);
+      return;
+    }
+
     if (!form.title.trim()) return setError("Title is required.");
 
     try {
@@ -154,6 +166,12 @@ export default function BlogForm() {
   return (
     <section className="mx-auto max-w-5xl">
       <h2 className="mb-4 text-2xl font-bold text-white">{isEditMode ? "Edit Blog" : "Add Blog"}</h2>
+
+      {!canSave && (
+        <div className="mb-4 rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-300">
+          You do not have permission to {isEditMode ? "edit" : "create"} blog posts. Contact an admin.
+        </div>
+      )}
 
       {error ? (
         <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-300">{error}</div>
@@ -254,7 +272,7 @@ export default function BlogForm() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <button type="submit" disabled={saving} className="rounded-lg bg-[var(--admin-primary)] px-5 py-2 text-black hover:bg-[var(--admin-primary-strong)] disabled:opacity-60">
+          <button type="submit" disabled={saving || !canSave} className="rounded-lg bg-[var(--admin-primary)] px-5 py-2 text-black hover:bg-[var(--admin-primary-strong)] disabled:opacity-60">
             {saving ? "Saving..." : isEditMode ? "Update" : "Create"}
           </button>
           <button type="button" onClick={() => navigate("/blogs")} className="rounded-lg border border-white/20 px-5 py-2 text-white/90 hover:bg-white/10">
