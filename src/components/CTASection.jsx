@@ -10,6 +10,18 @@ const floatingLeaves = [
   { id: 6, emoji: "🍃", style: { top: "40%", left: "3%", fontSize: "1.3rem", animationDelay: "0.4s", animationDuration: "9s" } },
 ];
 
+const DEFAULT_DATA = {
+  eyebrow: "Order Today",
+  heading: "Experience Pure",
+  headingAccent: "Organic Living",
+  subtext: "Taste the difference of truly organic honey, ghee, and shilajit — sourced from nature, delivered to your door.",
+  btnText: "Shop Now",
+  btnLink: "/products",
+  btn2Text: "Our Story",
+  btn2Link: "/about",
+  badgeText: "Nationwide Delivery Available",
+};
+
 export default function CTASection() {
   const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -42,7 +54,7 @@ export default function CTASection() {
     return () => observer.disconnect();
   }, []);
 
-  if (!data) return null;
+  const displayData = data || DEFAULT_DATA;
 
   return (
     <section className="cta-section" ref={sectionRef}>
@@ -57,28 +69,28 @@ export default function CTASection() {
 
       <div className="cta-inner">
         <div className={`cta-content ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.1s" }}>
-          {data.eyebrow && <div className="cta-eyebrow">🌿 {data.eyebrow}</div>}
-          {data.heading && (
+          {displayData.eyebrow && <div className="cta-eyebrow">🌿 {displayData.eyebrow}</div>}
+          {displayData.heading && (
             <h2 className="cta-heading">
-              {data.heading}<br />
-              {data.headingAccent && <span className="cta-accent">{data.headingAccent}</span>}
+              {displayData.heading}<br />
+              {displayData.headingAccent && <span className="cta-accent">{displayData.headingAccent}</span>}
             </h2>
           )}
-          {data.subtext && <p className="cta-subtext">{data.subtext}</p>}
+          {displayData.subtext && <p className="cta-subtext">{displayData.subtext}</p>}
 
           <div className="cta-actions">
-            <a href={data.btnLink} className="cta-primary-btn" id="cta-shop-now">
-              <span>{data.btnText}</span>
+            <a href={displayData.btnLink} className="cta-primary-btn" id="cta-shop-now">
+              <span>{displayData.btnText}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </a>
-            <a href={data.btn2Link} className="cta-secondary-btn" id="cta-our-story">
+            <a href={displayData.btn2Link} className="cta-secondary-btn" id="cta-our-story">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M10 9l5 3-5 3V9z" fill="currentColor"/>
               </svg>
-              {data.btn2Text}
+              {displayData.btn2Text}
             </a>
           </div>
 
@@ -87,7 +99,7 @@ export default function CTASection() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
-              {data.badgeText}
+              {displayData.badgeText}
             </div>
           </div>
         </div>

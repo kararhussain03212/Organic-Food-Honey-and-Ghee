@@ -9,6 +9,22 @@ const COLORS = [
   { color: "#2e6b4f", bg: "rgba(46,107,79,0.08)" },
 ];
 
+const DEFAULT_HEADER = {
+  eyebrow: "Our Promise",
+  heading: "Purity You Can",
+  headingAccent: "Trust",
+  subtext: "Every product we offer is carefully sourced, traditionally crafted, and rigorously tested — bringing the finest of nature directly to your home.",
+  btnText: "",
+  btnLink: "",
+};
+
+const DEFAULT_PROMISES = [
+  { icon: "leaf", tag: "100% Organic", title: "Certified Organic", desc: "All our products are certified organic with no artificial additives, preservatives, or chemicals." },
+  { icon: "shield", tag: "Lab Tested", title: "Quality Assured", desc: "Rigorous lab testing ensures every batch meets the highest purity and safety standards." },
+  { icon: "award", tag: "Ethically Sourced", title: "Sustainably Sourced", desc: "We partner with trusted farms to bring you products that are good for you and the planet." },
+  { icon: "heart", tag: "Family Trusted", title: "Family Trusted", desc: "Crafted with the same care we would give our own family — pure, honest, and wholesome." },
+];
+
 const resolveIconUrl = (value, apiRoot) => {
   if (!value) return null;
   if (value.startsWith("http")) return value;
@@ -51,7 +67,6 @@ export default function PurityPromise() {
   const [activeBadge, setActiveBadge] = useState(0);
   const [promises, setPromises] = useState([]);
   const [header, setHeader] = useState(null);
-  const [loading, setLoading] = useState(true);
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
@@ -79,9 +94,13 @@ export default function PurityPromise() {
           }))
         );
       }
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => {});
   }, [apiRoot]);
+
+  const displayHeader = header || DEFAULT_HEADER;
+  const displayPromises = promises.length > 0
+    ? promises
+    : DEFAULT_PROMISES.map((p, i) => ({ ...p, icon_url: null, ...COLORS[i % COLORS.length] }));
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -93,14 +112,10 @@ export default function PurityPromise() {
   }, []);
 
   useEffect(() => {
-    if (promises.length <= 1) return;
-    const t = setInterval(() => setActiveBadge((p) => (p + 1) % promises.length), 2000);
+    if (displayPromises.length <= 1) return;
+    const t = setInterval(() => setActiveBadge((p) => (p + 1) % displayPromises.length), 2000);
     return () => clearInterval(t);
-  }, [promises.length]);
-
-  if (!header || promises.length === 0) {
-    return null;
-  }
+  }, [displayPromises.length]);
 
   return (
     <section className="purity-section" ref={sectionRef}>
@@ -112,15 +127,15 @@ export default function PurityPromise() {
         <div className={`purity-header ${visible ? "fade-up" : "fade-hidden"}`}>
           <div className="purity-eyebrow">
             <span className="purity-leaf">🌿</span>
-            {header.eyebrow}
+            {displayHeader.eyebrow}
           </div>
           <h2 className="purity-heading">
-            {header.heading} <span className="purity-accent">{header.headingAccent}</span>
+            {displayHeader.heading} <span className="purity-accent">{displayHeader.headingAccent}</span>
           </h2>
-          <p className="purity-subtext">{header.subtext}</p>
+          <p className="purity-subtext">{displayHeader.subtext}</p>
 
           <div className="badge-strip">
-            {promises.map((p, i) => (
+            {displayPromises.map((p, i) => (
               <span key={p.tag + i} className={`purity-badge ${i === activeBadge ? "purity-badge-active" : ""}`}>
                 {p.tag}
               </span>
@@ -129,7 +144,7 @@ export default function PurityPromise() {
         </div>
 
         <div className="purity-grid">
-          {promises.map((p, i) => (
+          {displayPromises.map((p, i) => (
             <div
               key={p.title + i}
               className={`purity-card ${visible ? "fade-up" : "fade-hidden"}`}

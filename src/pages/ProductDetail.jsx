@@ -1,15 +1,24 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProductBySlug, getProducts } from "../api/apiClient";
+import { getBackendRoot } from "../api/runtimeApi";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
+
+const resolveImage = (path) => {
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+  const apiRoot = getBackendRoot();
+  if (path.startsWith("/uploads/")) return apiRoot + path;
+  return path;
+};
 
 /* ─── Image Gallery ─────────────────────────────── */
 function ImageGallery({ images, name }) {
   return (
     <div className="pd-gallery">
       <div className="pd-gallery-main">
-        <img src={images[0]} alt={name} className="pd-gallery-img" />
+        <img src={resolveImage(images[0])} alt={name} className="pd-gallery-img" />
       </div>
     </div>
   );
@@ -66,7 +75,7 @@ function RelatedCard({ product, navigate }) {
       onClick={() => navigate(`/products/${product.slug}`)}
     >
       <div className="pd-related-img-wrap">
-        <img src={images[0]} alt={product.name} className="pd-related-img" />
+        <img src={resolveImage(images[0])} alt={product.name} className="pd-related-img" />
       </div>
       <div className="pd-related-body">
         <h4 className="pd-related-name">{product.name}</h4>

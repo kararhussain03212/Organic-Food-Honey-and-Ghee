@@ -15,6 +15,19 @@ function Stars({ rating }) {
   );
 }
 
+const DEFAULT_HEADER = {
+  eyebrow: "Customer Stories",
+  heading: "Loved by",
+  headingAccent: "Our Customers",
+  subtext: "Thousands of families trust Arion Organic Food for pure, natural products.",
+};
+
+const DEFAULT_TESTIMONIALS = [
+  { id: 1, name: "Fatima K.", role: "Verified Customer", avatar: null, rating: 5, quote: "The honey is absolutely pure and delicious. You can taste the difference from anything in the market. Will never go back to regular honey!", product: "Arion Honey 500g", verified: true },
+  { id: 2, name: "Ahmed R.", role: "Verified Customer", avatar: null, rating: 5, quote: "The desi ghee is exactly what I was looking for — pure, aromatic, and just like my grandmother used to make. Highly recommended!", product: "Arion Cow Desi Ghee", verified: true },
+  { id: 3, name: "Sara M.", role: "Verified Customer", avatar: null, rating: 5, quote: "Shilajit has made a noticeable difference in my energy levels. The quality is outstanding and delivery was very fast.", product: "Arion Shilajit", verified: true },
+];
+
 const resolveAvatar = (value, apiRoot) => {
   if (!value) return null;
   if (value.startsWith("http")) return value;
@@ -71,16 +84,17 @@ export default function Testimonials() {
     return () => observer.disconnect();
   }, []);
 
+  const displayHeader = header || DEFAULT_HEADER;
+  const displayTestimonials = testimonials.length > 0 ? testimonials : DEFAULT_TESTIMONIALS;
+
   useEffect(() => {
-    if (testimonials.length <= 1) return;
-    const t = setInterval(() => setCurrent((p) => (p + 1) % testimonials.length), 5000);
+    if (displayTestimonials.length <= 1) return;
+    const t = setInterval(() => setCurrent((p) => (p + 1) % displayTestimonials.length), 5000);
     return () => clearInterval(t);
-  }, [testimonials.length]);
+  }, [displayTestimonials.length]);
 
-  const prev = () => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
-  const next = () => setCurrent((p) => (p + 1) % testimonials.length);
-
-  if (!header || testimonials.length === 0) return null;
+  const prev = () => setCurrent((p) => (p - 1 + displayTestimonials.length) % displayTestimonials.length);
+  const next = () => setCurrent((p) => (p + 1) % displayTestimonials.length);
 
   return (
     <section className="test-section" ref={sectionRef}>
@@ -89,21 +103,21 @@ export default function Testimonials() {
 
       <div className="test-inner">
         <div className={`test-header ${visible ? "fade-up" : "fade-hidden"}`}>
-          {header.eyebrow && <div className="test-eyebrow">💬 {header.eyebrow}</div>}
-          {header.heading && (
+          {displayHeader.eyebrow && <div className="test-eyebrow">💬 {displayHeader.eyebrow}</div>}
+          {displayHeader.heading && (
             <h2 className="test-heading">
-              {header.heading} {header.headingAccent && <span className="test-accent">{header.headingAccent}</span>}
+              {displayHeader.heading} {displayHeader.headingAccent && <span className="test-accent">{displayHeader.headingAccent}</span>}
             </h2>
           )}
-          {header.subtext && <p className="test-subtext">{header.subtext}</p>}
+          {displayHeader.subtext && <p className="test-subtext">{displayHeader.subtext}</p>}
         </div>
 
         <div className={`test-carousel-wrap ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.4s" }}>
           <div className="test-featured">
-            {testimonials.map((t, i) => (
+            {displayTestimonials.map((t, i) => (
               <div
                 key={t.id}
-                className={`test-card ${i === current ? "test-card-active" : i === (current - 1 + testimonials.length) % testimonials.length ? "test-card-prev" : "test-card-hidden"}`}
+                className={`test-card ${i === current ? "test-card-active" : i === (current - 1 + displayTestimonials.length) % displayTestimonials.length ? "test-card-prev" : "test-card-hidden"}`}
               >
                 <div className="test-card-glow" />
                 <div className="test-quote-icon">"</div>
@@ -132,7 +146,7 @@ export default function Testimonials() {
               </svg>
             </button>
             <div className="test-dots">
-              {testimonials.map((_, i) => (
+              {displayTestimonials.map((_, i) => (
                 <button
                   key={i}
                   className={`test-dot ${i === current ? "test-dot-active" : ""}`}
