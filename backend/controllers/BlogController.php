@@ -122,18 +122,28 @@ final class BlogController extends BaseCrudController
 
     public function publicBlogSettings(array $params = []): void
     {
-        $data = Cache::remember('public:blog-settings', static function () {
-            $model = new Setting();
-            $all = $model->asMap(true);
-            $blog = [];
-            foreach ($all as $key => $value) {
-                if (str_starts_with((string) $key, 'blog_')) {
-                    $blog[$key] = $value;
+        try {
+            $data = Cache::remember('public:blog-settings', static function () {
+                try {
+                    $model = new Setting();
+                    $all = $model->asMap(false);
+                    $blog = [];
+                    foreach ($all as $key => $value) {
+                        if (str_starts_with((string) $key, 'blog_')) {
+                            $blog[$key] = $value;
+                        }
+                    }
+                    return $blog;
+                } catch (\Throwable $e) {
+                    error_log('Blog settings fetch error: ' . $e->getMessage());
+                    return [];
                 }
-            }
-            return $blog;
-        });
-        Response::success($data, 'Blog settings fetched');
+            });
+            Response::success($data, 'Blog settings fetched');
+        } catch (\Throwable $e) {
+            error_log('Cache error in blog settings: ' . $e->getMessage());
+            Response::success([], 'Blog settings fetched');
+        }
     }
 
     public function adminUpdateBlogSettings(array $params = []): void
