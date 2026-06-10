@@ -31,6 +31,7 @@ const getInitialForm = () => ({
   variant_original_prices: {},
   images: [],
   imageFiles: [],
+  imageAltTexts: [],
   badges: [],
   short_desc: "",
   description: "",
@@ -81,6 +82,15 @@ export default function ProductForm() {
         const faqs        = parseJson(item.faqs, [{ q: "", a: "" }]);
         const tags        = parseJson(item.tags, []);
 
+        const imageAltTexts = Array.isArray(images) ? images.map(img => {
+          if (typeof img === 'object' && img?.alt_text) return img.alt_text;
+          return '';
+        }) : [];
+        const imageUrls = Array.isArray(images) ? images.map(img => {
+          if (typeof img === 'object' && img?.url) return toImageUrl(img.url);
+          return toImageUrl(img);
+        }) : [];
+
         setForm({
           name:                   item.name         || "",
           slug:                   item.slug         || "",
@@ -97,7 +107,8 @@ export default function ProductForm() {
           variants:               variants.length   ? variants : [""],
           variant_prices:         vPrices,
           variant_original_prices: vOrigPrices,
-          images:                 images.map(toImageUrl),
+          images:                 imageUrls,
+          imageAltTexts:          imageAltTexts,
           imageFiles:             [],
           badges,
           short_desc:             item.short_desc   || "",
@@ -143,6 +154,7 @@ export default function ProductForm() {
       ...p,
       images: [...p.images, blobUrl],
       imageFiles: [...p.imageFiles, file],
+      imageAltTexts: [...p.imageAltTexts, ""],
     }));
   };
 
@@ -155,10 +167,22 @@ export default function ProductForm() {
         ...p,
         images: p.images.filter((_, j) => j !== i),
         imageFiles: p.imageFiles.filter((_, j) => j !== blobsBefore),
+        imageAltTexts: p.imageAltTexts.filter((_, j) => j !== i),
       }));
     } else {
-      setField("images", form.images.filter((_, j) => j !== i));
+      setForm((p) => ({
+        ...p,
+        images: p.images.filter((_, j) => j !== i),
+        imageAltTexts: p.imageAltTexts.filter((_, j) => j !== i),
+      }));
     }
+  };
+
+  const handleImageAltTextChange = (i, altText) => {
+    setForm((p) => ({
+      ...p,
+      imageAltTexts: p.imageAltTexts.map((text, j) => j === i ? altText : text),
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -170,16 +194,18 @@ export default function ProductForm() {
     try {
       setSaving(true);
 
-      // Upload new files; keep existing server URLs as-is
+      // Upload new files; keep existing server URLs as-is, and bundle with alt text
       let fileIdx = 0;
-      const uploadedUrls = [];
-      for (const url of form.images) {
+      const uploadedImages = [];
+      for (let i = 0; i < form.images.length; i++) {
+        const url = form.images[i];
+        const altText = form.imageAltTexts[i] || "";
         if (url.startsWith("blob:")) {
           const serverUrl = await uploadImage(form.imageFiles[fileIdx++], "products", "");
-          uploadedUrls.push(serverUrl);
+          uploadedImages.push({ url: serverUrl, alt_text: altText });
           URL.revokeObjectURL(url);
         } else {
-          uploadedUrls.push(url);
+          uploadedImages.push({ url, alt_text: altText });
         }
       }
 
@@ -201,7 +227,7 @@ export default function ProductForm() {
         variants:      JSON.stringify(variantArr),
         variant_prices:           JSON.stringify(form.variant_prices),
         variant_original_prices:  JSON.stringify(form.variant_original_prices),
-        images:        JSON.stringify(uploadedUrls),
+        images:        JSON.stringify(uploadedImages),
         badges:        JSON.stringify(form.badges),
         short_desc:    form.short_desc.trim(),
         description:   form.description.trim(),
@@ -342,27 +368,48 @@ export default function ProductForm() {
           <h3 className="font-semibold text-white/90">Product Images</h3>
 
           {form.images.length > 0 && (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="space-y-4">
               {form.images.map((url, i) => (
-                <div key={i} className="group relative aspect-square overflow-hidden rounded-xl border border-white/10">
-                  <img
-                    src={url}
-                    alt=""
-                    className="h-full w-full object-cover"
-                    onError={(e) => { e.target.style.display = "none"; }}
-                  />
-                  {url.startsWith("blob:") && (
-                    <span className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 text-center text-[10px] font-semibold text-amber-400">
-                      New — not saved yet
-                    </span>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(i)}
-                    className="absolute right-1.5 top-1.5 hidden h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white group-hover:flex"
-                  >
-                    ✕
-                  </button>
+                <div key={i} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-white/70">Image #{i + 1}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(i)}
+                      className="rounded-lg bg-red-500/20 px-2 py-1 text-xs font-semibold text-red-400 hover:bg-red-500/30"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="group relative mb-3 aspect-square overflow-hidden rounded-lg border border-white/10">
+                    <img
+                      src={url}
+                      alt={form.imageAltTexts[i] || "Product image"}
+                      className="h-full w-full object-cover"
+                      onError={(e) => { e.target.style.display = "none"; }}
+                    />
+                    {url.startsWith("blob:") && (
+                      <span className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 text-center text-[10px] font-semibold text-amber-400">
+                        New — not saved yet
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                      Alt Text (SEO & Accessibility)
+                    </label>
+                    <input
+                      type="text"
+                      value={form.imageAltTexts[i] || ""}
+                      onChange={(e) => handleImageAltTextChange(i, e.target.value)}
+                      placeholder="Describe this image for accessibility..."
+                      maxLength="150"
+                      className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/40 focus:border-[var(--admin-primary)] focus:outline-none"
+                    />
+                    <p className="mt-1 text-[10px] text-white/50">
+                      {form.imageAltTexts[i]?.length || 0}/150 characters
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>

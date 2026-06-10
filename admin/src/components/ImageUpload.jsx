@@ -3,11 +3,14 @@ import { getBackendRoot } from "../api/runtimeApi";
 
 const ImageUpload = ({
   value = "",
+  altText = "",
   onFileSelect,
+  onAltTextChange,
   label = "Upload Image",
   helperText = "PNG, JPG, JPEG (Frontend brand theme)",
   accept = "image/*",
   required = false,
+  includeAltText = false,
 }) => {
   const [objectUrl, setObjectUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -87,6 +90,25 @@ const ImageUpload = ({
           Failed to load image: {preview.slice(0, 50)}...
         </div>
       ) : null}
+
+      {includeAltText && (
+        <div className="mt-3 space-y-1">
+          <label className="block text-xs font-semibold text-white/80">
+            Alt Text for SEO & Accessibility
+          </label>
+          <input
+            type="text"
+            value={altText || ""}
+            onChange={(e) => onAltTextChange?.(e.target.value)}
+            placeholder="Describe what's in the image..."
+            maxLength="150"
+            className="w-full rounded-lg border border-white/20 bg-[var(--admin-card)] px-3 py-2 text-sm text-white placeholder-white/40 focus:border-[var(--admin-primary)] focus:outline-none"
+          />
+          <p className="text-[10px] text-white/50">
+            {altText?.length || 0}/150 characters
+          </p>
+        </div>
+      )}
     </label>
   );
 };

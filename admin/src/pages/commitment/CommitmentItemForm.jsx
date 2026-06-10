@@ -15,6 +15,7 @@ const getInitialForm = () => ({
   is_active: true,
   iconFile: null,
   iconPreview: "",
+  iconAltText: "",
 });
 
 export default function CommitmentItemForm() {
@@ -54,14 +55,15 @@ export default function CommitmentItemForm() {
         const res = await getCommitmentItem(id);
         const item = res?.data?.data || {};
         setForm({
-          icon:        item.icon         || "",
-          tag:         item.tag          || "",
-          title:       item.title        || "",
-          description: item.description  || "",
-          sort_order:  Number(item.sort_order ?? 1),
-          is_active:   item.is_active === 1 || item.is_active === true,
-          iconFile:    null,
-          iconPreview: toImageUrl(item.icon_url || ""),
+          icon:         item.icon         || "",
+          tag:          item.tag          || "",
+          title:        item.title        || "",
+          description:  item.description  || "",
+          sort_order:   Number(item.sort_order ?? 1),
+          is_active:    item.is_active === 1 || item.is_active === true,
+          iconFile:     null,
+          iconPreview:  toImageUrl(item.icon_url || ""),
+          iconAltText:  item.icon_alt_text || "",
         });
       } catch (err) {
         console.error(err);
@@ -92,12 +94,13 @@ export default function CommitmentItemForm() {
       }
 
       const payload = {
-        icon:        form.icon.trim(),
-        tag:         form.tag.trim(),
-        title:       form.title.trim(),
-        description: form.description.trim(),
-        sort_order:  Number(form.sort_order || 1),
-        is_active:   form.is_active ? 1 : 0,
+        icon:            form.icon.trim(),
+        tag:             form.tag.trim(),
+        title:           form.title.trim(),
+        description:     form.description.trim(),
+        sort_order:      Number(form.sort_order || 1),
+        is_active:       form.is_active ? 1 : 0,
+        icon_alt_text:   form.iconAltText.trim(),
       };
 
       if (iconUrl) payload.icon_url = iconUrl;
@@ -215,9 +218,12 @@ export default function CommitmentItemForm() {
           <p className="mb-2 text-xs text-white/40">Upload an image icon. This overrides the emoji icon above.</p>
           <ImageUpload
             value={form.iconPreview}
+            altText={form.iconAltText}
             onFileSelect={(file) => setField("iconFile", file)}
+            onAltTextChange={(text) => setField("iconAltText", text)}
             label="Upload Icon Image"
             helperText="PNG, JPG, SVG — shown as the card icon (overrides emoji)"
+            includeAltText={true}
           />
         </div>
 

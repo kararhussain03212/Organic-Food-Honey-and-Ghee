@@ -26,6 +26,7 @@ const getInitialForm = () => ({
   is_active: true,
   imageFile: null,
   imagePreview: "",
+  imageAltText: "",
 });
 
 export default function TestimonialForm() {
@@ -71,15 +72,16 @@ export default function TestimonialForm() {
         const item = res?.data?.data || {};
 
         setForm({
-          name:       item.name    || "",
-          role:       item.role    || "Verified Customer",
-          quote:      item.quote   || "",
-          rating:     Number(item.rating     ?? 5),
-          product:    item.product || "",
-          sort_order: Number(item.sort_order ?? 1),
-          is_active:  item.is_active === 1 || item.is_active === true,
-          imageFile:  null,
+          name:         item.name    || "",
+          role:         item.role    || "Verified Customer",
+          quote:        item.quote   || "",
+          rating:       Number(item.rating     ?? 5),
+          product:      item.product || "",
+          sort_order:   Number(item.sort_order ?? 1),
+          is_active:    item.is_active === 1 || item.is_active === true,
+          imageFile:    null,
           imagePreview: toImageUrl(item.avatar || ""),
+          imageAltText: item.avatar_alt_text || "",
         });
       } catch (err) {
         console.error(err);
@@ -124,13 +126,14 @@ export default function TestimonialForm() {
       }
 
       const payload = {
-        name:       form.name.trim(),
-        role:       form.role.trim()    || "Verified Customer",
-        quote:      form.quote.trim(),
-        rating:     Number(form.rating  || 5),
-        product:    form.product.trim(),
-        sort_order: Number(form.sort_order || 1),
-        is_active:  form.is_active ? 1 : 0,
+        name:              form.name.trim(),
+        role:              form.role.trim()    || "Verified Customer",
+        quote:             form.quote.trim(),
+        rating:            Number(form.rating  || 5),
+        product:           form.product.trim(),
+        sort_order:        Number(form.sort_order || 1),
+        is_active:         form.is_active ? 1 : 0,
+        avatar_alt_text:   form.imageAltText.trim(),
       };
 
       if (avatarUrl) payload.avatar = avatarUrl;
@@ -249,9 +252,12 @@ export default function TestimonialForm() {
 
         <ImageUpload
           value={form.imagePreview}
+          altText={form.imageAltText}
           onFileSelect={(file) => setField("imageFile", file)}
+          onAltTextChange={(text) => setField("imageAltText", text)}
           label="Upload Avatar"
           helperText="Optional customer photo"
+          includeAltText={true}
         />
 
         <div className="flex flex-col gap-3 sm:flex-row">

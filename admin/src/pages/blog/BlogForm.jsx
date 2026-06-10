@@ -22,6 +22,7 @@ const initialForm = {
   isPublished: true,
   imageFile: null,
   imagePreview: "",
+  imageAltText: "",
 };
 
 const decodeHtmlEntities = (value) =>
@@ -101,6 +102,7 @@ export default function BlogForm() {
           isPublished: item.is_published === 1 || item.is_published === true,
           imageFile:   null,
           imagePreview: toImageUrl(item.image || ""),
+          imageAltText: item.image_alt_text || "",
         });
       } catch (err) {
         console.error(err);
@@ -136,17 +138,18 @@ export default function BlogForm() {
       }
 
       const payload = {
-        title:        form.title.trim(),
-        slug:         form.slug.trim(),
-        category:     form.category.trim(),
-        excerpt:      form.excerpt.trim(),
-        content:      form.content,
-        image:        imagePath,
-        author:       form.author.trim(),
-        published_at: toSqlDateTime(form.publishedAt),
-        read_time:    form.readTime ? Number(form.readTime) : null,
-        sort_order:   Number(form.sortOrder || 1),
-        is_published: form.isPublished ? 1 : 0,
+        title:         form.title.trim(),
+        slug:          form.slug.trim(),
+        category:      form.category.trim(),
+        excerpt:       form.excerpt.trim(),
+        content:       form.content,
+        image:         imagePath,
+        image_alt_text: form.imageAltText.trim(),
+        author:        form.author.trim(),
+        published_at:  toSqlDateTime(form.publishedAt),
+        read_time:     form.readTime ? Number(form.readTime) : null,
+        sort_order:    Number(form.sortOrder || 1),
+        is_published:  form.isPublished ? 1 : 0,
       };
 
       if (isEditMode) await updateBlog(id, payload);
@@ -222,9 +225,12 @@ export default function BlogForm() {
 
         <ImageUpload
           value={form.imagePreview}
+          altText={form.imageAltText}
           onFileSelect={(file) => setField("imageFile", file)}
+          onAltTextChange={(text) => setField("imageAltText", text)}
           label="Upload Blog Featured Image"
           helperText="This image will appear in home blog section and blog detail header."
+          includeAltText={true}
         />
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

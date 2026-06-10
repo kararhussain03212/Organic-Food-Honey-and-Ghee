@@ -11,7 +11,7 @@ final class BlogPost extends BaseModel
     protected string $table = 'blog_posts';
     protected array $fillable = [
         'title', 'slug', 'category', 'excerpt',
-        'content', 'image', 'author', 'tags',
+        'content', 'image', 'image_alt_text', 'author', 'tags',
         'is_published', 'published_at', 'read_time', 'sort_order',
     ];
 
