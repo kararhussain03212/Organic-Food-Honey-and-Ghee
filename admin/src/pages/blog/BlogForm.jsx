@@ -49,6 +49,13 @@ const toSqlDateTime = (value) => {
   return `${y}-${m}-${d} 00:00:00`;
 };
 
+const slugify = (value = "") =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 export default function BlogForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -64,6 +71,7 @@ export default function BlogForm() {
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
 
   const toImageUrl = useCallback(
     (value) => {
@@ -79,9 +87,23 @@ export default function BlogForm() {
 
   const setField = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
+  const handleTitleChange = (value) => {
+    setForm((prev) => ({
+      ...prev,
+      title: value,
+      slug: slugTouched ? prev.slug : slugify(value),
+    }));
+  };
+
+  const handleSlugChange = (value) => {
+    setSlugTouched(true);
+    setField("slug", slugify(value));
+  };
+
   useEffect(() => {
     if (!isEditMode) {
       setLoading(false);
+      setSlugTouched(false);
       return;
     }
 
@@ -89,6 +111,7 @@ export default function BlogForm() {
       try {
         const res = await getBlog(id);
         const item = res.data?.data || {};
+        setSlugTouched(true);
         setForm({
           title:       decodeHtmlEntities(item.title    || ""),
           slug:        decodeHtmlEntities(item.slug     || ""),
@@ -183,12 +206,13 @@ export default function BlogForm() {
       <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-white/10 bg-[var(--admin-bg)] p-6">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
-            <label className="mb-1 block text-sm text-white/80">Title</label>
-            <input value={form.title} onChange={(e) => setField("title", e.target.value)} required className="w-full rounded-lg border border-white/20 bg-[var(--admin-card)] px-3 py-2 text-white" />
+            <label className="mb-1 block text-sm text-white/80">Title *</label>
+            <input value={form.title} onChange={(e) => handleTitleChange(e.target.value)} required className="w-full rounded-lg border border-white/20 bg-[var(--admin-card)] px-3 py-2 text-white" />
           </div>
           <div>
             <label className="mb-1 block text-sm text-white/80">Slug</label>
-            <input value={form.slug} onChange={(e) => setField("slug", e.target.value)} placeholder="auto-generated-if-empty" className="w-full rounded-lg border border-white/20 bg-[var(--admin-card)] px-3 py-2 text-white" />
+            <input value={form.slug} onChange={(e) => handleSlugChange(e.target.value)} placeholder="auto-generated-from-title" className="w-full rounded-lg border border-white/20 bg-[var(--admin-card)] px-3 py-2 text-white" />
+            <p className="mt-1 text-xs text-white/50">Auto-generated from title. Edit to customize.</p>
           </div>
           <div>
             <label className="mb-1 block text-sm text-white/80">Category</label>

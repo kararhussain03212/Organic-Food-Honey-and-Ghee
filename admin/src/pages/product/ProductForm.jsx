@@ -424,7 +424,7 @@ export default function ProductForm() {
         </div>
 
         {/* ── Badges ── */}
-        <div className={sectionCls}>
+        {/* <div className={sectionCls}>
           <h3 className="font-semibold text-white/90">Badges</h3>
           <div className="flex flex-wrap gap-2">
             {BADGE_OPTIONS.map((b) => (
@@ -434,7 +434,7 @@ export default function ProductForm() {
               </label>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* ── Description ── */}
         <div className={sectionCls}>
