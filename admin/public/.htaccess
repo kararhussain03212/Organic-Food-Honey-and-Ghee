@@ -11,3 +11,53 @@ Options -Indexes
 
   RewriteRule . /admin/index.html [L]
 </IfModule>
+
+# 🔒 Security Headers for Admin Panel
+<IfModule mod_headers.c>
+  # Prevent Clickjacking (Admin should never be embedded in frames)
+  Header always set X-Frame-Options "DENY"
+
+  # Prevent MIME type sniffing
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Legacy XSS protection
+  Header always set X-XSS-Protection "1; mode=block"
+
+  # Referrer policy - don't leak admin URLs
+  Header always set Referrer-Policy "no-referrer"
+
+  # Control dangerous APIs and permissions
+  Header always set Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), vr=()"
+
+  # Strict HTTPS enforcement
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # CSP for Admin (very restrictive)
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self'; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content"
+
+  # Don't cache HTML (keep it fresh for security updates)
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "private, no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Cache static assets aggressively
+  <FilesMatch "\.(js|css|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot|map)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# Disable access to sensitive files
+<FilesMatch "(\.env|\.git|\.htaccess|\.htpasswd|composer\.lock|package-lock\.json)$">
+  Deny from all
+</FilesMatch>
+
+# PHP Security
+<IfModule mod_php.c>
+  php_flag display_errors off
+  php_flag log_errors on
+  php_value upload_max_filesize 100M
+  php_value post_max_size 100M
+  php_value max_execution_time 300
+</IfModule>

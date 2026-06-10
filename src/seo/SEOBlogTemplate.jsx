@@ -10,7 +10,7 @@ import { getReadingTime, generateBreadcrumbs } from "./seoUtils";
  */
 export const SEOBlogTemplate = ({
   article = {},
-  siteUrl = "https://arionorganicfood.com",
+  siteUrl = "https://organicfood.swiftsigngeneraltrading.com",
   children,
 }) => {
   const {
@@ -205,7 +205,7 @@ export const RelatedArticles = ({ currentSlug, articles, limit = 3 }) => {
  * FAQ Schema Component for Blog Posts
  * Helps answer common questions and improves SERP appearance
  */
-export const BlogFAQ = ({ faqs, siteUrl = "https://arionorganicfood.com" }) => {
+export const BlogFAQ = ({ faqs, siteUrl = "https://organicfood.swiftsigngeneraltrading.com" }) => {
   const { generateFAQSchema } = require("./seoData");
 
   return (

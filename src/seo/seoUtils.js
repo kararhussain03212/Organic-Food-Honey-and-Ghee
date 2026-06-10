@@ -137,7 +137,7 @@ export const observeWebVitals = () => {
 };
 
 // Generate canonical URL
-export const getCanonicalUrl = (pathname, baseUrl = "https://arionorganicfood.com") => {
+export const getCanonicalUrl = (pathname, baseUrl = "https://organicfood.swiftsigngeneraltrading.com") => {
   return `${baseUrl}${pathname}`;
 };
 

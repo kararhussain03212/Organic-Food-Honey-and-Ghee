@@ -1,0 +1,54 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Prevent directory listing
+  Options -Indexes
+
+  # API routes to backend (must be BEFORE other rules)
+  RewriteRule ^api/(.*)$ backend/index.php [QSA,L]
+  RewriteRule ^backend/api/(.*)$ backend/index.php [QSA,L]
+
+  # Admin panel routes
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^admin(/)?(.*)$ admin/dist/index.html [L]
+
+  # Static files (don't rewrite)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Frontend SPA routes
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)$ dist/index.html [L]
+
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Cache busting for static assets
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# Security headers (OUTSIDE rewrite module)
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # CSP for Frontend (allows Google Fonts, backend images, videos)
+  Header set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https:; img-src 'self' data: blob: https: http:; connect-src 'self' https: http:; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com; object-src 'none'; upgrade-insecure-requests"
+</IfModule>
+
+# PHP Configuration
+<IfModule mod_php.c>
+  php_value upload_max_filesize 100M
+  php_value post_max_size 100M
+  php_value max_execution_time 300
+</IfModule>

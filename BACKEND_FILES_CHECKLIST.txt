@@ -1,0 +1,196 @@
+================================================================================
+                    BACKEND FILES TO UPLOAD TO cPANEL
+================================================================================
+
+Your current directory: C:\xampp\htdocs\Organic Food\
+
+📤 UPLOAD THIS STRUCTURE TO: public_html/ ON cPANEL
+
+================================================================================
+ROOT LEVEL (public_html/)
+================================================================================
+
+FROM LOCAL:                         TO cPANEL:
+.env.production                 →   .env (EDIT with your DB credentials!)
+.htaccess                       →   .htaccess
+index.php                       →   index.php
+
+
+================================================================================
+BACKEND FOLDER (public_html/backend/)
+================================================================================
+
+FROM LOCAL:                         TO cPANEL:
+backend/.env.production         →   backend/.env (EDIT with your DB info!)
+backend/.htaccess              →   backend/.htaccess
+backend/index.php              →   backend/index.php
+
+📁 backend/config/
+   ├── env.php                 →   backend/config/env.php
+   ├── database.php            →   backend/config/database.php
+   └── jwt.php                 →   backend/config/jwt.php
+
+📁 backend/middleware/
+   ├── cors.php                →   backend/middleware/cors.php
+   └── auth.php                →   backend/middleware/auth.php
+
+📁 backend/routes/
+   └── api.php                 →   backend/routes/api.php
+
+📁 backend/controllers/
+   ├── SettingsController.php  →   backend/controllers/SettingsController.php
+   ├── ProductController.php   →   backend/controllers/ProductController.php
+   ├── BlogController.php      →   backend/controllers/BlogController.php
+   ├── HeroController.php      →   backend/controllers/HeroController.php
+   ├── TestimonialController.php → backend/controllers/TestimonialController.php
+   ├── CommitmentController.php  → backend/controllers/CommitmentController.php
+   ├── ContactController.php   →   backend/controllers/ContactController.php
+   └── [all other controllers] →   backend/controllers/[same]
+
+📁 backend/utils/
+   ├── Response.php            →   backend/utils/Response.php
+   ├── Router.php              →   backend/utils/Router.php
+   ├── Validation.php          →   backend/utils/Validation.php
+   └── [other utility files]   →   backend/utils/[same]
+
+📁 backend/seeds/
+   ├── seed_products.php       →   backend/seeds/seed_products.php
+   ├── seed_blog.php           →   backend/seeds/seed_blog.php
+   ├── seed_testimonials.php   →   backend/seeds/seed_testimonials.php
+   ├── seed.php                →   backend/seeds/seed.php
+   └── [other seed files]      →   backend/seeds/[same]
+
+📁 backend/uploads/  (CREATE EMPTY ON cPANEL)
+   ├── product-images/        (CREATE EMPTY)
+   └── blog-images/           (CREATE EMPTY)
+
+
+================================================================================
+FRONTEND BUILD FOLDER (public_html/dist/)
+================================================================================
+
+After running: npm run build
+
+FROM LOCAL:                         TO cPANEL:
+dist/index.html                →   dist/index.html
+dist/assets/                   →   dist/assets/ (all CSS, JS, images)
+dist/favicon.ico               →   dist/favicon.ico
+[all other dist/ files]        →   dist/[same]
+
+
+================================================================================
+ADMIN BUILD FOLDER (public_html/admin/dist/)
+================================================================================
+
+After running: cd admin && npm run build
+
+FROM LOCAL:                         TO cPANEL:
+admin/dist/index.html          →   admin/dist/index.html
+admin/dist/assets/             →   admin/dist/assets/ (all CSS, JS, images)
+admin/dist/favicon.ico         →   admin/dist/favicon.ico
+admin/public/.htaccess         →   admin/public/.htaccess (if exists)
+[all other admin/dist/ files]  →   admin/dist/[same]
+
+
+================================================================================
+PUBLIC ASSETS (public_html/public/)
+================================================================================
+
+FROM LOCAL:                         TO cPANEL:
+📁 public/logo/
+   ├── General trading storke.png → public/logo/General trading storke.png
+   └── General trading white storke.png → public/logo/General trading white storke.png
+
+📁 public/uploads/  (CREATE EMPTY)
+   └── (will be populated by admin uploads later)
+
+
+================================================================================
+TOTAL FILES TO UPLOAD
+================================================================================
+
+Root level:           3 files + 3 .env files
+backend/:            50-100 PHP files (config, middleware, routes, controllers, utils, seeds)
+dist/:               20-50 files (HTML, JS, CSS, assets)
+admin/dist/:         20-50 files (HTML, JS, CSS, assets)
+public/logo/:        2 image files
+public/uploads/:     0 files (empty directory)
+
+TOTAL ESTIMATE:       ~120-200 files
+
+
+================================================================================
+⚠️  IMPORTANT NOTES
+================================================================================
+
+❌ DO NOT UPLOAD:
+   - node_modules/ (too large!)
+   - src/ folder (already built into dist/)
+   - admin/src/ folder (already built into admin/dist/)
+   - .git/ folder (not needed)
+   - package.json, package-lock.json (not needed)
+
+✅ MUST EDIT AFTER UPLOADING:
+   1. backend/.env - Update DB credentials
+   2. .env (root) - Verify domain settings
+
+✅ MUST CREATE:
+   1. backend/uploads/ directory (with 777 permissions)
+   2. backend/uploads/product-images/ (with 777 permissions)
+   3. backend/uploads/blog-images/ (with 777 permissions)
+
+✅ MUST DO AFTER UPLOADING:
+   1. SSH into cPanel
+   2. cd public_html/backend
+   3. php seed.php  (or individual seeders)
+   4. Test: https://yourdomain.com/backend/api/public/settings
+
+
+================================================================================
+FILE PERMISSIONS (After Upload)
+================================================================================
+
+Directories (folders):    755
+Regular files:           644
+.htaccess:              644
+.env:                   600  (most secure)
+backend/uploads/:       777  (writable by PHP)
+
+
+================================================================================
+QUICK UPLOAD COMMAND (SSH)
+================================================================================
+
+# If uploading from your local machine via SSH:
+rsync -avz --exclude 'node_modules' --exclude '.git' \
+  C:\xampp\htdocs\Organic\ Food\backend\ \
+  user@organicfood.swiftsigngeneraltrading.com:/home/user/public_html/backend/
+
+rsync -avz C:\xampp\htdocs\Organic\ Food\dist\ \
+  user@organicfood.swiftsigngeneraltrading.com:/home/user/public_html/dist/
+
+rsync -avz C:\xampp\htdocs\Organic\ Food\admin\dist\ \
+  user@organicfood.swiftsigngeneraltrading.com:/home/user/public_html/admin/dist/
+
+
+================================================================================
+VERIFICATION AFTER UPLOAD
+================================================================================
+
+✓ Visit: https://organicfood.swiftsigngeneraltrading.com
+  Expected: Homepage loads
+
+✓ Visit: https://organicfood.swiftsigngeneraltrading.com/admin
+  Expected: Admin login page
+
+✓ Visit: https://organicfood.swiftsigngeneraltrading.com/backend/api/public/settings
+  Expected: JSON response (not 404)
+
+✓ Check cPanel Error Logs
+  Expected: No critical PHP errors
+
+
+================================================================================
+Last Updated: June 10, 2026
+Status: Ready for Upload
+================================================================================

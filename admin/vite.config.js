@@ -14,11 +14,11 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api": {
-        target: process.env.VITE_BACKEND_PROXY_TARGET || "http://localhost/honey-ghee/backend",
+        target: process.env.VITE_BACKEND_PROXY_TARGET || "http://localhost/Organic%20Food/backend",
         changeOrigin: true,
       },
       "/uploads": {
-        target: process.env.VITE_BACKEND_PROXY_TARGET || "http://localhost/honey-ghee/backend",
+        target: process.env.VITE_BACKEND_PROXY_TARGET || "http://localhost/Organic%20Food/backend",
         changeOrigin: true,
       },
     },

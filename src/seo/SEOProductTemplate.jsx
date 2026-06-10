@@ -10,7 +10,7 @@ import { generateBreadcrumbs } from "./seoUtils";
  */
 export const SEOProductTemplate = ({
   product = {},
-  siteUrl = "https://arionorganicfood.com",
+  siteUrl = "https://organicfood.swiftsigngeneraltrading.com",
   children,
 }) => {
   const {
