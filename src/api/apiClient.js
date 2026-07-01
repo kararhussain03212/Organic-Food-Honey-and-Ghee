@@ -1,4 +1,16 @@
 const BASE_URL = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
+const BACKEND_ROOT = BASE_URL.replace(/\/api$/i, "");
+
+function resolveUploadUrl(path) {
+  if (!path || typeof path !== "string") return path;
+  if (path.startsWith("/uploads/")) return BACKEND_ROOT + path;
+  return path;
+}
+
+function normalizeBlog(blog) {
+  if (!blog || typeof blog !== "object") return blog;
+  return { ...blog, image: resolveUploadUrl(blog.image) };
+}
 
 async function fetchApi(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
@@ -71,7 +83,8 @@ export async function getBlogs(params = {}) {
   try {
     const qs = new URLSearchParams({ paginate: "0", ...params }).toString();
     const result = await fetchApi(`/api/public/blog?${qs}`);
-    return Array.isArray(result) ? result : (result?.data ?? []);
+    const blogs = Array.isArray(result) ? result : (result?.data ?? []);
+    return blogs.map(normalizeBlog);
   } catch {
     return [];
   }
@@ -79,7 +92,8 @@ export async function getBlogs(params = {}) {
 
 export async function getBlogBySlug(slug) {
   try {
-    return await fetchApi(`/api/public/blog/${encodeURIComponent(slug)}`);
+    const result = await fetchApi(`/api/public/blog/${encodeURIComponent(slug)}`);
+    return normalizeBlog(result);
   } catch {
     return null;
   }
