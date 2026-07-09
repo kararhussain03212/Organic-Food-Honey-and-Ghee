@@ -10,6 +10,6 @@ final class ProductPageSetting extends BaseModel
 {
     protected string $table = 'product_page_settings';
     protected array $fillable = [
-        'badge_text', 'title', 'subtitle',
+        'badge_text', 'title', 'subtitle', 'seo_meta_description',
     ];
 }

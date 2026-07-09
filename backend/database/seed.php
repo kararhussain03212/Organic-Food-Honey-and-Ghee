@@ -286,6 +286,7 @@ $settings = [
     'footer_timings_heading'  => 'Working Hours',
     'footer_timings_days'     => 'Monday - Saturday',
     'footer_timings_time'     => '9:00 AM - 6:00 PM',
+    'footer_quick_links'      => '[{"label":"Home","path":"/"},{"label":"About","path":"/about"},{"label":"Products","path":"/products"},{"label":"Blog","path":"/blog"},{"label":"Contact","path":"/contact"}]',
     'footer_links'            => '[{"label":"Terms & Conditions","path":"/terms-and-conditions"},{"label":"Privacy Policy","path":"/privacy-policy"},{"label":"Return Policy","path":"/return-policy"},{"label":"Shipping Policy","path":"/online-order-policy"},{"label":"Certification","path":"/certification"}]',
     'footer_social_links'     => '[{"label":"Facebook","url":"https://www.facebook.com/SSgeneraltradinguae","icon":"facebook"},{"label":"Instagram","url":"https://www.instagram.com/ssarionorganicfood/","icon":"instagram"},{"label":"YouTube","url":"https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing","icon":"youtube"},{"label":"TikTok","url":"https://www.tiktok.com/@ssarionorganicfood","icon":"tiktok"}]',
 

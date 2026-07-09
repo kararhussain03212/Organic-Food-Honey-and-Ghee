@@ -22,7 +22,7 @@ const ImageUpload = ({
     if (url.startsWith("blob:")) return url;
     if (url.startsWith("http")) return url;
     if (url.startsWith("/uploads/")) return apiRoot + url;
-    if (url.startsWith("/")) return url;
+    if (url.startsWith("/")) return apiRoot + url;
     return `${apiRoot}/uploads/${url}`;
   };
 

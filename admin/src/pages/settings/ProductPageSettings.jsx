@@ -7,6 +7,7 @@ export default function ProductPageSettings() {
     badge_text: "",
     title: "",
     subtitle: "",
+    seo_meta_description: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -25,6 +26,7 @@ export default function ProductPageSettings() {
             badge_text: data.badge_text || "",
             title:      data.title      || "",
             subtitle:   data.subtitle   || "",
+            seo_meta_description: data.seo_meta_description || "",
           });
         }
       } catch (err) {
@@ -60,6 +62,7 @@ export default function ProductPageSettings() {
           badge_text: data.badge_text || "",
           title:      data.title      || "",
           subtitle:   data.subtitle   || "",
+          seo_meta_description: data.seo_meta_description || "",
         });
       }
     } catch (err) {

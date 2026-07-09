@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { getSettings, parseJsonField } from "../api/apiClient";
+import { getBackendRoot } from "../api/runtimeApi";
 import { FiInstagram } from "react-icons/fi";
 import { FaFacebookSquare } from "react-icons/fa";
 import { AiFillTikTok } from "react-icons/ai";
@@ -34,6 +35,18 @@ const Footer = () => {
   const timingsDays = s?.footer_timings_days;
   const timingsTime = s?.footer_timings_time;
 
+  const footerLogoUrl = useMemo(() => {
+    const logo = s?.footer_logo || "/logo/General trading white storke.png";
+    if (logo.startsWith("http")) return logo;
+    if (logo.startsWith("/uploads/")) return getBackendRoot() + logo;
+    if (logo.startsWith("/")) return getBackendRoot() + logo;
+    return getBackendRoot() + "/uploads/" + logo;
+  }, [s?.footer_logo]);
+
+  const footerQuickLinks = useMemo(() => {
+    return parseJsonField(s?.footer_quick_links, []);
+  }, [s?.footer_quick_links]);
+
   const footerLinks = useMemo(() => {
     return parseJsonField(s?.footer_links, []);
   }, [s?.footer_links]);
@@ -50,7 +63,7 @@ const Footer = () => {
         {(brandTitle || brandSub) && (
           <div className="footer-brand-block">
             <div className="footer-logo" aria-hidden="true">
-              <img src="/logo/General trading white storke.png" alt="logo" />
+              <img src={footerLogoUrl} alt={`${brandTitle} - Organic Food Pakistan`} />
             </div>
             <div>
               {brandTitle && <div className="footer-title">{brandTitle}</div>}
@@ -97,6 +110,29 @@ const Footer = () => {
                 {timingsDays && <p>{timingsDays}</p>}
                 {timingsTime && <p>{timingsTime}</p>}
               </div>
+            </div>
+          </div>
+        )}
+
+        {footerQuickLinks.length > 0 && (
+          <div className="footer-quick">
+            <div className="footer-links">
+              {footerQuickLinks.map((link) => {
+                const isExternal = link.path?.startsWith("http://") || link.path?.startsWith("https://");
+                const target = link.target || "_self";
+                return isExternal ? (
+                  <a
+                    key={link.label}
+                    href={link.path}
+                    target={target}
+                    rel={target === "_blank" ? "noopener noreferrer" : ""}
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link to={link.path} key={link.label}>{link.label}</Link>
+                );
+              })}
             </div>
           </div>
         )}

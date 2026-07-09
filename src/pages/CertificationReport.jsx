@@ -1,5 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import Testimonials from "../components/Testimonials";
+import { SEOHelmet } from "../seo/SEOHelmet";
+import { getSEOData } from "../seo/seoData";
 import "../styles/CertificationReport.css";
 
 const reportData = {
@@ -89,10 +91,16 @@ export default function CertificationReport() {
   const { qrCode } = useParams();
   const navigate = useNavigate();
   const report = reportData[qrCode];
+  const seo = report ? getSEOData("certificationReport", report, qrCode) : null;
 
   if (!report) {
     return (
       <main className="rp-page">
+        <SEOHelmet
+          title="Report Not Found | Arion Organic Food"
+          description="The PCSIR certification report could not be found."
+          url={`/certification/${qrCode}`}
+        />
         <section className="rp-not-found">
           <h1>Report Not Found</h1>
           <p>The PCSIR certification report for this product could not be found.</p>
@@ -106,6 +114,16 @@ export default function CertificationReport() {
 
   return (
     <main className="rp-page">
+      {seo && (
+        <SEOHelmet
+          title={seo.title}
+          description={seo.description}
+          keywords={seo.keywords}
+          image={report.certImage || seo.image}
+          url={seo.slug}
+          type={seo.type}
+        />
+      )}
 
       {/* ── Page Title ─────────────────────────────────────── */}
       <section className="rp-page-title">

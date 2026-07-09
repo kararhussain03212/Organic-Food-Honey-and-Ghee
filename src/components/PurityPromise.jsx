@@ -153,7 +153,7 @@ export default function PurityPromise() {
               <div className="purity-card-glow" />
               <div className="purity-icon-wrap" style={{ background: p.bg, color: p.color }}>
                 {p.icon_url ? (
-                  <img src={p.icon_url} alt={p.title} style={{ width: "1.8rem", height: "1.8rem", objectFit: "contain" }} />
+                  <img src={p.icon_url} alt={p.icon_alt_text || p.title} title={p.desc} style={{ width: "1.8rem", height: "1.8rem", objectFit: "contain" }} />
                 ) : (
                   <SvgIcon name={p.icon} color={p.color} size={28} />
                 )}

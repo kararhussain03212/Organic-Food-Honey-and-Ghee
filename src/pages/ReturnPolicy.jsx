@@ -26,10 +26,10 @@ const sections = [
 const ReturnPolicy = () => {
   return (
     <PolicyPage
-      title="Return Policy"
-      updatedOn="May 21, 2026"
-      sections={sections}
-    />
+        title="Return Policy"
+        updatedOn="May 21, 2026"
+        sections={sections}
+      />
   );
 };
 

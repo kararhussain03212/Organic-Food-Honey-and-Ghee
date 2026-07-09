@@ -11,6 +11,7 @@ import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { getSettings, parseJsonField } from "../api/apiClient";
+import { getBackendRoot } from "../api/runtimeApi";
 
 const DELIVERY_KEY = "delivery_location";
 
@@ -50,6 +51,14 @@ const Navbar = () => {
   const navEmail      = settings.navbar_email;
   const welcomeText   = settings.navbar_welcome_text;
   const waNumber      = settings.whatsapp_number;
+
+  const navLogoUrl = useMemo(() => {
+    const logo = settings.nav_logo || "/logo/General trading storke.png";
+    if (logo.startsWith("http")) return logo;
+    if (logo.startsWith("/uploads/")) return getBackendRoot() + logo;
+    if (logo.startsWith("/")) return getBackendRoot() + logo;
+    return getBackendRoot() + "/uploads/" + logo;
+  }, [settings.nav_logo]);
 
   const navItems = useMemo(() => {
     return parseJsonField(settings.nav_links, []);
@@ -173,7 +182,7 @@ const Navbar = () => {
       <div className="main-nav">
         <Link className="brand" to="/" aria-label={`${brandTitle} home`}>
           <div className="logo-badge" aria-hidden="true">
-            <img src="/logo/General trading storke.png" alt="logo" />
+            <img src={navLogoUrl} alt="Swift Sign Organic Food Store Pakistan" />
           </div>
           <div className="brand-text">
             <span className="brand-title">{brandTitle}</span>
@@ -207,14 +216,14 @@ const Navbar = () => {
               type="search"
               name="q"
               placeholder="Search"
-              aria-label="Search"
+              aria-label="Search Organic Products"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button type="submit" aria-label="Search"><IoSearch /></button>
+            <button type="submit" aria-label="Search Organic Products"><IoSearch /></button>
           </form>
 
-          <button className="icon-btn" type="button" aria-label="Cart" onClick={() => setIsCartOpen(true)}>
+          <button className="icon-btn" type="button" aria-label="View Shopping Cart" onClick={() => setIsCartOpen(true)}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M7 18a2 2 0 1 0 2 2 2 2 0 0 0-2-2zm10 0a2 2 0 1 0 2 2 2 2 0 0 0-2-2zM6.2 6h12.9l-1.3 6.1a2 2 0 0 1-2 1.6H8.1a2 2 0 0 1-2-1.6L4.3 3H2V1h3.4z" />
             </svg>
@@ -267,7 +276,7 @@ const Navbar = () => {
       <div className={`mobile-panel ${isOpen ? "open" : ""}`} role="dialog" aria-modal="true">
         <div className="mobile-panel-header">
           <div className="mobile-brand">
-            <img src="/logo/General trading storke.png" alt={`${brandTitle} logo`} />
+            <img src={navLogoUrl} alt={`${brandTitle} logo`} />
             <div>
               <span className="mobile-brand-title">{brandTitle}</span>
               <span className="mobile-brand-subtitle">{brandSubtitle}</span>
@@ -375,7 +384,7 @@ const Navbar = () => {
             <div className="location-modal-header">
               <div className="location-modal-brand">
                 <div className="location-modal-logo">
-                  <img src="/logo/General trading storke.png" alt={`${brandTitle} logo`} />
+                  <img src={navLogoUrl} alt={`${brandTitle} logo`} />
                 </div>
                 <div>
                   <p className="location-modal-kicker">{brandTitle}</p>

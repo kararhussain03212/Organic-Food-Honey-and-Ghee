@@ -1,6 +1,50 @@
 import ImageUpload from "../../../components/ImageUpload";
 import FieldRows from "./FieldRows";
 
+function LinkListEditor({ title, addLabel, items, setItems }) {
+  return (
+    <div className="space-y-3 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-4">
+      <h4 className="text-sm font-semibold text-[var(--admin-ink)]">{title}</h4>
+      {items.map((item, index) => (
+        <div key={`link-${index}`} className="grid grid-cols-1 gap-2 md:grid-cols-[1fr_1fr_auto]">
+          <input
+            type="text"
+            placeholder="Label"
+            value={item.label}
+            onChange={(event) =>
+              setItems((prev) => prev.map((x, i) => (i === index ? { ...x, label: event.target.value } : x)))
+            }
+            className="rounded-lg border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2 text-[var(--admin-ink)]"
+          />
+          <input
+            type="text"
+            placeholder="Path"
+            value={item.path}
+            onChange={(event) =>
+              setItems((prev) => prev.map((x, i) => (i === index ? { ...x, path: event.target.value } : x)))
+            }
+            className="rounded-lg border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2 text-[var(--admin-ink)]"
+          />
+          <button
+            type="button"
+            onClick={() => setItems((prev) => (prev.length > 1 ? prev.filter((_, i) => i !== index) : prev))}
+            className="rounded-lg border border-red-500 bg-red-500/10 px-3 py-2 font-medium text-red-400 hover:bg-red-500/20"
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() => setItems((prev) => [...prev, { label: "", path: "" }])}
+        className="rounded-lg bg-[var(--admin-accent)] px-3 py-2 text-sm font-semibold text-black hover:bg-[var(--admin-accent-strong)]"
+      >
+        + {addLabel}
+      </button>
+    </div>
+  );
+}
+
 export default function FooterSettingsSection({
   fieldKeys,
   form,
@@ -10,6 +54,8 @@ export default function FooterSettingsSection({
   uploadToSetting,
   footerLinks,
   setFooterLinks,
+  footerQuickLinks,
+  setFooterQuickLinks,
   footerSocialLinks,
   setFooterSocialLinks,
 }) {
@@ -41,45 +87,19 @@ export default function FooterSettingsSection({
         </div>
       </div>
 
-      <div className="space-y-3 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-4">
-        <h4 className="text-sm font-semibold text-[var(--admin-ink)]">Footer Links</h4>
-        {footerLinks.map((item, index) => (
-          <div key={`footer-link-${index}`} className="grid grid-cols-1 gap-2 md:grid-cols-[1fr_1fr_auto]">
-            <input
-              type="text"
-              placeholder="Label"
-              value={item.label}
-              onChange={(event) =>
-                setFooterLinks((prev) => prev.map((x, i) => (i === index ? { ...x, label: event.target.value } : x)))
-              }
-              className="rounded-lg border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2 text-[var(--admin-ink)]"
-            />
-            <input
-              type="text"
-              placeholder="Path"
-              value={item.path}
-              onChange={(event) =>
-                setFooterLinks((prev) => prev.map((x, i) => (i === index ? { ...x, path: event.target.value } : x)))
-              }
-              className="rounded-lg border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2 text-[var(--admin-ink)]"
-            />
-            <button
-              type="button"
-              onClick={() => setFooterLinks((prev) => (prev.length > 1 ? prev.filter((_, i) => i !== index) : prev))}
-              className="rounded-lg border border-red-500 bg-red-500/10 px-3 py-2 font-medium text-red-400 hover:bg-red-500/20"
-            >
-              Remove
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() => setFooterLinks((prev) => [...prev, { label: "", path: "" }])}
-          className="rounded-lg bg-[var(--admin-accent)] px-3 py-2 text-sm font-semibold text-black hover:bg-[var(--admin-accent-strong)]"
-        >
-          + Add Footer Link
-        </button>
-      </div>
+      <LinkListEditor
+        title="Footer Quick Links (left column)"
+        addLabel="Add Quick Link"
+        items={footerQuickLinks}
+        setItems={setFooterQuickLinks}
+      />
+
+      <LinkListEditor
+        title="Footer Policy Links (right column)"
+        addLabel="Add Footer Link"
+        items={footerLinks}
+        setItems={setFooterLinks}
+      />
 
       <div className="space-y-3 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-4">
         <h4 className="text-sm font-semibold text-[var(--admin-ink)]">Footer Social Links</h4>

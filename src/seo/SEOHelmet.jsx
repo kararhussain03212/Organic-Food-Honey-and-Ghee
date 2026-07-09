@@ -23,8 +23,14 @@ export const SEOHelmet = ({
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="utf-8" />
 
-      {/* Canonical URL */}
+      {/* Canonical URL - Self-referencing for duplicate prevention */}
       <link rel="canonical" href={finalUrl} />
+
+      {/* Pakistani Authority & Geo-location Headers */}
+      <meta name="geo.placename" content="Pakistan" />
+      <meta name="geo.position" content="30.1575;69.2075" />
+      <meta name="ICBM" content="30.1575, 69.2075" />
+      <meta name="geo.country" content="PK" />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />

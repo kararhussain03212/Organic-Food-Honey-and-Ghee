@@ -254,6 +254,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
   const [aboutProperties, setAboutProperties] = useState([""]);
   const [gheeCards, setGheeCards] = useState([{ icon: "cow", icon_url: "", title: "", description: "" }]);
   const [footerLinks, setFooterLinks] = useState([{ label: "", path: "" }]);
+  const [footerQuickLinks, setFooterQuickLinks] = useState([{ label: "", path: "" }]);
   const [footerSocialLinks, setFooterSocialLinks] = useState([{ label: "", url: "", icon: "facebook" }]);
   const [aboutPageProperties, setAboutPageProperties] = useState([""]);
   const [aboutPageCategories, setAboutPageCategories] = useState([
@@ -341,6 +342,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         let nextAboutProperties = [""];
         let nextGheeCards = [{ icon: "cow", icon_url: "", title: "", description: "" }];
         let nextFooterLinks = [{ label: "", path: "" }];
+        let nextFooterQuickLinks = [{ label: "", path: "" }];
         let nextFooterSocialLinks = [{ label: "", url: "", icon: "facebook" }];
         let nextAboutPageProperties = [""];
         let nextAboutPageCategories = [{ icon: "", icon_url: "", title: "", description: "" }];
@@ -405,6 +407,15 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
               .map((item) => ({ label: String(item?.label || ""), path: String(item?.path || "") }))
               .filter((item) => item.label || item.path);
             if (normalized.length) nextFooterLinks = normalized;
+            return;
+          }
+
+          if (key === "footer_quick_links") {
+            const parsed = asArray(rawValue);
+            const normalized = parsed
+              .map((item) => ({ label: String(item?.label || ""), path: String(item?.path || "") }))
+              .filter((item) => item.label || item.path);
+            if (normalized.length) nextFooterQuickLinks = normalized;
             return;
           }
 
@@ -512,6 +523,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         setAboutProperties(nextAboutProperties);
         setGheeCards(nextGheeCards);
         setFooterLinks(nextFooterLinks);
+        setFooterQuickLinks(nextFooterQuickLinks);
         setFooterSocialLinks(nextFooterSocialLinks);
         setAboutPageProperties(nextAboutPageProperties);
         setAboutPageCategories(nextAboutPageCategories);
@@ -633,6 +645,11 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           .map((item) => ({ label: String(item.label || "").trim(), path: String(item.path || "").trim() }))
           .filter((item) => item.label && item.path),
       );
+      payload.footer_quick_links = JSON.stringify(
+        footerQuickLinks
+          .map((item) => ({ label: String(item.label || "").trim(), path: String(item.path || "").trim() }))
+          .filter((item) => item.label && item.path),
+      );
       payload.footer_social_links = JSON.stringify(
         footerSocialLinks
           .map((item) => ({
@@ -702,6 +719,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
     aboutProperties,
     gheeCards,
     footerLinks,
+    footerQuickLinks,
     footerSocialLinks,
     aboutPageProperties,
     aboutPageCategories,
@@ -750,6 +768,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
     aboutProperties,
     gheeCards,
     footerLinks,
+    footerQuickLinks,
     footerSocialLinks,
     aboutPageProperties,
     aboutPageCategories,
@@ -826,6 +845,15 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
       ) : null}
 
       <article className="space-y-4 rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-card)] p-4 shadow-sm md:p-5">
+        {activeMainSection === "home" ? (
+          <FieldRows
+            keys={getKeysFor("home.seo")}
+            form={form}
+            setField={setField}
+            toLabel={toLabel}
+          />
+        ) : null}
+
         {activeMainSection === "navbar" ? (
           <NavbarSettingsSection
             fieldKeys={getKeysFor("navbar")}
@@ -936,6 +964,8 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
             uploadToSetting={uploadToSetting}
             footerLinks={footerLinks}
             setFooterLinks={setFooterLinks}
+            footerQuickLinks={footerQuickLinks}
+            setFooterQuickLinks={setFooterQuickLinks}
             footerSocialLinks={footerSocialLinks}
             setFooterSocialLinks={setFooterSocialLinks}
           />
