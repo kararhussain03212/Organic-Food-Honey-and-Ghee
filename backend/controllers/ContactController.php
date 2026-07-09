@@ -79,17 +79,119 @@ final class ContactController extends BaseController
             Response::error('Validation failed', 422, ['fields' => $errors]);
         }
 
+        $name    = trim((string) ($payload['name'] ?? ''));
+        $phone   = trim((string) ($payload['phone'] ?? ''));
+        $subject = trim((string) ($payload['subject'] ?? ''));
+
         $model = new ContactMessage();
         $model->create([
-            'name'    => trim((string) ($payload['name'] ?? '')),
+            'name'    => $name,
             'email'   => $email,
-            'phone'   => trim((string) ($payload['phone'] ?? '')),
-            'subject' => trim((string) ($payload['subject'] ?? '')),
+            'phone'   => $phone,
+            'subject' => $subject,
             'message' => $message,
             'status'  => 'unread',
         ]);
 
+        $this->sendMailNotification($name, $email, $phone, $subject, $message);
+
         Response::success(null, 'Message sent successfully');
+    }
+
+    private function sendMailNotification(string $name, string $email, string $phone, string $subject, string $message): void
+    {
+        $autoloadCandidates = [
+            __DIR__ . '/../../vendor/autoload.php',
+            __DIR__ . '/../../../vendor/autoload.php',
+        ];
+        $autoloadPath = null;
+        foreach ($autoloadCandidates as $candidate) {
+            if (file_exists($candidate)) {
+                $autoloadPath = $candidate;
+                break;
+            }
+        }
+        if ($autoloadPath === null) {
+            return;
+        }
+
+        $configCandidates = [
+            __DIR__ . '/../../public/api/mail-config.php',
+            __DIR__ . '/../../../public/api/mail-config.php',
+        ];
+        $configPath = null;
+        foreach ($configCandidates as $candidate) {
+            if (file_exists($candidate)) {
+                $configPath = $candidate;
+                break;
+            }
+        }
+        if ($configPath === null) {
+            return;
+        }
+
+        require_once $autoloadPath;
+        $config = require $configPath;
+
+        try {
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host       = (string) $config['smtp_host'];
+            $mail->Port       = (int) $config['smtp_port'];
+            $mail->SMTPAuth   = true;
+            $mail->Username   = (string) $config['smtp_user'];
+            $mail->Password   = (string) $config['smtp_pass'];
+            $mail->Timeout    = (int) ($config['smtp_timeout'] ?? 20);
+            $mail->SMTPKeepAlive = true;
+
+            $secure = strtolower((string) ($config['smtp_secure'] ?? 'ssl'));
+            $mail->SMTPSecure = $secure === 'tls'
+                ? \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS
+                : \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+
+            $mail->CharSet = 'UTF-8';
+            $mail->setFrom((string) $config['from_email'], (string) $config['from_name']);
+            $mail->addAddress((string) $config['to_email'], (string) $config['to_name']);
+            $mail->addReplyTo($email, $name);
+            $mail->isHTML(true);
+            $mail->Subject = '[Contact Form] ' . $subject;
+
+            $safeMessage = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
+            $safeName    = htmlspecialchars($name,    ENT_QUOTES, 'UTF-8');
+            $safeEmail   = htmlspecialchars($email,   ENT_QUOTES, 'UTF-8');
+            $safePhone   = htmlspecialchars($phone !== '' ? $phone : 'N/A', ENT_QUOTES, 'UTF-8');
+            $safeSubject = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
+
+            $mail->Body = "
+                <h2>New Contact Form Message</h2>
+                <p><strong>Name:</strong> {$safeName}</p>
+                <p><strong>Email:</strong> {$safeEmail}</p>
+                <p><strong>Phone:</strong> {$safePhone}</p>
+                <p><strong>Subject:</strong> {$safeSubject}</p>
+                <p><strong>Message:</strong></p>
+                <p>{$safeMessage}</p>
+            ";
+            $mail->AltBody = "Name: {$name}\nEmail: {$email}\nPhone: " . ($phone !== '' ? $phone : 'N/A') . "\nSubject: {$subject}\n\nMessage:\n{$message}";
+            $mail->send();
+
+            // Auto-reply to sender
+            $mail->clearAllRecipients();
+            $mail->clearReplyTos();
+            $mail->addAddress($email, $name);
+            $mail->Subject  = 'We received your message - Swift Sign Organic Foods';
+            $mail->Body     = "
+                <h2>Thank you for contacting us</h2>
+                <p>Hi {$safeName},</p>
+                <p>We received your message and our team will get back to you soon.</p>
+                <p><strong>Your subject:</strong> {$safeSubject}</p>
+                <p>Best regards,<br>Swift Sign Organic Foods</p>
+            ";
+            $mail->AltBody = "Hi {$name},\n\nWe received your message and our team will get back to you soon.\nSubject: {$subject}\n\nBest regards,\nSwift Sign Organic Foods";
+            try { $mail->send(); } catch (\Throwable $e) { /* auto-reply failure is non-fatal */ }
+            $mail->smtpClose();
+        } catch (\Throwable $e) {
+            // Email failure is non-fatal — message is already saved to DB
+        }
     }
 
     public function index(array $params = []): void

@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://organicfood.swiftsigngeneraltrading.com",
+        target: "https://arionorganicfood.com",
         changeOrigin: true,
       },
     },

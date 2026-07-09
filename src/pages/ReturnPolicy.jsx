@@ -16,7 +16,7 @@ const sections = [
   {
     heading: "Contact",
     paragraphs: [
-      "Email: info@swiftsigngeneraltrading.com",
+      "Email: info@arionorganicfood.com",
       "WhatsApp: +92 333 8399480",
       "Hours: Mon-Sun: 10am - 7pm",
     ],

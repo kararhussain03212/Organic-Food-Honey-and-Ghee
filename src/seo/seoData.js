@@ -4,10 +4,10 @@
 export const seoData = {
   default: {
     siteName: "Arion Organic Food",
-    siteUrl: "https://organicfood.swiftsigngeneraltrading.com",
+    siteUrl: "https://arionorganicfood.com",
     description: "Buy premium organic foods, honey, ghee, and wellness products in Pakistan. Certified, pure, and natural.",
     keywords: "organic food, organic honey, organic ghee, natural products, Pakistan",
-    image: "https://organicfood.swiftsigngeneraltrading.com/og-image.png",
+    image: "https://arionorganicfood.com/og-image.png",
     twitterHandle: "@arionorganic",
   },
 
@@ -133,7 +133,7 @@ export const generateOrgSchema = (siteUrl) => ({
     "@type": "ContactPoint",
     contactType: "Customer Support",
     telephone: "+92-333-8399480",
-    email: "info@swiftsigngeneraltrading.com",
+    email: "info@arionorganicfood.com",
     areaServed: "PK",
   },
   address: {

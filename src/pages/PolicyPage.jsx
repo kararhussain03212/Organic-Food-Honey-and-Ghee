@@ -1,5 +1,5 @@
 const PolicyPage = ({ title, updatedOn, sections }) => {
-  const supportEmail = "info@swiftsigngeneraltrading.com";
+  const supportEmail = "info@arionorganicfood.com";
   const mailtoHref = `mailto:${supportEmail}`;
 
   const renderParagraph = (paragraph) => {

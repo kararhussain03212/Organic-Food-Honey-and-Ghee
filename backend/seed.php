@@ -248,7 +248,7 @@ $settings = [
     'navbar_brand_title'      => 'Arion Organic Food',
     'navbar_brand_subtitle'   => 'Organic Foods',
     'navbar_phone'            => '+92 333 8399480',
-    'navbar_email'            => 'info@arionorganic.com',
+    'navbar_email'            => 'info@arionorganicfood.com',
     'navbar_welcome_text'     => 'Welcome to Arion Organic Food',
     'nav_links'               => '[{"label":"Home","path":"/"},{"label":"About","path":"/about"},{"label":"Products","path":"/products"},{"label":"Blog","path":"/blog"},{"label":"Contact","path":"/contact"}]',
     'whatsapp_number'         => '923338399480',
@@ -258,7 +258,7 @@ $settings = [
     'footer_brand_subtitle'   => 'ORGANIC FOODS',
     'footer_about_text'       => 'Premium organic products including Desi Ghee, Honey, and Shilajit — sourced naturally.',
     'footer_phone'            => '+92 333 8399480',
-    'footer_email'            => 'info@arionorganic.com',
+    'footer_email'            => 'info@arionorganicfood.com',
     'footer_address'          => 'Office 22, 4th Floor, Pakland City Center, I-8 Markaz, Islamabad, Pakistan.',
     'footer_social_facebook'  => 'https://www.facebook.com/SSgeneraltradinguae',
     'footer_social_instagram' => 'https://www.instagram.com/ssarionorganicfood/',
@@ -272,7 +272,7 @@ $settings = [
     'footer_social_links'     => '[{"label":"Facebook","url":"https://www.facebook.com/SSgeneraltradinguae","icon":"facebook"},{"label":"Instagram","url":"https://www.instagram.com/ssarionorganicfood/","icon":"instagram"},{"label":"YouTube","url":"https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw/editing","icon":"youtube"},{"label":"TikTok","url":"https://www.tiktok.com/@ssarionorganicfood","icon":"tiktok"}]',
 
     // Contact
-    'contact_email'             => 'info@arionorganic.com',
+    'contact_email'             => 'info@arionorganicfood.com',
     'contact_phone'             => '+92 333 8399480',
     'contact_whatsapp'          => '923338399480',
     'contact_address'           => 'Office 22, 4th Floor, Pakland City Center, I-8 Markaz, Islamabad, Pakistan.',

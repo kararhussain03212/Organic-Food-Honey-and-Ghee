@@ -36,7 +36,7 @@ const sections = [
   {
     heading: "Contact",
     paragraphs: [
-      "For privacy questions or data requests, contact us at info@swiftsigngeneraltrading.com.",
+      "For privacy questions or data requests, contact us at info@arionorganicfood.com.",
     ],
   },
 ];

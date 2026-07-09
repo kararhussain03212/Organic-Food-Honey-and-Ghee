@@ -191,8 +191,8 @@ export default function Certification() {
           </div>
           <p className="cert-faq-footer">
             Still have questions? Email us at{" "}
-            <a href="mailto:info@swiftsigngeneraltrading.com" className="cert-faq-email">
-              info@swiftsigngeneraltrading.com
+            <a href="mailto:info@arionorganicfood.com" className="cert-faq-email">
+              info@arionorganicfood.com
             </a>
           </p>
         </div>

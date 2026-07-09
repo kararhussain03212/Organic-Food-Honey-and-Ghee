@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const PRODUCTION_DOMAIN = 'organicfood.swiftsigngeneraltrading.com';
+const PRODUCTION_DOMAIN = 'arionorganicfood.com';
 const CHECKS = [];
 let passCount = 0;
 let failCount = 0;
@@ -36,7 +36,7 @@ if (fs.existsSync('.env.production')) {
   const env = fs.readFileSync('.env.production', 'utf8');
   check(
     'Frontend .env has production domain',
-    env.includes('organicfood.swiftsigngeneraltrading.com'),
+    env.includes('arionorganicfood.com'),
     env.split('\n')[0]
   );
 }
@@ -44,13 +44,13 @@ if (fs.existsSync('.env.production')) {
 if (fs.existsSync('backend/.env.production')) {
   const env = fs.readFileSync('backend/.env.production', 'utf8');
   check('Backend FORCE_HTTPS=true', env.includes('FORCE_HTTPS=true'));
-  check('Backend has production domain', env.includes('organicfood.swiftsigngeneraltrading.com'));
+  check('Backend has production domain', env.includes('arionorganicfood.com'));
   check('Backend CORS configured', env.includes('CORS_ALLOW_ORIGIN'));
 }
 
 if (fs.existsSync('admin/.env.production')) {
   const env = fs.readFileSync('admin/.env.production', 'utf8');
-  check('Admin .env has production domain', env.includes('organicfood.swiftsigngeneraltrading.com'));
+  check('Admin .env has production domain', env.includes('arionorganicfood.com'));
 }
 
 // 3. Check for hardcoded localhost
@@ -65,12 +65,12 @@ const files = [
 files.forEach(file => {
   if (fs.existsSync(file)) {
     const content = fs.readFileSync(file, 'utf8');
-    const hasOldDomain = content.includes('arionorganicfood.com');
+    const hasOldDomain = content.includes('organicfood.swiftsigngeneraltrading.com');
     const hasLocalhost = content.includes('localhost:');
     check(
       `${path.basename(file)} uses production domain`,
       !hasOldDomain && !hasLocalhost,
-      hasOldDomain ? 'Still has arionorganicfood.com' : hasLocalhost ? 'Still has localhost' : 'Clean'
+      hasOldDomain ? 'Still has organicfood.swiftsigngeneraltrading.com' : hasLocalhost ? 'Still has localhost' : 'Clean'
     );
   }
 });
