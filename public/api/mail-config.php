@@ -4,7 +4,7 @@ return [
     'smtp_port' => 465,
     'smtp_secure' => 'ssl',
     'smtp_user' => 'info@arionorganicfood.com',
-    'smtp_pass' => 'J#xesZpUlvO.C.OZ',
+    'smtp_pass' => 'PytHOWMEF$8Em@T[',
     'smtp_debug' => false,
     'smtp_timeout' => 20,
 

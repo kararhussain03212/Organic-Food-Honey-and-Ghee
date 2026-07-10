@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getProducts, getProductPage } from "../api/apiClient";
+import { getProducts, getProductPage, getSettings, isSectionActive } from "../api/apiClient";
+import { Helmet } from "react-helmet-async";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
 
@@ -104,6 +105,7 @@ export default function Products() {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [productPageSettings, setProductPageSettings] = useState(null);
+  const [pageActive, setPageActive] = useState(true);
 
   useEffect(() => {
     getProducts().then((data) => {
@@ -115,6 +117,7 @@ export default function Products() {
         setProductPageSettings(data);
       }
     });
+    getSettings().then((s) => setPageActive(isSectionActive(s, "product")));
   }, []);
 
   const categories = useMemo(() => {
@@ -162,8 +165,15 @@ export default function Products() {
     setCurrentPage(1);
   };
 
+  if (!pageActive) return null;
+
   return (
     <main className="prl-page">
+      {productPageSettings?.seo_meta_description && (
+        <Helmet>
+          <meta name="description" content={productPageSettings.seo_meta_description} />
+        </Helmet>
+      )}
       <div className="prl-blob prl-blob-1" />
       <div className="prl-blob prl-blob-2" />
 

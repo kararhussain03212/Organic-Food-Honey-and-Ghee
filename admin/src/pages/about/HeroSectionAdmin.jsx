@@ -13,7 +13,7 @@ export default function HeroSectionAdmin() {
   const [form, setForm] = useState({
     badge_text: "", hero_title: "", hero_highlight_text: "",
     hero_subtitle: "", hero_quote: "", hero_background_image: "",
-    seo_title: "", seo_description: "", seo_keywords: "",
+    seo_description: "",
   });
   const [imageFile, setImageFile]     = useState(null);
   const [imagePreview, setImagePreview] = useState("");
@@ -35,8 +35,7 @@ export default function HeroSectionAdmin() {
         badge_text: d.badge_text || "", hero_title: d.hero_title || "",
         hero_highlight_text: d.hero_highlight_text || "", hero_subtitle: d.hero_subtitle || "",
         hero_quote: d.hero_quote || "", hero_background_image: d.hero_background_image || "",
-        seo_title: d.seo_title || "", seo_description: d.seo_description || "",
-        seo_keywords: d.seo_keywords || "",
+        seo_description: d.seo_description || "",
       });
       setImagePreview(toImageUrl(d.hero_background_image || ""));
     }).catch(() => setError("Failed to load hero section."));
@@ -80,6 +79,28 @@ export default function HeroSectionAdmin() {
 
       <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-white/10 bg-[var(--admin-bg)] p-6">
 
+        {/* SEO */}
+        <div className={sectionCls}>
+          <h3 className="font-semibold text-white/90">SEO</h3>
+          <div>
+            <label className={labelCls}>SEO Description</label>
+            <textarea rows={2} className={inputCls} value={form.seo_description} onChange={(e) => setField("seo_description", e.target.value)} />
+          </div>
+        </div>
+
+        {/* Quote & Background */}
+        <div className={sectionCls}>
+          <h3 className="font-semibold text-white/90">Quote &amp; Background</h3>
+          <div>
+            <label className={labelCls}>Hero Quote</label>
+            <textarea rows={3} className={inputCls} value={form.hero_quote} onChange={(e) => setField("hero_quote", e.target.value)} placeholder="Bringing nature's finest directly to your table…" />
+          </div>
+          <div>
+            <label className={labelCls}>Background Image</label>
+            <ImageUpload value={imagePreview} onFileSelect={(f) => setImageFile(f)} label="Upload Hero Background" helperText="Recommended: 1920×1080 or wider" />
+          </div>
+        </div>
+
         {/* Page Content */}
         <div className={sectionCls}>
           <h3 className="font-semibold text-white/90">Page Content</h3>
@@ -100,38 +121,6 @@ export default function HeroSectionAdmin() {
               <label className={labelCls}>Subtitle</label>
               <input className={inputCls} value={form.hero_subtitle} onChange={(e) => setField("hero_subtitle", e.target.value)} placeholder="Pure, Natural, Authentic" />
             </div>
-          </div>
-        </div>
-
-        {/* Quote & Background */}
-        <div className={sectionCls}>
-          <h3 className="font-semibold text-white/90">Quote &amp; Background</h3>
-          <div>
-            <label className={labelCls}>Hero Quote</label>
-            <textarea rows={3} className={inputCls} value={form.hero_quote} onChange={(e) => setField("hero_quote", e.target.value)} placeholder="Bringing nature's finest directly to your table…" />
-          </div>
-          <div>
-            <label className={labelCls}>Background Image</label>
-            <ImageUpload value={imagePreview} onFileSelect={(f) => setImageFile(f)} label="Upload Hero Background" helperText="Recommended: 1920×1080 or wider" />
-          </div>
-        </div>
-
-        {/* SEO */}
-        <div className={sectionCls}>
-          <h3 className="font-semibold text-white/90">SEO</h3>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label className={labelCls}>SEO Title</label>
-              <input className={inputCls} value={form.seo_title} onChange={(e) => setField("seo_title", e.target.value)} />
-            </div>
-            <div>
-              <label className={labelCls}>SEO Keywords</label>
-              <input className={inputCls} value={form.seo_keywords} onChange={(e) => setField("seo_keywords", e.target.value)} />
-            </div>
-          </div>
-          <div>
-            <label className={labelCls}>SEO Description</label>
-            <textarea rows={2} className={inputCls} value={form.seo_description} onChange={(e) => setField("seo_description", e.target.value)} />
           </div>
         </div>
 

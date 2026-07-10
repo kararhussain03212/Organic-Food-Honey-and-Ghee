@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
-import { getProducts, getSettings } from "../api/apiClient";
+import { getProducts, getSettings, isSectionActive } from "../api/apiClient";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
@@ -17,14 +17,6 @@ const badgeColors = {
   "Premium Quality": { background: "#8b4513", color: "#fff" },
 };
 
-const DEFAULTS = {
-  eyebrow: "Our Collection",
-  heading: "Premium Organic",
-  headingAccent: "Products",
-  subtext: "Each product is carefully sourced, traditionally crafted, and rigorously tested — bringing the finest of nature directly to your home.",
-  btnText: "View All Products",
-  btnLink: "/products",
-};
 
 const apiRoot = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
 const resolveImage = (path) => {
@@ -108,7 +100,8 @@ function SkeletonCard() {
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [header, setHeader] = useState(DEFAULTS);
+  const [header, setHeader] = useState(null);
+  const [active, setActive] = useState(true);
 
   useEffect(() => {
     getProducts().then((data) => {
@@ -118,16 +111,19 @@ export default function Products() {
 
     getSettings().then((s) => {
       if (!s) return;
+      setActive(isSectionActive(s, "home_company"));
       setHeader({
-        eyebrow: s.home_collection_eyebrow || DEFAULTS.eyebrow,
-        heading: s.home_collection_heading || DEFAULTS.heading,
-        headingAccent: s.home_collection_heading_accent || DEFAULTS.headingAccent,
-        subtext: s.home_collection_subtext || DEFAULTS.subtext,
-        btnText: s.home_collection_btn_text || DEFAULTS.btnText,
-        btnLink: s.home_collection_btn_link || DEFAULTS.btnLink,
+        eyebrow: s.home_collection_eyebrow,
+        heading: s.home_collection_heading,
+        headingAccent: s.home_collection_heading_accent,
+        subtext: s.home_collection_subtext,
+        btnText: s.home_collection_btn_text,
+        btnLink: s.home_collection_btn_link,
       });
     });
   }, []);
+
+  if (!active || !header || !header.heading) return null;
 
   const displayItems = loading ? Array.from({ length: 4 }, (_, i) => i) : products;
 

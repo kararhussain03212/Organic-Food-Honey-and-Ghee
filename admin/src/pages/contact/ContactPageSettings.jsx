@@ -7,6 +7,7 @@ const sectionCls = "rounded-xl border border-white/10 bg-[var(--admin-bg)] p-4 s
 
 const EMPTY = {
   hero_badge: "", hero_heading: "", hero_highlight: "", hero_description: "",
+  seo_meta_description: "",
   form_title: "", name_placeholder: "", email_placeholder: "", phone_placeholder: "",
   subject_placeholder: "", message_placeholder: "", submit_button_text: "",
   availability_text: "", contact_heading: "", contact_description: "",
@@ -48,6 +49,7 @@ export default function ContactPageSettings() {
           hero_heading:         d.hero_heading         || "",
           hero_highlight:       d.hero_highlight       || "",
           hero_description:     d.hero_description     || "",
+          seo_meta_description: d.seo_meta_description || "",
           form_title:           d.form_title           || "",
           name_placeholder:     d.name_placeholder     || "",
           email_placeholder:    d.email_placeholder    || "",
@@ -113,6 +115,24 @@ export default function ContactPageSettings() {
       {error ? <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{error}</div> : null}
 
       <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-white/10 bg-[var(--admin-bg)] p-6">
+
+        {/* SEO */}
+        <div className={sectionCls}>
+          <h3 className="font-semibold text-white/90">SEO</h3>
+          <div>
+            <label className={labelCls}>SEO Meta Description</label>
+            <textarea
+              rows={3}
+              className={inputCls}
+              value={form.seo_meta_description}
+              onChange={(e) => setField("seo_meta_description", e.target.value)}
+              placeholder="e.g., Contact Arion Organic Food for pure honey, desi ghee, and shilajit. Call, WhatsApp, or visit us in Islamabad, Pakistan."
+            />
+            <p className="mt-1 text-[10px] text-white/50">
+              {form.seo_meta_description?.length || 0}/160 characters (recommended)
+            </p>
+          </div>
+        </div>
 
         {/* Hero Section */}
         <div className={sectionCls}>

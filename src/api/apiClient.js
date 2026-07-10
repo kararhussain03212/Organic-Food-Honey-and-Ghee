@@ -148,6 +148,13 @@ export async function postContact(data) {
   });
 }
 
+// Admin saves per-section visibility as settings keys like "section_status_navbar".
+// A section is visible unless its status is explicitly inactive.
+export function isSectionActive(settings, key) {
+  const value = String(settings?.[`section_status_${key}`] ?? "active").toLowerCase();
+  return value !== "inactive" && value !== "unactive";
+}
+
 export function parseJsonField(value, fallback = []) {
   if (Array.isArray(value)) return value;
   if (typeof value === "string" && value.trim()) {

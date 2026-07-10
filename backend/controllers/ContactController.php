@@ -101,8 +101,9 @@ final class ContactController extends BaseController
     private function sendMailNotification(string $name, string $email, string $phone, string $subject, string $message): void
     {
         $autoloadCandidates = [
-            __DIR__ . '/../../vendor/autoload.php',
-            __DIR__ . '/../../../vendor/autoload.php',
+            __DIR__ . '/../../vendor/autoload.php',    // local: project-root/vendor
+            __DIR__ . '/../../../vendor/autoload.php', // cPanel: public_html/vendor (backend one level deeper)
+            __DIR__ . '/../vendor/autoload.php',       // vendor inside backend/
         ];
         $autoloadPath = null;
         foreach ($autoloadCandidates as $candidate) {
@@ -112,12 +113,15 @@ final class ContactController extends BaseController
             }
         }
         if ($autoloadPath === null) {
+            $this->logMailFailure('PHPMailer autoload not found. Checked: ' . implode(' | ', $autoloadCandidates));
             return;
         }
 
         $configCandidates = [
-            __DIR__ . '/../../public/api/mail-config.php',
+            __DIR__ . '/../../public/api/mail-config.php',    // local: project-root/public/api
+            __DIR__ . '/../../api/mail-config.php',           // cPanel: public_html/api (sibling of backend/)
             __DIR__ . '/../../../public/api/mail-config.php',
+            __DIR__ . '/../../../api/mail-config.php',
         ];
         $configPath = null;
         foreach ($configCandidates as $candidate) {
@@ -127,6 +131,7 @@ final class ContactController extends BaseController
             }
         }
         if ($configPath === null) {
+            $this->logMailFailure('mail-config.php not found. Checked: ' . implode(' | ', $configCandidates));
             return;
         }
 
@@ -191,7 +196,14 @@ final class ContactController extends BaseController
             $mail->smtpClose();
         } catch (\Throwable $e) {
             // Email failure is non-fatal — message is already saved to DB
+            $this->logMailFailure('PHPMailer error: ' . $e->getMessage());
         }
+    }
+
+    private function logMailFailure(string $line): void
+    {
+        $path = __DIR__ . '/../storage/mail-err.log';
+        @file_put_contents($path, '[' . date('Y-m-d H:i:s') . '] ' . $line . PHP_EOL, FILE_APPEND);
     }
 
     public function index(array $params = []): void

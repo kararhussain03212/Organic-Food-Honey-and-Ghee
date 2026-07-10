@@ -265,6 +265,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
   ]);
   const [storyBullets, setStoryBullets] = useState([""]);
   const [loading, setLoading] = useState(true);
+  const [loadedOk, setLoadedOk] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savingStatus, setSavingStatus] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -336,6 +337,13 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         setError("");
         const res = await getSettings();
         const rows = Array.isArray(res?.data?.data) ? res.data.data : [];
+        if (!rows.length) {
+          // Never leave the form blank over live data: saving an unloaded form
+          // would overwrite every setting in the database with empty strings.
+          setLoadedOk(false);
+          setError("Settings could not be loaded from the backend. Saving is disabled to prevent wiping existing data — reload the page and try again.");
+          return;
+        }
 
         const next = createEmptyTextForm();
         let nextNavLinks = [{ label: "", path: "" }];
@@ -363,7 +371,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
 
           const sv = row?.setting_value;
           // Only call decodeHtmlEntities when the value is still a plain string.
-          const rawValue = Array.isArray(sv) ? sv : decodeHtmlEntities(sv ?? "");
+          const rawValue = typeof sv === "object" && sv !== null ? sv : decodeHtmlEntities(sv ?? "");
 
           if (key.startsWith("section_status_")) {
             const statusKey = key.replace("section_status_", "");
@@ -515,7 +523,11 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
             return;
           }
 
-          if (Object.prototype.hasOwnProperty.call(next, key)) next[key] = String(Array.isArray(rawValue) ? "" : rawValue);
+          // JSON-typed settings arrive auto-decoded as arrays/objects; re-serialize
+          // them for text inputs instead of blanking them (blank would get saved back).
+          if (Object.prototype.hasOwnProperty.call(next, key)) {
+            next[key] = typeof rawValue === "object" && rawValue !== null ? JSON.stringify(rawValue) : String(rawValue);
+          }
         });
 
         setForm(next);
@@ -530,9 +542,11 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         setAboutPageProcessCards(nextAboutPageProcessCards);
         setStoryBullets(nextStoryBullets);
         setSectionStatus(nextSectionStatus);
+        setLoadedOk(true);
       } catch (err) {
         console.error(err);
-        setError("Failed to load settings from backend.");
+        setLoadedOk(false);
+        setError("Failed to load settings from backend. Saving is disabled to prevent wiping existing data.");
       } finally {
         setLoading(false);
       }
@@ -613,6 +627,10 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
   };
 
   const handleSave = useCallback(async () => {
+    if (!loadedOk) {
+      setError("Settings were not loaded successfully, so saving is disabled to prevent wiping existing data. Reload the page and try again.");
+      return;
+    }
     setSaving(true);
     setError("");
     setSuccess("");
@@ -695,18 +713,24 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
       await new Promise(resolve => setTimeout(resolve, 500));
       const res = await getSettings();
       const rows = Array.isArray(res?.data?.data) ? res.data.data : [];
-      const next = createEmptyTextForm();
 
-      rows.forEach((row) => {
-        const key = String(row?.setting_key || "").trim();
-        if (Object.prototype.hasOwnProperty.call(next, key)) {
-          const sv = row?.setting_value;
-          const rawValue = Array.isArray(sv) ? "" : decodeHtmlEntities(sv ?? "");
-          next[key] = String(rawValue);
-        }
-      });
-
-      setForm(next);
+      // Only rebuild the form when the refetch returned data; otherwise keep
+      // the current form so a failed refetch can't blank out the inputs.
+      if (rows.length) {
+        const next = createEmptyTextForm();
+        rows.forEach((row) => {
+          const key = String(row?.setting_key || "").trim();
+          if (Object.prototype.hasOwnProperty.call(next, key)) {
+            const sv = row?.setting_value;
+            if (typeof sv === "object" && sv !== null) {
+              next[key] = JSON.stringify(sv);
+            } else {
+              next[key] = String(decodeHtmlEntities(sv ?? ""));
+            }
+          }
+        });
+        setForm(next);
+      }
     } catch (err) {
       console.error(err);
       setError(err?.response?.data?.message || "Failed to save settings.");
@@ -714,6 +738,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
       setSaving(false);
     }
   }, [
+    loadedOk,
     form,
     navLinks,
     aboutProperties,
@@ -1059,10 +1084,10 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         <button
           type="button"
           onClick={handleSave}
-          disabled={saving || uploading}
+          disabled={saving || uploading || loading || !loadedOk}
           className="rounded-xl bg-[var(--admin-primary)] px-5 py-2.5 text-white shadow-sm hover:bg-[var(--admin-primary-strong)] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {saving ? "Saving..." : uploading ? "Uploading..." : "Save Settings"}
+          {saving ? "Saving..." : uploading ? "Uploading..." : loading ? "Loading..." : !loadedOk ? "Save Disabled" : "Save Settings"}
         </button>
       </div>
     </section>

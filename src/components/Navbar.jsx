@@ -10,7 +10,7 @@ import { IoCall } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import { getSettings, parseJsonField } from "../api/apiClient";
+import { getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
 const DELIVERY_KEY = "delivery_location";
@@ -53,7 +53,8 @@ const Navbar = () => {
   const waNumber      = settings.whatsapp_number;
 
   const navLogoUrl = useMemo(() => {
-    const logo = settings.nav_logo || "/logo/General trading storke.png";
+    const logo = settings.nav_logo;
+    if (!logo) return null;
     if (logo.startsWith("http")) return logo;
     if (logo.startsWith("/uploads/")) return getBackendRoot() + logo;
     if (logo.startsWith("/")) return getBackendRoot() + logo;
@@ -174,6 +175,8 @@ const Navbar = () => {
       completeCheckout();
     }
   };
+
+  if (!isSectionActive(settings, "navbar")) return null;
 
   return (
     <header className="site-header">

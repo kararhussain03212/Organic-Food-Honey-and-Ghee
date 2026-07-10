@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { getTestimonials, getSettings } from "../api/apiClient";
+import { getTestimonials, getSettings, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
 
@@ -15,18 +15,6 @@ function Stars({ rating }) {
   );
 }
 
-const DEFAULT_HEADER = {
-  eyebrow: "Customer Stories",
-  heading: "Loved by",
-  headingAccent: "Our Customers",
-  subtext: "Thousands of families trust Arion Organic Food for pure, natural products.",
-};
-
-const DEFAULT_TESTIMONIALS = [
-  { id: 1, name: "Fatima K.", role: "Verified Customer", avatar: null, rating: 5, quote: "The honey is absolutely pure and delicious. You can taste the difference from anything in the market. Will never go back to regular honey!", product: "Arion Honey 500g", verified: true },
-  { id: 2, name: "Ahmed R.", role: "Verified Customer", avatar: null, rating: 5, quote: "The desi ghee is exactly what I was looking for — pure, aromatic, and just like my grandmother used to make. Highly recommended!", product: "Arion Cow Desi Ghee", verified: true },
-  { id: 3, name: "Sara M.", role: "Verified Customer", avatar: null, rating: 5, quote: "Shilajit has made a noticeable difference in my energy levels. The quality is outstanding and delivery was very fast.", product: "Arion Shilajit", verified: true },
-];
 
 const resolveAvatar = (value, apiRoot) => {
   if (!value) return null;
@@ -42,10 +30,12 @@ export default function Testimonials() {
   const [current, setCurrent] = useState(0);
   const [testimonials, setTestimonials] = useState([]);
   const [header, setHeader] = useState(null);
+  const [active, setActive] = useState(true);
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
     Promise.all([getSettings(), getTestimonials()]).then(([s, items]) => {
+      setActive(isSectionActive(s, "home_testimonials"));
       if (s && s.home_testimonials_heading) {
         setHeader({
           eyebrow: s.home_testimonials_eyebrow,
@@ -76,25 +66,27 @@ export default function Testimonials() {
   }, [apiRoot]);
 
   useEffect(() => {
+    // Re-attach once data arrives: before that the component renders null,
+    // so sectionRef.current doesn't exist yet on the initial mount.
+    if (!sectionRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setVisible(true); },
       { threshold: 0.1 }
     );
-    if (sectionRef.current) observer.observe(sectionRef.current);
+    observer.observe(sectionRef.current);
     return () => observer.disconnect();
-  }, []);
-
-  const displayHeader = header || DEFAULT_HEADER;
-  const displayTestimonials = testimonials.length > 0 ? testimonials : DEFAULT_TESTIMONIALS;
+  }, [header, testimonials.length]);
 
   useEffect(() => {
-    if (displayTestimonials.length <= 1) return;
-    const t = setInterval(() => setCurrent((p) => (p + 1) % displayTestimonials.length), 5000);
+    if (testimonials.length <= 1) return;
+    const t = setInterval(() => setCurrent((p) => (p + 1) % testimonials.length), 5000);
     return () => clearInterval(t);
-  }, [displayTestimonials.length]);
+  }, [testimonials.length]);
 
-  const prev = () => setCurrent((p) => (p - 1 + displayTestimonials.length) % displayTestimonials.length);
-  const next = () => setCurrent((p) => (p + 1) % displayTestimonials.length);
+  if (!active || !header || !header.heading || testimonials.length === 0) return null;
+
+  const prev = () => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
+  const next = () => setCurrent((p) => (p + 1) % testimonials.length);
 
   return (
     <section className="test-section" ref={sectionRef}>
@@ -103,21 +95,21 @@ export default function Testimonials() {
 
       <div className="test-inner">
         <div className={`test-header ${visible ? "fade-up" : "fade-hidden"}`}>
-          {displayHeader.eyebrow && <div className="test-eyebrow">💬 {displayHeader.eyebrow}</div>}
-          {displayHeader.heading && (
+          {header.eyebrow && <div className="test-eyebrow">💬 {header.eyebrow}</div>}
+          {header.heading && (
             <h2 className="test-heading">
-              {displayHeader.heading} {displayHeader.headingAccent && <span className="test-accent">{displayHeader.headingAccent}</span>}
+              {header.heading} {header.headingAccent && <span className="test-accent">{header.headingAccent}</span>}
             </h2>
           )}
-          {displayHeader.subtext && <p className="test-subtext">{displayHeader.subtext}</p>}
+          {header.subtext && <p className="test-subtext">{header.subtext}</p>}
         </div>
 
         <div className={`test-carousel-wrap ${visible ? "fade-up" : "fade-hidden"}`} style={{ transitionDelay: "0.4s" }}>
           <div className="test-featured">
-            {displayTestimonials.map((t, i) => (
+            {testimonials.map((t, i) => (
               <div
                 key={t.id}
-                className={`test-card ${i === current ? "test-card-active" : i === (current - 1 + displayTestimonials.length) % displayTestimonials.length ? "test-card-prev" : "test-card-hidden"}`}
+                className={`test-card ${i === current ? "test-card-active" : i === (current - 1 + testimonials.length) % testimonials.length ? "test-card-prev" : "test-card-hidden"}`}
               >
                 <div className="test-card-glow" />
                 <div className="test-quote-icon">"</div>
@@ -146,7 +138,7 @@ export default function Testimonials() {
               </svg>
             </button>
             <div className="test-dots">
-              {displayTestimonials.map((_, i) => (
+              {testimonials.map((_, i) => (
                 <button
                   key={i}
                   className={`test-dot ${i === current ? "test-dot-active" : ""}`}

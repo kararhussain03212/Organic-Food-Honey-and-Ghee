@@ -520,6 +520,7 @@ CREATE TABLE IF NOT EXISTS `contact_page_settings` (
   `hero_heading`         VARCHAR(255)  DEFAULT NULL,
   `hero_highlight`       VARCHAR(255)  DEFAULT NULL,
   `hero_description`     TEXT          DEFAULT NULL,
+  `seo_meta_description` VARCHAR(255)  DEFAULT NULL,
   `form_title`           VARCHAR(255)  DEFAULT NULL,
   `name_placeholder`     VARCHAR(120)  DEFAULT NULL,
   `email_placeholder`    VARCHAR(120)  DEFAULT NULL,

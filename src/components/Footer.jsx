@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { getSettings, parseJsonField } from "../api/apiClient";
+import { getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 import { FiInstagram } from "react-icons/fi";
 import { FaFacebookSquare } from "react-icons/fa";
@@ -36,7 +36,8 @@ const Footer = () => {
   const timingsTime = s?.footer_timings_time;
 
   const footerLogoUrl = useMemo(() => {
-    const logo = s?.footer_logo || "/logo/General trading white storke.png";
+    const logo = s?.footer_logo;
+    if (!logo) return null;
     if (logo.startsWith("http")) return logo;
     if (logo.startsWith("/uploads/")) return getBackendRoot() + logo;
     if (logo.startsWith("/")) return getBackendRoot() + logo;
@@ -55,7 +56,7 @@ const Footer = () => {
     return parseJsonField(s?.footer_social_links, []);
   }, [s?.footer_social_links]);
 
-  if (!s) return null;
+  if (!s || !isSectionActive(s, "footer")) return null;
 
   return (
     <footer className="site-footer">

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { getSettings, getCommitmentItems } from "../api/apiClient";
+import { getSettings, getCommitmentItems, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
 const COLORS = [
@@ -9,21 +9,6 @@ const COLORS = [
   { color: "#2e6b4f", bg: "rgba(46,107,79,0.08)" },
 ];
 
-const DEFAULT_HEADER = {
-  eyebrow: "Our Promise",
-  heading: "Purity You Can",
-  headingAccent: "Trust",
-  subtext: "Every product we offer is carefully sourced, traditionally crafted, and rigorously tested — bringing the finest of nature directly to your home.",
-  btnText: "",
-  btnLink: "",
-};
-
-const DEFAULT_PROMISES = [
-  { icon: "leaf", tag: "100% Organic", title: "Certified Organic", desc: "All our products are certified organic with no artificial additives, preservatives, or chemicals." },
-  { icon: "shield", tag: "Lab Tested", title: "Quality Assured", desc: "Rigorous lab testing ensures every batch meets the highest purity and safety standards." },
-  { icon: "award", tag: "Ethically Sourced", title: "Sustainably Sourced", desc: "We partner with trusted farms to bring you products that are good for you and the planet." },
-  { icon: "heart", tag: "Family Trusted", title: "Family Trusted", desc: "Crafted with the same care we would give our own family — pure, honest, and wholesome." },
-];
 
 const resolveIconUrl = (value, apiRoot) => {
   if (!value) return null;
@@ -67,10 +52,12 @@ export default function PurityPromise() {
   const [activeBadge, setActiveBadge] = useState(0);
   const [promises, setPromises] = useState([]);
   const [header, setHeader] = useState(null);
+  const [active, setActive] = useState(true);
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
     Promise.all([getSettings(), getCommitmentItems()]).then(([s, items]) => {
+      setActive(isSectionActive(s, "home_commitment"));
       if (s && s.home_commitment_heading) {
         setHeader({
           eyebrow: s.home_commitment_eyebrow,
@@ -97,25 +84,25 @@ export default function PurityPromise() {
     }).catch(() => {});
   }, [apiRoot]);
 
-  const displayHeader = header || DEFAULT_HEADER;
-  const displayPromises = promises.length > 0
-    ? promises
-    : DEFAULT_PROMISES.map((p, i) => ({ ...p, icon_url: null, ...COLORS[i % COLORS.length] }));
-
   useEffect(() => {
+    // Re-attach once data arrives: before that the component renders null,
+    // so sectionRef.current doesn't exist yet on the initial mount.
+    if (!sectionRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setVisible(true); },
       { threshold: 0.15 }
     );
-    if (sectionRef.current) observer.observe(sectionRef.current);
+    observer.observe(sectionRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [header, promises.length]);
 
   useEffect(() => {
-    if (displayPromises.length <= 1) return;
-    const t = setInterval(() => setActiveBadge((p) => (p + 1) % displayPromises.length), 2000);
+    if (promises.length <= 1) return;
+    const t = setInterval(() => setActiveBadge((p) => (p + 1) % promises.length), 2000);
     return () => clearInterval(t);
-  }, [displayPromises.length]);
+  }, [promises.length]);
+
+  if (!active || !header || !header.heading || promises.length === 0) return null;
 
   return (
     <section className="purity-section" ref={sectionRef}>
@@ -127,15 +114,15 @@ export default function PurityPromise() {
         <div className={`purity-header ${visible ? "fade-up" : "fade-hidden"}`}>
           <div className="purity-eyebrow">
             <span className="purity-leaf">🌿</span>
-            {displayHeader.eyebrow}
+            {header.eyebrow}
           </div>
           <h2 className="purity-heading">
-            {displayHeader.heading} <span className="purity-accent">{displayHeader.headingAccent}</span>
+            {header.heading} <span className="purity-accent">{header.headingAccent}</span>
           </h2>
-          <p className="purity-subtext">{displayHeader.subtext}</p>
+          <p className="purity-subtext">{header.subtext}</p>
 
           <div className="badge-strip">
-            {displayPromises.map((p, i) => (
+            {promises.map((p, i) => (
               <span key={p.tag + i} className={`purity-badge ${i === activeBadge ? "purity-badge-active" : ""}`}>
                 {p.tag}
               </span>
@@ -144,7 +131,7 @@ export default function PurityPromise() {
         </div>
 
         <div className="purity-grid">
-          {displayPromises.map((p, i) => (
+          {promises.map((p, i) => (
             <div
               key={p.title + i}
               className={`purity-card ${visible ? "fade-up" : "fade-hidden"}`}

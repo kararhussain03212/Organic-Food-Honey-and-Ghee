@@ -34,6 +34,20 @@ export default function ProductPageSettingsSection({ onDataLoaded, onDataChange 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-2 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-3 md:grid-cols-[280px_1fr] md:items-start">
+        <label className="pt-2 text-sm font-semibold text-[var(--admin-ink)]">SEO Meta Description</label>
+        <textarea
+          placeholder="e.g., Buy premium organic products online in Pakistan. Browse our complete collection of pure honey and natural desi ghee"
+          value={settings.seo_meta_description || ""}
+          onChange={(e) => handleChange("seo_meta_description", e.target.value)}
+          rows={3}
+          className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-sm text-[var(--admin-ink)] outline-none transition focus:border-[var(--admin-primary)]"
+        />
+        <p className="text-[10px] text-white/50 col-span-2 md:col-start-2">
+          {settings.seo_meta_description?.length || 0}/160 characters (recommended)
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-2 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-3 md:grid-cols-[280px_1fr] md:items-start">
         <label className="pt-2 text-sm font-semibold text-[var(--admin-ink)]">Badge Text</label>
         <input
           type="text"
@@ -66,19 +80,6 @@ export default function ProductPageSettingsSection({ onDataLoaded, onDataChange 
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-2 rounded-xl border border-[var(--admin-border)] bg-[var(--admin-card-elevated)] p-3 md:grid-cols-[280px_1fr] md:items-start">
-        <label className="pt-2 text-sm font-semibold text-[var(--admin-ink)]">SEO Meta Description</label>
-        <textarea
-          placeholder="e.g., Buy premium organic products online in Pakistan. Browse our complete collection of pure honey and natural desi ghee"
-          value={settings.seo_meta_description || ""}
-          onChange={(e) => handleChange("seo_meta_description", e.target.value)}
-          rows={3}
-          className="w-full rounded-xl border border-[var(--admin-border)] bg-[var(--admin-bg)] px-3 py-2.5 text-sm text-[var(--admin-ink)] outline-none transition focus:border-[var(--admin-primary)]"
-        />
-        <p className="text-[10px] text-white/50 col-span-2 md:col-start-2">
-          {settings.seo_meta_description?.length || 0}/160 characters (recommended)
-        </p>
-      </div>
     </div>
   );
 }

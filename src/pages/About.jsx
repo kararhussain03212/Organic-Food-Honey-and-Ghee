@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getSettings, isSectionActive } from "../api/apiClient";
 import "../styles/About.css";
 
 const BASE_URL = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
@@ -247,8 +248,10 @@ function AboutCTA({ cta }) {
 /* ─── Page ───────────────────────────────────────────── */
 export default function About() {
   const [data, setData] = useState(null);
+  const [pageActive, setPageActive] = useState(true);
 
   useEffect(() => {
+    getSettings().then((s) => setPageActive(isSectionActive(s, "about"))).catch(() => {});
     fetchAboutPage().then((d) => {
       if (!d || !d.hero) return;
       setData({
@@ -264,7 +267,7 @@ export default function About() {
     }).catch(() => {});
   }, []);
 
-  if (!data) return null;
+  if (!pageActive || !data) return null;
 
   return (
     <main className="ab-page">

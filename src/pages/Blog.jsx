@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getBlogs, getBlogSettings, parseJsonField } from "../api/apiClient";
+import { getBlogs, getBlogSettings, getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
 import "../styles/Blog.css";
 
 
@@ -190,7 +190,13 @@ export default function Blog() {
   const [hero, setHero] = useState(null);
   const heroRef = useRef(null);
 
+  const [pageActive, setPageActive] = useState(true);
+
   useEffect(() => { setVisible(true); }, []);
+
+  useEffect(() => {
+    getSettings().then((s) => setPageActive(isSectionActive(s, "blog"))).catch(() => {});
+  }, []);
 
   useEffect(() => {
     getBlogSettings().then((s) => {
@@ -257,6 +263,8 @@ export default function Blog() {
   const totalPages = Math.ceil(filtered.length / POSTS_PER_PAGE);
   const paginated = filtered.slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
   const featuredPost = blogs.find((b) => b.featured || b.is_published);
+
+  if (!pageActive) return null;
 
   return (
     <main className="bl-page">
