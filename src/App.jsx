@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import WhatsAppFloat from "./components/WhatsAppFloat";
 import Home from './pages/Home'
 import Contact from './pages/Contact'
+import Career from './pages/Career'
 import Blog from './pages/Blog'
 import BlogDetail from './pages/BlogDetail'
 import About from './pages/About'
@@ -40,6 +41,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/career" element={<Career />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/about" element={<About />} />
