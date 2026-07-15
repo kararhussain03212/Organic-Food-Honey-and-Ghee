@@ -3,12 +3,12 @@ import "../styles/Career.css";
 import { getSettings, isSectionActive } from "../api/apiClient";
 
 const AGENTS = [
-  { id: 1, name: "Azam Muhammad", region: "Gilgit Baltistan", quote: "Here to help you find the right product for your family.", whatsapp: "+923425551234" },
-  { id: 2, name: "Dr. Iftikhar", region: "Dubai, UAE", quote: "Your trusted wellness partner in the Gulf.", whatsapp: "+971501234567" },
-  { id: 3, name: "Wasif Abbas", region: "Khyber Pakhtunkhwa", quote: "Bringing pure products to KPK families.", whatsapp: "+923115551234" },
-  { id: 4, name: "Zahir Abbas", region: "Khyber Pakhtunkhwa", quote: "Quality wellness, delivered to your doorstep.", whatsapp: "+923335551234" },
-  { id: 5, name: "Ismail", region: "Islamabad", quote: "Connect with Arion's trusted representative.", whatsapp: "+923005551234" },
-  { id: 6, name: "Punjabi Saeed", region: "Punjab", quote: "Serving Punjab with authentic, natural products.", whatsapp: "+923215551234" },
+  { id: 1, name: "Azam Muhammad", region: "Gilgit Baltistan", quote: "Here to help you find the right product for your family.", whatsapp: "+923425551234", image: "https://images.unsplash.com/photo-1615109398623-88346a601842?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { id: 2, name: "Dr. Iftikhar", region: "Dubai, UAE", quote: "Your trusted wellness partner in the Gulf.", whatsapp: "+971501234567", image: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { id: 3, name: "Wasif Abbas", region: "Khyber Pakhtunkhwa", quote: "Bringing pure products to KPK families.", whatsapp: "+923115551234", image: "https://picsum.photos/240/240?random=3" },
+  { id: 4, name: "Zahir Abbas", region: "Khyber Pakhtunkhwa", quote: "Quality wellness, delivered to your doorstep.", whatsapp: "+923335551234", image: "https://picsum.photos/240/240?random=4" },
+  { id: 5, name: "Ismail", region: "Islamabad", quote: "Connect with Arion's trusted representative.", whatsapp: "+923005551234", image: "https://picsum.photos/240/240?random=5" },
+  { id: 6, name: "Punjabi Saeed", region: "Punjab", quote: "Serving Punjab with authentic, natural products.", whatsapp: "+923215551234", image: "https://picsum.photos/240/240?random=6" },
 ];
 
 function useInView() {
@@ -206,6 +206,38 @@ function AffiliateSection() {
   );
 }
 
+function AgentCard({ agent, inView, index }) {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <div className={`cr-agent-card${inView ? " visible" : ""}`} style={{ transitionDelay: `${index * 0.08}s` }}>
+      {!imageError ? (
+        <img
+          src={agent.image}
+          alt={agent.name}
+          className="cr-agent-image"
+          onError={() => setImageError(true)}
+          loading="lazy"
+        />
+      ) : (
+        <div className="cr-agent-image-fallback">
+          <div className="cr-agent-initials">{agent.name.split(' ').map(n => n[0]).join('')}</div>
+        </div>
+      )}
+      <h3 className="cr-agent-name">{agent.name}</h3>
+      <p className="cr-agent-region">{agent.region}</p>
+      <blockquote className="cr-agent-quote">"{agent.quote}"</blockquote>
+      <a href={`https://wa.me/${agent.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="cr-agent-cta">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+          <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.958 9.958 0 0 1-5.084-1.383L2 22l1.414-4.836A9.958 9.958 0 0 1 2 12 10 10 0 0 1 12 2zm0 2a8 8 0 1 0 0 16A8 8 0 0 0 12 4z" />
+        </svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+  );
+}
+
 function AgentsSection() {
   const [ref, inView] = useInView();
 
@@ -220,19 +252,7 @@ function AgentsSection() {
 
         <div className="cr-agents-grid">
           {AGENTS.map((agent, i) => (
-            <div key={agent.id} className={`cr-agent-card${inView ? " visible" : ""}`} style={{ transitionDelay: `${i * 0.08}s` }}>
-              <div className="cr-agent-badge">🟢</div>
-              <h3 className="cr-agent-name">{agent.name}</h3>
-              <p className="cr-agent-region">{agent.region}</p>
-              <blockquote className="cr-agent-quote">"{agent.quote}"</blockquote>
-              <a href={`https://wa.me/${agent.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="cr-agent-cta">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                  <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.958 9.958 0 0 1-5.084-1.383L2 22l1.414-4.836A9.958 9.958 0 0 1 2 12 10 10 0 0 1 12 2zm0 2a8 8 0 1 0 0 16A8 8 0 0 0 12 4z" />
-                </svg>
-                Chat on WhatsApp
-              </a>
-            </div>
+            <AgentCard key={agent.id} agent={agent} inView={inView} index={i} />
           ))}
         </div>
       </div>
