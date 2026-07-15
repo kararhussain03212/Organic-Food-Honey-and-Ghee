@@ -9,9 +9,12 @@ use Backend\Controllers\ContactController;
 use Backend\Controllers\CustomerAddressController;
 use Backend\Controllers\DashboardController;
 use Backend\Controllers\HeroController;
+use Backend\Controllers\OrderController;
+use Backend\Controllers\PartnerController;
 use Backend\Controllers\ProductController;
 use Backend\Controllers\ProductPageController;
 use Backend\Controllers\SettingController;
+use Backend\Controllers\TeamMemberController;
 use Backend\Controllers\TestimonialController;
 use Backend\Controllers\UploadController;
 use Backend\Controllers\UserController;
@@ -31,6 +34,9 @@ require_once __DIR__ . '/../controllers/DashboardController.php';
 require_once __DIR__ . '/../controllers/ContactController.php';
 require_once __DIR__ . '/../controllers/AboutController.php';
 require_once __DIR__ . '/../controllers/CustomerAddressController.php';
+require_once __DIR__ . '/../controllers/PartnerController.php';
+require_once __DIR__ . '/../controllers/TeamMemberController.php';
+require_once __DIR__ . '/../controllers/OrderController.php';
 require_once __DIR__ . '/../middleware/auth.php';
 require_once __DIR__ . '/../utils/Router.php';
 
@@ -137,6 +143,28 @@ function registerAdminRoutes(Router $router): void
     $router->post('/api/admin/about/comparison-cards',        [AboutController::class, 'adminStoreComparisonCards'],  $mw);
     $router->put('/api/admin/about/comparison-cards/{id}',    [AboutController::class, 'adminUpdateComparisonCards'], $mw);
     $router->delete('/api/admin/about/comparison-cards/{id}', [AboutController::class, 'adminDeleteComparisonCards'], $mw);
+
+    // Partner Page Settings (admin)
+    $router->get('/api/admin/partner-page', [PartnerController::class, 'adminGetPage'], $mw);
+    $router->put('/api/admin/partner-page', [PartnerController::class, 'adminUpdatePage'], $mw);
+
+    // Team Members (admin)
+    $router->get('/api/admin/team-members', [TeamMemberController::class, 'index'], $mw);
+    $router->get('/api/admin/team-members/{id}', [TeamMemberController::class, 'show'], $mw);
+    $router->post('/api/admin/team-members', [TeamMemberController::class, 'store'], $mw);
+    $router->put('/api/admin/team-members/{id}', [TeamMemberController::class, 'update'], $mw);
+    $router->delete('/api/admin/team-members/{id}', [TeamMemberController::class, 'destroy'], $mw);
+    $router->patch('/api/admin/team-members/reorder', [TeamMemberController::class, 'reorder'], $mw);
+
+    // Affiliate Applications (admin)
+    $router->get('/api/admin/affiliate-applications', [PartnerController::class, 'adminIndexApplications'], $mw);
+    $router->patch('/api/admin/affiliate-applications/{id}', [PartnerController::class, 'adminUpdateApplication'], $mw);
+    $router->delete('/api/admin/affiliate-applications/{id}', [PartnerController::class, 'adminDeleteApplication'], $mw);
+
+    // Orders (admin)
+    $router->get('/api/admin/orders', [OrderController::class, 'adminIndex'], $mw);
+    $router->patch('/api/admin/orders/{id}', [OrderController::class, 'adminUpdate'], $mw);
+    $router->delete('/api/admin/orders/{id}', [OrderController::class, 'adminDestroy'], $mw);
 
     // Customer Addresses (admin)
     $router->get('/api/admin/customers', [CustomerAddressController::class, 'index'], $mw);

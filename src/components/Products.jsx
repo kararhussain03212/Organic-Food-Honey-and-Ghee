@@ -19,8 +19,12 @@ const badgeColors = {
 
 
 const apiRoot = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
-const resolveImage = (path) => {
+// Images can be plain path strings (legacy) or {url, alt_text} objects
+// (current admin format) — normalize both before resolving.
+const resolveImage = (img) => {
+  const path = typeof img === "object" && img !== null ? img.url : img;
   if (!path) return null;
+  if (path.startsWith("http")) return path;
   if (path.startsWith("/uploads/")) return apiRoot + path;
   return path;
 };
@@ -39,8 +43,9 @@ function ProductCard({ product }) {
     : (product.original_price ? Math.round(((product.original_price - product.price) / product.original_price) * 100) : null);
 
   const handleShopNow = () => {
-    const message = `🛍️ *ORDER REQUEST*\n\n*Product:* ${product.name}\n*Variant:* ${variant}\n*Price:* Rs ${Number(price).toLocaleString()}`;
-    window.dispatchEvent(new CustomEvent("shop:requestLocation", { detail: { message } }));
+    const message = `*ORDER REQUEST*\n\n*Product:* ${product.name}\n*Code:* ${product.id}\n*Variant:* ${variant}\n*Price:* Rs ${Number(price).toLocaleString()}`;
+    const items = [{ id: product.id, name: product.name, variant, qty: 1, price: Number(price) || 0 }];
+    window.dispatchEvent(new CustomEvent("shop:requestLocation", { detail: { message, items } }));
   };
 
   const goToProduct = () => navigate(`/products/${product.slug}`);

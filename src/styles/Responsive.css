@@ -126,6 +126,19 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* Hide purity/commitment section and secondary navbar on mobile */
+  .purity-section {
+    display: none !important;
+  }
+
+  .info-strip {
+    display: none !important;
+  }
+
+  .info-inner {
+    display: none !important;
+  }
+
   .ab-story {
     padding-top: 2rem !important;
   }

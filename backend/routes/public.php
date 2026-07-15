@@ -8,9 +8,12 @@ use Backend\Controllers\BlogController;
 use Backend\Controllers\CommitmentItemController;
 use Backend\Controllers\ContactController;
 use Backend\Controllers\HeroController;
+use Backend\Controllers\OrderController;
+use Backend\Controllers\PartnerController;
 use Backend\Controllers\ProductController;
 use Backend\Controllers\ProductPageController;
 use Backend\Controllers\SettingController;
+use Backend\Controllers\TeamMemberController;
 use Backend\Controllers\TestimonialController;
 use Backend\Middleware\AuthMiddleware;
 use Backend\Utils\Router;
@@ -25,6 +28,9 @@ require_once __DIR__ . '/../controllers/ContactController.php';
 require_once __DIR__ . '/../controllers/CommitmentItemController.php';
 require_once __DIR__ . '/../controllers/AboutController.php';
 require_once __DIR__ . '/../controllers/AddressController.php';
+require_once __DIR__ . '/../controllers/PartnerController.php';
+require_once __DIR__ . '/../controllers/TeamMemberController.php';
+require_once __DIR__ . '/../controllers/OrderController.php';
 require_once __DIR__ . '/../middleware/auth.php';
 require_once __DIR__ . '/../utils/Router.php';
 
@@ -43,6 +49,14 @@ function registerPublicRoutes(Router $router): void
     $router->get('/api/public/contact-page',  [ContactController::class, 'publicContactPage']);
     $router->post('/api/public/contact', [ContactController::class, 'store']);
     $router->get('/api/public/product-page', [ProductPageController::class, 'publicPage']);
+
+    // Partner With Us page
+    $router->get('/api/public/partner-page', [PartnerController::class, 'publicPage']);
+    $router->get('/api/public/team-members', [TeamMemberController::class, 'publicIndex']);
+    $router->post('/api/public/affiliate-applications', [PartnerController::class, 'storeApplication']);
+
+    // Orders
+    $router->post('/api/public/orders', [OrderController::class, 'store']);
 
     // About Us
     $router->get('/api/public/about/page',        [AboutController::class, 'publicPage']);

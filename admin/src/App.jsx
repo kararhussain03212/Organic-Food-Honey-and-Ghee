@@ -30,6 +30,11 @@ import ProblemCardForm from "./pages/about/ProblemCardForm";
 import CoreValueList from "./pages/about/CoreValueList";
 import CoreValueForm from "./pages/about/CoreValueForm";
 import CustomerAddresses from "./pages/addresses/CustomerAddresses";
+import PartnerPageSettings from "./pages/partner/PartnerPageSettings";
+import TeamMemberList from "./pages/partner/TeamMemberList";
+import TeamMemberForm from "./pages/partner/TeamMemberForm";
+import AffiliateApplications from "./pages/partner/AffiliateApplications";
+import OrderList from "./pages/orders/OrderList";
 import { useAuth } from "./context/useAuth";
 
 function Forbidden403() {
@@ -425,6 +430,16 @@ export default function App() {
               </ProtectedPage>
             }
           />
+
+          {/* Career / Partner Page */}
+          <Route path="/partner-settings"        element={<ProtectedPage><PartnerPageSettings /></ProtectedPage>} />
+          <Route path="/team-members"            element={<ProtectedPage><TeamMemberList /></ProtectedPage>} />
+          <Route path="/team-members/new"        element={<ProtectedPage><TeamMemberForm /></ProtectedPage>} />
+          <Route path="/team-members/edit/:id"   element={<ProtectedPage><TeamMemberForm /></ProtectedPage>} />
+          <Route path="/affiliate-applications"  element={<ProtectedPage><AffiliateApplications /></ProtectedPage>} />
+
+          {/* Orders */}
+          <Route path="/orders" element={<ProtectedPage><OrderList /></ProtectedPage>} />
 
           {/* About Us Management */}
           <Route path="/about/hero"    element={<ProtectedPage><HeroSectionAdmin /></ProtectedPage>} />

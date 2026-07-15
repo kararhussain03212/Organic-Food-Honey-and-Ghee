@@ -34,6 +34,8 @@ const Footer = () => {
   const timingsHeading = s?.footer_timings_heading;
   const timingsDays = s?.footer_timings_days;
   const timingsTime = s?.footer_timings_time;
+  const quickLinksHeading = s?.footer_quick_links_heading;
+  const policyLinksHeading = s?.footer_policy_links_heading;
 
   const footerLogoUrl = useMemo(() => {
     const logo = s?.footer_logo;
@@ -117,6 +119,7 @@ const Footer = () => {
 
         {footerQuickLinks.length > 0 && (
           <div className="footer-quick">
+            {quickLinksHeading && <h3>{quickLinksHeading}</h3>}
             <div className="footer-links">
               {footerQuickLinks.map((link) => {
                 const isExternal = link.path?.startsWith("http://") || link.path?.startsWith("https://");
@@ -140,6 +143,7 @@ const Footer = () => {
 
         {footerLinks.length > 0 && (
           <div className="footer-poli">
+            {policyLinksHeading && <h3>{policyLinksHeading}</h3>}
             <div className="footer-links">
               {footerLinks.map((link) => {
                 const isExternal = link.path?.startsWith("http://") || link.path?.startsWith("https://");

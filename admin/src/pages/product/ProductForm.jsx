@@ -381,7 +381,7 @@ export default function ProductForm() {
                       Remove
                     </button>
                   </div>
-                  <div className="group relative mb-3 aspect-square overflow-hidden rounded-lg border border-white/10">
+                  <div className="group relative mb-3 h-48 overflow-hidden rounded-lg border border-white/10">
                     <img
                       src={url}
                       alt={form.imageAltTexts[i] || "Product image"}

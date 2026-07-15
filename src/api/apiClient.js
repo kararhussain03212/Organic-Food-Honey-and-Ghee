@@ -141,6 +141,56 @@ export async function getProductPage() {
   }
 }
 
+export async function getPartnerPage() {
+  try {
+    const result = await fetchApi("/api/public/partner-page");
+    return result ?? {};
+  } catch {
+    return {};
+  }
+}
+
+export async function getTeamMembers() {
+  try {
+    const result = await fetchApi("/api/public/team-members");
+    return Array.isArray(result) ? result : (result?.data ?? []);
+  } catch {
+    return [];
+  }
+}
+
+// Throws an Error with .fields (per-field messages) on 422 so the form can
+// show inline server-side validation errors.
+export async function postAffiliateApplication(data) {
+  const res = await fetch(`${BASE_URL}/api/public/affiliate-applications`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const body = await res.json().catch(() => null);
+  if (!res.ok) {
+    const err = new Error(body?.error || `Request failed: ${res.status}`);
+    err.fields = body?.fields || null;
+    err.status = res.status;
+    throw err;
+  }
+  return body?.data ?? body;
+}
+
+// Creates an order and returns the generated order number, or null if the
+// API is unavailable — the WhatsApp message is still sent without a number.
+export async function postOrder(data) {
+  try {
+    const result = await fetchApi("/api/public/orders", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    return result?.order_number ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function postContact(data) {
   return fetchApi("/api/public/contact", {
     method: "POST",

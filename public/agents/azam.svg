@@ -1,0 +1,24 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bgAzam" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#496348;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3d4f39;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" fill="url(#bgAzam)"/>
+
+  <!-- Head -->
+  <circle cx="120" cy="70" r="35" fill="#C7A66B"/>
+
+  <!-- Body/Shoulders -->
+  <ellipse cx="120" cy="160" rx="50" ry="55" fill="#C7A66B"/>
+
+  <!-- Neck connector -->
+  <rect x="105" y="100" width="30" height="20" fill="#C7A66B"/>
+
+  <!-- Facial features -->
+  <circle cx="110" cy="65" r="4" fill="#496348"/>
+  <circle cx="130" cy="65" r="4" fill="#496348"/>
+  <path d="M 120 75 Q 115 80 120 82 Q 125 80 120 75" fill="#496348"/>
+</svg>

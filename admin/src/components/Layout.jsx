@@ -34,6 +34,12 @@ const NAV = [
   { path: "/settings/product",  label: "Product Page" },
   { path: "/settings/blog",     label: "Blog Page" },
   { path: "/contact-settings",  label: "Contact Page" },
+  // Orders
+  { path: "/orders",                  label: "Orders" },
+  // Career / Partner Page
+  { path: "/partner-settings",        label: "Career Page" },
+  { path: "/team-members",            label: "Team Members" },
+  { path: "/affiliate-applications",  label: "Applications" },
 ];
 
 const PAGE_TITLES = {
@@ -50,6 +56,11 @@ const PAGE_TITLES = {
   "/testimonials":                   "Testimonials",
   "/testimonials/new":               "Add Testimonial",
   "/contact-messages":               "Contact Messages",
+  "/orders":                         "Orders",
+  "/partner-settings":               "Career Page Settings",
+  "/team-members":                   "Team Members",
+  "/team-members/new":               "Add Team Member",
+  "/affiliate-applications":         "Affiliate Applications",
   "/contact-settings":               "Contact Page Settings",
   "/settings/navbar":                "Navbar Settings",
   "/settings/home":                  "Home Settings",
@@ -136,6 +147,7 @@ export default function Layout({ children }) {
     if (location.pathname.startsWith("/commitment/edit"))        return "Edit Commitment Item";
     if (location.pathname.startsWith("/blogs/edit"))             return "Edit Blog";
     if (location.pathname.startsWith("/testimonials/edit"))      return "Edit Testimonial";
+    if (location.pathname.startsWith("/team-members/edit"))      return "Edit Team Member";
     if (location.pathname.startsWith("/about/problems/edit"))    return "Edit Problem Card";
     if (location.pathname.startsWith("/about/core-values/edit")) return "Edit Core Value";
     if (location.pathname === "/about/hero")           return "About - Hero Section";

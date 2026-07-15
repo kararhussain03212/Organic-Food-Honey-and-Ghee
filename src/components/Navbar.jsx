@@ -10,7 +10,7 @@ import { IoCall } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import { getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
+import { getSettings, getContactPage, parseJsonField, isSectionActive, postOrder } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
 const DELIVERY_KEY = "delivery_location";
@@ -29,19 +29,34 @@ function loadSaved() {
   catch { return {}; }
 }
 
+const resolveCartImage = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("blob:")) return path;
+  const apiRoot = getBackendRoot();
+  if (path.startsWith("/uploads/")) return apiRoot + path;
+  if (path.startsWith("/")) return apiRoot + path;
+  return apiRoot + "/uploads/" + path;
+};
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [pendingWaMessage, setPendingWaMessage] = useState("");
+  const [pendingItems, setPendingItems] = useState([]);
+  const [placingOrder, setPlacingOrder] = useState(false);
   const [cartItems, setCartItems] = useState(() => getCartItems());
   const [searchTerm, setSearchTerm] = useState("");
   const [settings, setSettings] = useState({});
+  const [contactPage, setContactPage] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
     getSettings().then((data) => {
       if (data && Object.keys(data).length > 0) setSettings(data);
+    });
+    getContactPage().then((data) => {
+      if (data && Object.keys(data).length > 0) setContactPage(data);
     });
   }, []);
 
@@ -50,7 +65,9 @@ const Navbar = () => {
   const navPhone      = settings.navbar_phone;
   const navEmail      = settings.navbar_email;
   const welcomeText   = settings.navbar_welcome_text;
-  const waNumber      = settings.whatsapp_number;
+  // Order/checkout messages go to the Contact page's WhatsApp number so
+  // orders land wherever the admin has configured customer contact to go.
+  const orderWaNumber = (contactPage.whatsapp_number || settings.whatsapp_number || "").replace(/\D/g, "");
 
   const navLogoUrl = useMemo(() => {
     const logo = settings.nav_logo;
@@ -93,12 +110,12 @@ const Navbar = () => {
   const buildDeliveryBlock = () =>
     [
       "",
-      "📍 Delivery Details:",
-      `👤 Name: ${firstName.trim()} ${lastName.trim()}`,
-      `🏠 Address: ${streetAddress.trim()}${apartment.trim() ? ` | ${apartment.trim()}` : ""}`,
-      `🏙️ City: ${city.trim()}${postalCode.trim() ? ` | ${postalCode.trim()}` : ""}`,
-      `📱 Phone: ${phone.trim()}`,
-      `🌍 Country: Pakistan`,
+      "*Delivery Details:*",
+      `Name: ${firstName.trim()} ${lastName.trim()}`,
+      `Address: ${streetAddress.trim()}${apartment.trim() ? ` | ${apartment.trim()}` : ""}`,
+      `City: ${city.trim()}${postalCode.trim() ? ` | ${postalCode.trim()}` : ""}`,
+      `Phone: ${phone.trim()}`,
+      `Country: Pakistan`,
     ].join("\n");
 
   const handleSearchSubmit = (event) => {
@@ -120,6 +137,7 @@ const Navbar = () => {
   useEffect(() => {
     const handler = (e) => {
       setPendingWaMessage(e.detail.message || "");
+      setPendingItems(Array.isArray(e.detail.items) ? e.detail.items : []);
       setIsLocationOpen(true);
     };
     window.addEventListener("shop:requestLocation", handler);
@@ -135,22 +153,49 @@ const Navbar = () => {
 
   const handleRemoveItem = (id, variant) => removeFromCart(id, variant);
 
-  const completeCheckout = () => {
+  // Persist the order in the backend and return "Order #: ARN-..." for the
+  // WhatsApp message, or "" if the API is unreachable (message still sends).
+  const createOrder = async (items) => {
+    if (!Array.isArray(items) || items.length === 0) return "";
+    const orderNumber = await postOrder({
+      customer_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
+      phone: phone.trim(),
+      address: streetAddress.trim(),
+      apartment: apartment.trim(),
+      city: city.trim(),
+      postal_code: postalCode.trim(),
+      items: items.map((item) => ({
+        code: item.id ?? "",
+        name: item.name,
+        variant: item.variant || "",
+        qty: item.qty || 1,
+        price: item.price || 0,
+      })),
+    });
+    return orderNumber ? `*Order #:* ${orderNumber}\n\n` : "";
+  };
+
+  const completeCheckout = async () => {
     if (cartItems.length === 0) return;
+    setPlacingOrder(true);
+    const orderLine = await createOrder(cartItems);
+    setPlacingOrder(false);
     const lines = cartItems.map(
-      (item) => `  • ${item.name} × ${item.qty} (Rs ${item.price.toLocaleString()})`,
+      (item) => `  - ${item.name}${item.variant ? ` (${item.variant})` : ""} [Code: ${item.id}] x ${item.qty} (Rs ${item.price.toLocaleString()})`,
     );
     const message = [
-      "🛒 *ORDER REQUEST*",
+      "*ORDER REQUEST*",
+      "",
+      orderLine.trim(),
       "",
       "Items:",
       ...lines,
       "",
-      `💰 Subtotal: Rs ${subtotal.toLocaleString()}`,
+      `Subtotal: Rs ${subtotal.toLocaleString()}`,
       buildDeliveryBlock(),
-    ].join("\n");
+    ].filter((line, i) => line !== "" || i !== 2).join("\n");
     window.open(
-      `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`,
+      `https://wa.me/${orderWaNumber}?text=${encodeURIComponent(message)}`,
       "_blank",
       "noopener,noreferrer",
     );
@@ -160,19 +205,24 @@ const Navbar = () => {
 
   const handleCheckout = () => setIsLocationOpen(true);
 
-  const handleSelectLocation = () => {
-    if (!canSubmitLocation) return;
+  const handleSelectLocation = async () => {
+    if (!canSubmitLocation || placingOrder) return;
     saveLocation();
-    setIsLocationOpen(false);
     if (pendingWaMessage) {
+      setPlacingOrder(true);
+      const orderLine = await createOrder(pendingItems);
+      setPlacingOrder(false);
+      setIsLocationOpen(false);
       window.open(
-        `https://wa.me/${waNumber}?text=${encodeURIComponent(pendingWaMessage + buildDeliveryBlock())}`,
+        `https://wa.me/${orderWaNumber}?text=${encodeURIComponent(orderLine + pendingWaMessage + buildDeliveryBlock())}`,
         "_blank",
         "noopener,noreferrer",
       );
       setPendingWaMessage("");
+      setPendingItems([]);
     } else {
-      completeCheckout();
+      setIsLocationOpen(false);
+      await completeCheckout();
     }
   };
 
@@ -347,7 +397,7 @@ const Navbar = () => {
           ) : (
             cartItems.map((item) => (
               <div className="cart-item" key={`${item.id}-${item.variant}`}>
-                <img src={item.image} alt={item.name} />
+                <img src={resolveCartImage(item.image)} alt={item.name} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.style.visibility = "hidden"; }} />
                 <div>
                   <span className="cart-item-name">{item.name}</span>
                   <span className="cart-item-meta">Qty {item.qty}{item.variant ? ` • ${item.variant}` : ""}</span>
@@ -379,7 +429,7 @@ const Navbar = () => {
               className="location-modal-close"
               type="button"
               aria-label="Close"
-              onClick={() => { setIsLocationOpen(false); setPendingWaMessage(""); }}
+              onClick={() => { setIsLocationOpen(false); setPendingWaMessage(""); setPendingItems([]); }}
             >
               ×
             </button>
@@ -464,10 +514,10 @@ const Navbar = () => {
               <button
                 className="location-modal-submit btn-ripple"
                 type="button"
-                disabled={!canSubmitLocation}
+                disabled={!canSubmitLocation || placingOrder}
                 onClick={handleSelectLocation}
               >
-                Confirm &amp; Continue
+                {placingOrder ? "Placing Order…" : <>Confirm &amp; Continue</>}
               </button>
             </div>
           </div>

@@ -5,7 +5,13 @@ import { getBackendRoot } from "../api/runtimeApi";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
 
-const resolveImage = (path) => {
+// Images can be plain path strings (legacy) or {url, alt_text} objects
+// (current admin format) — normalize both to a plain path before resolving.
+const getImagePath = (img) => (typeof img === "object" && img !== null ? img.url : img);
+const getImageAlt = (img, fallback) => (typeof img === "object" && img !== null && img.alt_text) || fallback;
+
+const resolveImage = (img) => {
+  const path = getImagePath(img);
   if (!path) return null;
   if (path.startsWith("http")) return path;
   const apiRoot = getBackendRoot();
@@ -15,11 +21,30 @@ const resolveImage = (path) => {
 
 /* ─── Image Gallery ─────────────────────────────── */
 function ImageGallery({ images, name }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const validImages = images.length > 0 ? images : [null];
+  const active = validImages[activeIndex] ?? validImages[0];
+
   return (
     <div className="pd-gallery">
       <div className="pd-gallery-main">
-        <img src={resolveImage(images[0])} alt={name} className="pd-gallery-img" />
+        <img src={resolveImage(active)} alt={getImageAlt(active, name)} className="pd-gallery-img" />
       </div>
+      {validImages.length > 1 && (
+        <div className="pd-gallery-thumbs">
+          {validImages.map((img, i) => (
+            <button
+              key={i}
+              type="button"
+              className={`pd-thumb${i === activeIndex ? " active" : ""}`}
+              onClick={() => setActiveIndex(i)}
+              aria-label={`View image ${i + 1} of ${name}`}
+            >
+              <img src={resolveImage(img)} alt={getImageAlt(img, `${name} thumbnail ${i + 1}`)} />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -147,14 +172,15 @@ export default function ProductDetail() {
   const totalSavings = hasOriginal ? (selectedOriginal - selectedPrice) * qty : 0;
 
   const handleAddToCart = () => {
-    addToCart({ id: product.id, name: product.name, price: selectedPrice, qty, image: productImages[0], variant: selectedVariant });
+    addToCart({ id: product.id, name: product.name, price: selectedPrice, qty, image: getImagePath(productImages[0]), variant: selectedVariant });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
 
   const handleShopNow = () => {
-    const message = `🛍️ *ORDER REQUEST*\n\n*Product:* ${product.name}\n*Size:* ${selectedVariant}\n*Quantity:* ${qty}\n*Price:* Rs ${totalPrice.toLocaleString()}`;
-    window.dispatchEvent(new CustomEvent("shop:requestLocation", { detail: { message } }));
+    const message = `*ORDER REQUEST*\n\n*Product:* ${product.name}\n*Code:* ${product.id}\n*Size:* ${selectedVariant}\n*Quantity:* ${qty}\n*Price:* Rs ${totalPrice.toLocaleString()}`;
+    const items = [{ id: product.id, name: product.name, variant: selectedVariant, qty, price: Number(selectedPrice) || 0 }];
+    window.dispatchEvent(new CustomEvent("shop:requestLocation", { detail: { message, items } }));
   };
 
   const scrollSlider = (dir) => {

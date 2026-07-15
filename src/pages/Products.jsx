@@ -9,8 +9,13 @@ const PRODUCTS_PER_PAGE = 9;
 
 
 const apiRoot = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
-const resolveImage = (path) => {
+// Images can be plain path strings (legacy) or {url, alt_text} objects
+// (current admin format) — normalize both before resolving.
+const getImagePath = (img) => (typeof img === "object" && img !== null ? img.url : img);
+const resolveImage = (img) => {
+  const path = getImagePath(img);
   if (!path) return null;
+  if (path.startsWith("http")) return path;
   if (path.startsWith("/uploads/")) return apiRoot + path;
   return path;
 };
@@ -30,7 +35,7 @@ function ProductCard({ product }) {
     : (Array.isArray(product.images) ? product.images : []);
 
   const handleAddToCart = () => {
-    addToCart({ id: product.id, name: product.name, price: currentPrice, qty: 1, image: images[0], variant });
+    addToCart({ id: product.id, name: product.name, price: currentPrice, qty: 1, image: getImagePath(images[0]), variant });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
