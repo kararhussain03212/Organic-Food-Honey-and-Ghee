@@ -21,12 +21,25 @@ final class HeroController extends BaseCrudController
 {
     protected string $modelClass = HeroSlide::class;
     protected string $resourceName = 'hero';
-    protected array $requiredCreateFields = ['title'];
+    protected array $requiredCreateFields = ['product_id'];
+
+    /**
+     * Public homepage slider: active slides joined to their product, with
+     * title/description/tags/image/category resolved server-side.
+     */
+    public function publicIndex(array $params = []): void
+    {
+        $data = Cache::remember(
+            'public:hero:resolved',
+            static fn () => (new HeroSlide())->activeWithProducts()
+        );
+        Response::success($data, 'Fetched successfully');
+    }
 
     public function store(array $params = []): void
     {
         $model = new $this->modelClass();
-        $payload = Validator::sanitizeInput($this->body());
+        $payload = $this->normalizePayload(Validator::sanitizeInput($this->body()));
 
         $errors = Validator::required($payload, $this->requiredCreateFields);
         if ($errors !== []) {
@@ -60,7 +73,7 @@ final class HeroController extends BaseCrudController
             Response::error('Resource not found', 404);
         }
 
-        $payload = Validator::sanitizeInput($this->body());
+        $payload = $this->normalizePayload(Validator::sanitizeInput($this->body()));
         if (isset($payload['title']) && (!isset($payload['slug']) || trim((string) $payload['slug']) === '')) {
             $payload['slug'] = $this->slugify((string) $payload['title']);
         }
@@ -78,6 +91,23 @@ final class HeroController extends BaseCrudController
         ActivityLogger::log($this->currentAdminId(), 'update', $this->resourceName, $id);
         Cache::clearAll();
         Response::success($model->find($id), 'Updated successfully');
+    }
+
+    private function normalizePayload(array $payload): array
+    {
+        if (array_key_exists('product_id', $payload)) {
+            $payload['product_id'] = (int) $payload['product_id'] > 0 ? (int) $payload['product_id'] : null;
+        }
+        if (array_key_exists('tags', $payload)) {
+            $tags = $payload['tags'];
+            if (is_string($tags) && trim($tags) !== '' && $tags[0] !== '[') {
+                $tags = array_values(array_filter(array_map('trim', explode(',', $tags))));
+            }
+            $payload['tags'] = is_array($tags)
+                ? ($tags === [] ? null : json_encode($tags, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
+                : ($tags === '' ? null : $tags);
+        }
+        return $payload;
     }
 
     private function toClientError(\Throwable $e): string

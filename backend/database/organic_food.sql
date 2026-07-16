@@ -61,9 +61,12 @@ CREATE TABLE IF NOT EXISTS `activity_logs` (
 -- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hero_slides` (
   `id`                      INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `product_id`              INT UNSIGNED DEFAULT NULL,
   `kicker`                  VARCHAR(255) DEFAULT NULL,
   `title`                   VARCHAR(255) DEFAULT NULL,
   `subtitle`                VARCHAR(500) DEFAULT NULL,
+  `tags`                    LONGTEXT DEFAULT NULL,
+  `gradient`                VARCHAR(255) DEFAULT NULL,
   `button_text`             VARCHAR(120) DEFAULT NULL,
   `button_link`             VARCHAR(500) DEFAULT NULL,
   `secondary_button_text`   VARCHAR(120) DEFAULT NULL,
@@ -71,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `hero_slides` (
   `image`                   VARCHAR(500) DEFAULT NULL,
   `video_url`               VARCHAR(500) DEFAULT NULL,
   `sort_order`              SMALLINT NOT NULL DEFAULT 0,
+  `order_position`          SMALLINT NOT NULL DEFAULT 0,
   `is_active`               TINYINT(1) NOT NULL DEFAULT 1,
   `created_at`              DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at`              DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProducts } from "../api/apiClient";
+import { getHeroSlides } from "../api/apiClient";
 import { addToCart } from "../utils/cart";
 import "../styles/CircleSlider.css";
 
@@ -15,119 +15,31 @@ const resolveImage = (img) => {
   return "/" + path;
 };
 
-// Initial slide data with premium organic products
-const initialSlides = [
-  {
-    key: "sidr-honey-500g",
-    name: "Pure Sidr Honey",
-    variant: "500g",
-    price: 1850,
-    tags: ["Best Seller", "100% Pure"],
-    description: "Sourced from the premium Sidr valleys, our raw and unfiltered Sidr Honey is known for its rich flavor, deep golden hue, and powerful medicinal properties.",
-    image: "/product-images/honey 500 g.png",
-    category: "HONEY",
-    gradient: "radial-gradient(circle, #FCF5E5 0%, #E6C280 100%)"
-  },
-  {
-    key: "cow-ghee-500g",
-    name: "Premium Cow Ghee",
-    variant: "500g",
-    price: 1650,
-    tags: ["A2 Quality", "Pure Bilona"],
-    description: "Traditionally churned from fresh cow milk using the ancient Bilona method, rich in fat-soluble vitamins, offering a golden texture and delightful aroma.",
-    image: "/product-images/cow-ghee-500g.png",
-    category: "GHEE",
-    gradient: "radial-gradient(circle, #FDF9E2 0%, #E8D786 100%)"
-  },
-  {
-    key: "shilajit-5g",
-    name: "Himalayan Shilajit",
-    variant: "5g",
-    price: 1250,
-    tags: ["Gold Grade", "Natural Energy"],
-    description: "Pure organic resin harvested from high-altitude Himalayan peaks. Packed with fulvic acid and 85+ trace minerals to boost stamina and vitality naturally.",
-    image: "/product-images/shilajit 5g.png",
-    category: "SHILAJIT",
-    gradient: "radial-gradient(circle, #F2F2F2 0%, #C0C0C0 100%)"
-  },
-  {
-    key: "buffalo-ghee-500g",
-    name: "Organic Buffalo Ghee",
-    variant: "500g",
-    price: 1450,
-    tags: ["Rich Aroma", "Kitchen Essential"],
-    description: "Sourced from premium grass-fed buffaloes, this ghee is perfect for high-heat cooking and baking, adding a rich, creamy taste to your traditional dishes.",
-    image: "/product-images/buffalo-ghee-500g.png",
-    category: "GHEE",
-    gradient: "radial-gradient(circle, #F8F8F8 0%, #DCDCDC 100%)"
-  },
-  {
-    key: "goat-ghee-500g",
-    name: "Pure Goat Ghee",
-    variant: "500g",
-    price: 2450,
-    tags: ["Superfood", "Easy Digestion"],
-    description: "A rare and highly nutritious ghee churned from fresh goat milk. Sourced from free-roaming mountain goats, highly digestible and rich in medium-chain fatty acids.",
-    image: "/product-images/goat-ghee-500g.png",
-    category: "GHEE",
-    gradient: "radial-gradient(circle, #EBF5EB 0%, #C2E0C2 100%)"
-  },
-  {
-    key: "honey-1kg",
-    name: "Wild Forest Honey",
-    variant: "1kg",
-    price: 2950,
-    tags: ["Multi-Floral", "Raw & Sweet"],
-    description: "Harvested from wild forest wildflowers, this dark amber multi-floral honey has an intense floral aroma and natural therapeutic enzyme richness.",
-    image: "/product-images/honey-1kg.png",
-    category: "HONEY",
-    gradient: "radial-gradient(circle, #FEF2E4 0%, #D4A373 100%)"
-  }
-];
+const DEFAULT_GRADIENT = "radial-gradient(circle, #FCF5E5 0%, #E6C280 100%)";
 
-// Preset angles for orbit thumbnails (degrees, where 0 is 12 o'clock going clockwise)
-// Symmetrical arrangement around the sides and bottom:
-// Pos 0: 40° (Top-Right)
-// Pos 1: 110° (Bottom-Right)
-// Pos 2: 180° (Bottom-Center)
-// Pos 3: 250° (Bottom-Left)
-// Pos 4: 320° (Top-Left)
-const angles = [40, 110, 180, 250, 320];
+// Orbit thumbnail angles (degrees, 0 = 12 o'clock, clockwise).
+// Distributes however many thumbnails exist across the 40°–320° arc,
+// keeping the top of the orbit clear — matches the original 5-thumb
+// layout (40, 110, 180, 250, 320) when there are 6 slides.
+const orbitAngles = (count) => {
+  if (count <= 0) return [];
+  if (count === 1) return [180];
+  const step = 280 / (count - 1);
+  return Array.from({ length: count }, (_, i) => 40 + i * step);
+};
 
 export default function CircleSlider() {
   const navigate = useNavigate();
-  const [slides, setSlides] = useState(initialSlides);
+  const [slides, setSlides] = useState([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [added, setAdded] = useState(false);
 
-  // Sync slides with database products on mount
+  // Load slides from the hero-slides API (admin-managed, product-linked)
   useEffect(() => {
-    getProducts().then((dbProducts) => {
-      if (dbProducts && dbProducts.length > 0) {
-        // Map the top real products to our slider format
-        const merged = initialSlides.map((slide, index) => {
-          const dbProd = dbProducts[index];
-          if (dbProd) {
-            const images = typeof dbProd.images === "string" ? JSON.parse(dbProd.images || "[]") : (dbProd.images || []);
-            const imagePath = images[0] ? resolveImage(images[0]) : slide.image;
-            const variants = typeof dbProd.variants === "string" ? JSON.parse(dbProd.variants || "[]") : (dbProd.variants || []);
-            const variant = variants[0] || dbProd.subtitle || slide.variant;
-            
-            return {
-              ...slide,
-              id: dbProd.id,
-              slug: dbProd.slug,
-              price: Number(dbProd.price) || slide.price,
-              image: imagePath,
-              name: dbProd.name || slide.name,
-              description: dbProd.short_desc || dbProd.shortDesc || dbProd.description || slide.description,
-              variant: variant,
-              category: dbProd.category_name ? dbProd.category_name.toUpperCase() : slide.category,
-            };
-          }
-          return slide;
-        });
-        setSlides(merged);
+    getHeroSlides().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        setSlides(data);
+        setActiveIdx(0);
       }
     });
   }, []);
@@ -136,17 +48,17 @@ export default function CircleSlider() {
 
   // Autoplay functionality: slide changes every 5 seconds
   useEffect(() => {
-    if (slides.length === 0) return;
+    if (slides.length < 2) return;
     const interval = setInterval(() => {
       setActiveIdx((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
   }, [slides.length]);
 
-  // Compute indices of other 5 slides that go onto the orbit
+  // The other slides go onto the orbit as thumbnails (preview ring)
   const remainingSlides = useMemo(() => {
     const list = [];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i < slides.length; i++) {
       const idx = (activeIdx + i) % slides.length;
       list.push({
         ...slides[idx],
@@ -156,17 +68,17 @@ export default function CircleSlider() {
     return list;
   }, [activeIdx, slides]);
 
+  const angles = useMemo(() => orbitAngles(remainingSlides.length), [remainingSlides.length]);
+
   // Handle Add to Cart action
   const handleAddToCart = () => {
     const prod = activeProduct;
-    // Fallback ID if not fetched from DB
-    const itemId = prod.id || `local-${prod.key}`;
     addToCart({
-      id: itemId,
-      name: prod.name,
+      id: prod.product_id,
+      name: prod.title,
       price: prod.price,
       qty: 1,
-      image: prod.image,
+      image: resolveImage(prod.image),
       variant: prod.variant
     });
 
@@ -174,21 +86,25 @@ export default function CircleSlider() {
     setTimeout(() => setAdded(false), 2000);
   };
 
+  if (!activeProduct) return null;
+
   return (
     <section className="circle-hero-section" id="home">
       <div className="circle-hero-container">
         {/* Left column: product copywriting details */}
         <div key={activeIdx} className="circle-hero-details animate-fade-in">
-          <p className="circle-hero-kicker">Premium Selection</p>
-          <h1 className="circle-hero-title">{activeProduct.name}</h1>
+          <p className="circle-hero-kicker">{activeProduct.eyebrow}</p>
+          <h1 className="circle-hero-title">{activeProduct.title}</h1>
 
           <div className="circle-hero-tags">
-            {activeProduct.tags.map((tag) => (
+            {(activeProduct.tags || []).map((tag) => (
               <span key={tag} className="circle-hero-tag">
                 {tag}
               </span>
             ))}
-            <span className="circle-hero-tag">{activeProduct.variant}</span>
+            {activeProduct.variant ? (
+              <span className="circle-hero-tag">{activeProduct.variant}</span>
+            ) : null}
           </div>
 
           <p className="circle-hero-description">{activeProduct.description}</p>
@@ -202,13 +118,13 @@ export default function CircleSlider() {
               </svg>
               {added ? "Added!" : "Add to Cart"}
             </button>
-            <button 
+            <button
               className="circle-hero-btn-view"
               onClick={() => {
                 if (activeProduct.slug) navigate(`/products/${activeProduct.slug}`);
               }}
             >
-              Product Detail
+              View Product
             </button>
           </div>
 
@@ -238,12 +154,12 @@ export default function CircleSlider() {
           {/* Central Active Circle */}
           <div
             className="circle-hero-center-circle"
-            style={{ background: activeProduct.gradient }}
+            style={{ background: activeProduct.gradient || DEFAULT_GRADIENT }}
           >
             <img
               key={activeIdx}
               src={resolveImage(activeProduct.image)}
-              alt={activeProduct.name}
+              alt={activeProduct.title}
               className="circle-hero-center-image"
             />
           </div>
@@ -259,7 +175,7 @@ export default function CircleSlider() {
 
             return (
               <div
-                key={slide.key}
+                key={slide.id}
                 className="circle-hero-thumbnail-wrapper"
                 style={{
                   transform: `translate(calc(-50% + var(--orbit-radius) * ${x}), calc(-50% + var(--orbit-radius) * ${y}))`,
@@ -269,7 +185,7 @@ export default function CircleSlider() {
                   className="circle-hero-thumbnail"
                   onClick={() => setActiveIdx(slide.originalIdx)}
                 >
-                  <img src={resolveImage(slide.image)} alt={slide.name} />
+                  <img src={resolveImage(slide.image)} alt={slide.title} />
                 </div>
               </div>
             );
