@@ -1897,7 +1897,7 @@ select.field-select {
 .purity-blob-1 {
   width: 500px;
   height: 500px;
-  top: -120px;
+  top: 150px;
   left: -100px;
   background: rgba(200, 160, 74, 0.12);
 }
