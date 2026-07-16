@@ -4,6 +4,9 @@ import { useAuth } from "../context/useAuth.js";
 import fallbackLogo from "../assets/images/web_logo.png";
 import { getBackendRoot } from "../api/runtimeApi";
 import { getSettings } from "../api/settingApi";
+import { getContactMessages } from "../api/contactApi";
+import { getOrders } from "../api/orderApi";
+import axios from "../api/axios";
 
 const NAV = [
   { path: "/dashboard",         label: "Dashboard" },
@@ -34,8 +37,9 @@ const NAV = [
   { path: "/settings/product",  label: "Product Page" },
   { path: "/settings/blog",     label: "Blog Page" },
   { path: "/contact-settings",  label: "Contact Page" },
-  // Orders
+  // Orders & Messages
   { path: "/orders",                  label: "Orders" },
+  { path: "/contact-messages",        label: "Contact Messages" },
   // Career / Partner Page
   { path: "/partner-settings",        label: "Career Page" },
   { path: "/team-members",            label: "Team Members" },
@@ -105,6 +109,9 @@ export default function Layout({ children }) {
   const [aboutManual,      setAboutManual]       = useState(false);
   const [logoutOpen,       setLogoutOpen]        = useState(false);
   const [siteLogo,         setSiteLogo]          = useState(fallbackLogo);
+  const [unreadCount,      setUnreadCount]       = useState(0);
+  const [newOrdersCount,   setNewOrdersCount]    = useState(0);
+  const [newAppsCount,     setNewAppsCount]      = useState(0);
 
   const { user, logout } = useAuth();
   const isAdmin  = user?.role === "admin";
@@ -124,6 +131,36 @@ export default function Layout({ children }) {
         if (logo && /^https?:\/\//i.test(logo)) setSiteLogo(logo);
       })
       .catch(() => {});
+  }, []);
+
+  /* ── fetch unread messages count for navbar ── */
+  useEffect(() => {
+    getContactMessages({ per_page: 1, paginate: 1, status: "unread" })
+      .then((res) => {
+        const count = res?.meta?.total ?? 0;
+        setUnreadCount(count);
+      })
+      .catch(() => setUnreadCount(0));
+  }, []);
+
+  /* ── fetch new orders count for navbar ── */
+  useEffect(() => {
+    getOrders({ per_page: 1, paginate: 1, status: "new" })
+      .then((res) => {
+        const count = res?.meta?.total ?? 0;
+        setNewOrdersCount(count);
+      })
+      .catch(() => setNewOrdersCount(0));
+  }, []);
+
+  /* ── fetch new applications count for navbar ── */
+  useEffect(() => {
+    axios.get("/admin/affiliate-applications?per_page=1&paginate=1&status=new")
+      .then((res) => {
+        const count = res?.data?.meta?.total ?? 0;
+        setNewAppsCount(count);
+      })
+      .catch(() => setNewAppsCount(0));
   }, []);
 
   /* ── body scroll lock on mobile overlay ── */
@@ -342,6 +379,57 @@ export default function Layout({ children }) {
           </button>
 
           <h1 className="min-w-0 flex-1 truncate text-base font-bold text-white sm:text-lg">{pageTitle}</h1>
+
+          {/* Orders notification */}
+          <Link
+            to="/orders"
+            className="relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors hover:bg-[var(--admin-sidebar-hover)]"
+            title="New Orders"
+          >
+            <span className="pi pi-shopping-cart text-base text-blue-400" />
+            {newOrdersCount > 0 ? (
+              <>
+                <span className="text-white">{newOrdersCount > 99 ? "99+" : newOrdersCount}</span>
+                <span className="text-xs text-[var(--admin-muted)]">Orders</span>
+              </>
+            ) : (
+              <span className="text-xs text-[var(--admin-muted)]">Orders</span>
+            )}
+          </Link>
+
+          {/* Applications notification */}
+          <Link
+            to="/affiliate-applications"
+            className="relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors hover:bg-[var(--admin-sidebar-hover)]"
+            title="Affiliate Applications"
+          >
+            <span className="pi pi-briefcase text-base text-amber-400" />
+            {newAppsCount > 0 ? (
+              <>
+                <span className="text-white">{newAppsCount > 99 ? "99+" : newAppsCount}</span>
+                <span className="text-xs text-[var(--admin-muted)]">Apps</span>
+              </>
+            ) : (
+              <span className="text-xs text-[var(--admin-muted)]">Apps</span>
+            )}
+          </Link>
+
+          {/* Messages notification */}
+          <Link
+            to="/contact-messages"
+            className="relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors hover:bg-[var(--admin-sidebar-hover)]"
+            title="Contact Messages"
+          >
+            <span className="pi pi-envelope text-base text-red-400" />
+            {unreadCount > 0 ? (
+              <>
+                <span className="text-white">{unreadCount > 99 ? "99+" : unreadCount}</span>
+                <span className="text-xs text-[var(--admin-muted)]">Msgs</span>
+              </>
+            ) : (
+              <span className="text-xs text-[var(--admin-muted)]">Msgs</span>
+            )}
+          </Link>
 
           <button
             type="button"

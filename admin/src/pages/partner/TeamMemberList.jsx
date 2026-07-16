@@ -134,26 +134,7 @@ export default function TeamMemberList() {
                   </div>
 
                   <div className="flex w-full flex-wrap items-start gap-2 sm:w-auto">
-                    <div className="flex gap-1">
-                      <button
-                        type="button"
-                        onClick={() => handleMove(index, -1)}
-                        disabled={index === 0 || reordering}
-                        className="rounded-lg border border-white/20 px-3 py-2 text-sm text-white/80 disabled:opacity-30 hover:bg-white/10"
-                        title="Move up"
-                      >
-                        ↑
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleMove(index, 1)}
-                        disabled={index === members.length - 1 || reordering}
-                        className="rounded-lg border border-white/20 px-3 py-2 text-sm text-white/80 disabled:opacity-30 hover:bg-white/10"
-                        title="Move down"
-                      >
-                        ↓
-                      </button>
-                    </div>
+
                     <button
                       type="button"
                       onClick={() => handleToggleActive(item)}
