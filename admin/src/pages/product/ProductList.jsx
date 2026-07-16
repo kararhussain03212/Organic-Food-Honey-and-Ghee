@@ -54,7 +54,8 @@ export default function ProductList() {
 
   const resolveImage = (images) => {
     const arr = parseJsonField(images);
-    const raw = arr[0];
+    const first = arr[0];
+    const raw = typeof first === "object" && first !== null ? first.url : first;
     if (!raw) return FALLBACK_IMG;
     if (raw.startsWith("http")) return raw;
     if (raw.startsWith("/product-images/")) return publicRoot + raw;

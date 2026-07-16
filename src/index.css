@@ -906,10 +906,13 @@ html {
 }
 
 .footer-contact h3,
-.footer-timings h3 {
+.footer-timings h3,
+.footer-quick h3,
+.footer-poli h3 {
   font-size: 1.1rem;
   margin-bottom: 0.6rem;
-  color: #E8E6E2;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .footer-contact p,
