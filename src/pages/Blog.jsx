@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBlogs, getBlogSettings, getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
+import { SEOHelmet } from "../seo/SEOHelmet";
+import { getSEOData } from "../seo/seoData";
 import "../styles/Blog.css";
 
 
@@ -266,8 +268,14 @@ export default function Blog() {
 
   if (!pageActive) return null;
 
+  const seo = getSEOData("blog");
   return (
     <main className="bl-page">
+      <SEOHelmet
+        title={seo.title}
+        description={seo.description}
+        keywords={seo.keywords}
+      />
       <div className="bl-bg-blob bl-bg-blob-1" />
       <div className="bl-bg-blob bl-bg-blob-2" />
 

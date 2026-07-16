@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getProducts, getProductPage, getSettings, isSectionActive } from "../api/apiClient";
 import { Helmet } from "react-helmet-async";
+import { getSEOData } from "../seo/seoData";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
 
@@ -174,11 +175,12 @@ export default function Products() {
 
   return (
     <main className="prl-page">
-      {productPageSettings?.seo_meta_description && (
-        <Helmet>
+      <Helmet>
+        <title>{getSEOData("products").title}</title>
+        {productPageSettings?.seo_meta_description && (
           <meta name="description" content={productPageSettings.seo_meta_description} />
-        </Helmet>
-      )}
+        )}
+      </Helmet>
       <div className="prl-blob prl-blob-1" />
       <div className="prl-blob prl-blob-2" />
 

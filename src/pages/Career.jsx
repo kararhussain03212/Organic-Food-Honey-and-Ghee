@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import "../styles/Career.css";
+import { Helmet } from "react-helmet-async";
 import {
   getSettings,
   getPartnerPage,
@@ -461,6 +462,9 @@ export default function Career() {
 
   return (
     <main className="cr-page">
+      <Helmet>
+        <title>Arion Organic Foods | Premium Partnership & Careers</title>
+      </Helmet>
       <HeroSection content={content} />
       <AffiliateSection content={content} />
       <AgentsSection content={content} agents={agents} />

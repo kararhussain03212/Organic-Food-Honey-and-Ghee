@@ -97,7 +97,7 @@ export default function CertificationReport() {
     return (
       <main className="rp-page">
         <SEOHelmet
-          title="Report Not Found | Arion Organic Food"
+          title="Arion Organic Foods | Premium PCSIR Certification"
           description="The PCSIR certification report could not be found."
           url={`/certification/${qrCode}`}
         />

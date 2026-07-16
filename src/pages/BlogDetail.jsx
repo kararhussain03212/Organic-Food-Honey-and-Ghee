@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getBlogBySlug, getBlogs, parseJsonField } from "../api/apiClient";
+import { SEOHelmet } from "../seo/SEOHelmet";
+import { getSEOData } from "../seo/seoData";
 import "../styles/BlogDetail.css";
 
 /* ─── Decode HTML entities from API response ──── */
@@ -266,9 +268,15 @@ export default function BlogDetail() {
   const recentPosts = allPosts.filter((b) => b.slug !== post.slug).slice(0, 5);
   const publishDate = post.date || (post.published_at ? new Date(post.published_at).toLocaleDateString("en-PK", { year: "numeric", month: "long", day: "numeric" }) : "");
   const readTime = post.read_time || calculateReadTime(post.content);
+  const seo = getSEOData("blogDetail", post.title, post.slug);
 
   return (
     <main className="bd-page">
+      <SEOHelmet
+        title={seo.title}
+        description={seo.description}
+        keywords={seo.keywords}
+      />
       <ProgressBar />
 
       {/* ── Hero banner ──────────────────────────── */}

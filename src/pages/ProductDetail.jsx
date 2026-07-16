@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProductBySlug, getProducts } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
+import { SEOHelmet } from "../seo/SEOHelmet";
+import { getSEOData } from "../seo/seoData";
 import { addToCart } from "../utils/cart";
 import "../styles/Products.css";
 
@@ -188,8 +190,14 @@ export default function ProductDetail() {
     if (el) el.scrollBy({ left: dir * 300, behavior: "smooth" });
   };
 
+  const seo = getSEOData("productDetail", product.name, product.category);
   return (
     <main className="pd-page">
+      <SEOHelmet
+        title={seo.title}
+        description={seo.description}
+        keywords={seo.keywords}
+      />
       {/* ── Breadcrumb ──────────────────────────── */}
       <nav className="pd-breadcrumb">
         <div className="pd-container">

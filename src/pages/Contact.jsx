@@ -4,6 +4,7 @@ import { AiFillTikTok } from "react-icons/ai";
 import { IoLogoYoutube } from "react-icons/io5";
 import { getContactPage, getSettings, isSectionActive } from "../api/apiClient";
 import { Helmet } from "react-helmet-async";
+import { getSEOData } from "../seo/seoData";
 
 const SOCIAL_SVGS = {
   facebook: (
@@ -294,11 +295,12 @@ export default function Contact() {
 
   return (
     <section className="cu-page" ref={pageRef}>
-      {settings.seo_meta_description && (
-        <Helmet>
+      <Helmet>
+        <title>{getSEOData("contact").title}</title>
+        {settings.seo_meta_description && (
           <meta name="description" content={settings.seo_meta_description} />
-        </Helmet>
-      )}
+        )}
+      </Helmet>
       <div className="cu-bg-blob cu-bg-blob-1" />
       <div className="cu-bg-blob cu-bg-blob-2" />
       <div className="cu-bg-blob cu-bg-blob-3" />

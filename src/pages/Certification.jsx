@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEOHelmet } from "../seo/SEOHelmet";
+import { getSEOData } from "../seo/seoData";
 import Testimonials from "../components/Testimonials";
 import "../styles/Certification.css";
 
@@ -78,9 +80,15 @@ const faqs = [
 export default function Certification() {
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
   const navigate = useNavigate();
+  const seo = getSEOData("certification");
 
   return (
     <main>
+      <SEOHelmet
+        title={seo.title}
+        description={seo.description}
+        keywords={seo.keywords}
+      />
       {/* ── Hero ── */}
       <section className="cert-hero">
         <div className="cert-hero-inner">

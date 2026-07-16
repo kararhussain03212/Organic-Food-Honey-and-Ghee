@@ -1,4 +1,6 @@
-﻿import PolicyPage from "./PolicyPage";
+﻿import { SEOHelmet } from "../seo/SEOHelmet";
+import { getSEOData } from "../seo/seoData";
+import PolicyPage from "./PolicyPage";
 
 const sections = [
   {
@@ -25,12 +27,19 @@ const sections = [
 ];
 
 const TermsAndConditions = () => {
+  const seo = getSEOData("policies").termsAndConditions;
   return (
-    <PolicyPage
-      title="Terms & Conditions"
-      updatedOn="May 21, 2026"
-      sections={sections}
-    />
+    <>
+      <SEOHelmet
+        title={seo.title}
+        description={seo.description}
+      />
+      <PolicyPage
+        title="Terms & Conditions"
+        updatedOn="May 21, 2026"
+        sections={sections}
+      />
+    </>
   );
 };
 

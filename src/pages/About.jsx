@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSettings, isSectionActive } from "../api/apiClient";
+import { SEOHelmet } from "../seo/SEOHelmet";
+import { getSEOData } from "../seo/seoData";
 import "../styles/About.css";
 
 const BASE_URL = (import.meta.env.VITE_API_URL || "/backend").replace(/\/$/, "");
@@ -269,8 +271,14 @@ export default function About() {
 
   if (!pageActive || !data) return null;
 
+  const seo = getSEOData("about");
   return (
     <main className="ab-page">
+      <SEOHelmet
+        title={seo.title}
+        description={seo.description}
+        keywords={seo.keywords}
+      />
       {data.hero && <HeroSection hero={data.hero} />}
       {data.story && <StorySection story={data.story} />}
       {data.problems && data.problems.length > 0 && (

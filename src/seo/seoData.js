@@ -13,7 +13,7 @@ export const seoData = {
 
   // Home Page
   home: {
-    title: "Organic Food Store in Pakistan | Pure & Natural Products",
+    title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
     description: "Discover premium organic foods, honey, ghee, and wellness products. Certified quality, guaranteed purity. Shop authentic organic products in Pakistan.",
     keywords: "organic food, organic products Pakistan, natural honey, organic ghee, wellness products",
     slug: "/",
@@ -22,7 +22,7 @@ export const seoData = {
 
   // About Page
   about: {
-    title: "About Arion Organic Food | Certified Organic Products",
+    title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
     description: "Learn about our journey providing pure, certified organic foods to Pakistan. Committed to quality, sustainability, and natural wellness.",
     keywords: "organic food company, certified organic, food safety Pakistan, natural products",
     slug: "/about",
@@ -31,7 +31,7 @@ export const seoData = {
 
   // Products Page
   products: {
-    title: "Organic Products | Premium Honey, Ghee & Wellness Items",
+    title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
     description: "Browse our collection of PCSIR-certified organic honey, ghee, and natural wellness products. All products are 100% pure and natural.",
     keywords: "organic products, organic honey price, organic ghee, natural wellness, buy organic online Pakistan",
     slug: "/products",
@@ -40,7 +40,7 @@ export const seoData = {
 
   // Product Detail Pages - Template
   productDetail: (productName, category) => ({
-    title: `${productName} | Premium Organic ${category} in Pakistan`,
+    title: `Arion Organic Foods | Premium ${productName}`,
     description: `Buy pure, PCSIR-certified ${productName}. 100% natural, no additives. Premium quality organic ${category} delivered in Pakistan.`,
     keywords: `${productName}, organic ${category}, buy ${productName.toLowerCase()} online, ${category} price Pakistan`,
     type: "product",
@@ -48,7 +48,7 @@ export const seoData = {
 
   // Blog Page
   blog: {
-    title: "Organic Food Blog | Health Tips & Product Guides",
+    title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
     description: "Read expert articles about organic food benefits, health tips, and natural wellness. Learn about organic products and healthy living.",
     keywords: "organic food blog, health tips, natural wellness, organic nutrition, food guide",
     slug: "/blog",
@@ -57,7 +57,7 @@ export const seoData = {
 
   // Blog Detail Pages - Template
   blogDetail: (articleTitle, slug) => ({
-    title: `${articleTitle} | Organic Food Blog`,
+    title: `Arion Organic Foods | Premium - ${articleTitle}`,
     description: `${articleTitle}. Expert tips and insights on organic food, health, and natural wellness.`,
     keywords: `${articleTitle.toLowerCase()}, organic health, natural wellness, food benefits`,
     slug: `/blog/${slug}`,
@@ -66,7 +66,7 @@ export const seoData = {
 
   // Certification Page
   certification: {
-    title: "PCSIR Certification | Guaranteed Organic Food Quality",
+    title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
     description: "Learn about PCSIR certification for our organic products. Guaranteed purity, safety, and authenticity. Verify your products online.",
     keywords: "PCSIR certification, organic certification Pakistan, food quality, product verification",
     slug: "/certification",
@@ -75,7 +75,7 @@ export const seoData = {
 
   // Contact Page
   contact: {
-    title: "Contact Us | Arion Organic Food",
+    title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
     description: "Get in touch with Arion Organic Food. Customer support, inquiries, and feedback. Contact us via email, phone, or WhatsApp.",
     keywords: "contact us, customer support, organic food Pakistan, inquiries",
     slug: "/contact",
@@ -85,22 +85,22 @@ export const seoData = {
   // Policy Pages
   policies: {
     termsAndConditions: {
-      title: "Terms & Conditions | Arion Organic Food",
+      title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
       description: "Read our terms and conditions for shopping at Arion Organic Food.",
       slug: "/terms-and-conditions",
     },
     privacyPolicy: {
-      title: "Privacy Policy | Arion Organic Food",
+      title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
       description: "Our privacy policy outlines how we protect your personal information.",
       slug: "/privacy-policy",
     },
     returnPolicy: {
-      title: "Return Policy | Arion Organic Food",
+      title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
       description: "Easy returns and refunds policy for your peace of mind.",
       slug: "/return-policy",
     },
     shippingPolicy: {
-      title: "Shipping Policy | Arion Organic Food",
+      title: "Arion Organic Foods | Premium Honey, Ghee & Shilajit",
       description: "Fast and reliable shipping policy for online orders in Pakistan.",
       slug: "/online-order-policy",
     },
