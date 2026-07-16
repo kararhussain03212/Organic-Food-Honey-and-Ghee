@@ -208,7 +208,7 @@ export default function CircleSlider() {
                 if (activeProduct.slug) navigate(`/products/${activeProduct.slug}`);
               }}
             >
-              View Product
+              Product Detail
             </button>
           </div>
 
