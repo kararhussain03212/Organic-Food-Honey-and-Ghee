@@ -15,7 +15,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
+import { subscribeSettings, parseJsonField, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 import "../styles/InstagramFeed.css";
 
@@ -63,7 +63,7 @@ export default function InstagramFeed() {
   };
 
   useEffect(() => {
-    getSettings().then((s) => {
+    return subscribeSettings((s) => {
       setActive(isSectionActive(s, "home_social"));
       if (!s) return;
 

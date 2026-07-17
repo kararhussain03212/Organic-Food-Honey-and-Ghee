@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { getTestimonials, getSettings, isSectionActive } from "../api/apiClient";
+import { getTestimonials, subscribeSettings, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
 
@@ -34,7 +34,7 @@ export default function Testimonials() {
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
-    Promise.all([getSettings(), getTestimonials()]).then(([s, items]) => {
+    const unsubscribe = subscribeSettings((s) => {
       setActive(isSectionActive(s, "home_testimonials"));
       if (s && s.home_testimonials_heading) {
         setHeader({
@@ -44,7 +44,9 @@ export default function Testimonials() {
           subtext: s.home_testimonials_subtext,
         });
       }
+    });
 
+    getTestimonials().then((items) => {
       if (Array.isArray(items) && items.length > 0) {
         const active = items.filter((t) => t.is_active === 1 || t.is_active === true);
         if (active.length > 0) {
@@ -63,6 +65,8 @@ export default function Testimonials() {
         }
       }
     });
+
+    return unsubscribe;
   }, [apiRoot]);
 
   useEffect(() => {

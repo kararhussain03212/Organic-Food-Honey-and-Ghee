@@ -43,6 +43,10 @@ export default defineConfig({
   server: {
     port: 5174,
     strictPort: true,
+    watch: {
+      // Don't reload the dev admin when a production build writes dist/.
+      ignored: ["**/dist/**"],
+    },
     proxy: {
       "/api": {
         target: process.env.VITE_BACKEND_PROXY_TARGET || "http://localhost/Organic%20Food/backend",

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import "../styles/Career.css";
 import { Helmet } from "react-helmet-async";
 import {
-  getSettings,
+  subscribeSettings,
   getPartnerPage,
   getTeamMembers,
   postAffiliateApplication,
@@ -444,9 +444,12 @@ export default function Career() {
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
-    Promise.all([getSettings(), getPartnerPage(), getTeamMembers()])
-      .then(([s, page, members]) => {
-        setPageActive(isSectionActive(s, "career"));
+    const unsubscribe = subscribeSettings((s) => {
+      setPageActive(isSectionActive(s, "career"));
+    });
+
+    Promise.all([getPartnerPage(), getTeamMembers()])
+      .then(([page, members]) => {
         setContent(page && Object.keys(page).length > 0 ? page : null);
         setAgents(
           (Array.isArray(members) ? members : []).map((m) => ({
@@ -456,6 +459,8 @@ export default function Career() {
         );
       })
       .catch(() => {});
+
+    return unsubscribe;
   }, [apiRoot]);
 
   if (!pageActive || !content) return null;

@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
+import { subscribeSettings, parseJsonField, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 import { FiInstagram } from "react-icons/fi";
 import { FaFacebookSquare } from "react-icons/fa";
@@ -19,7 +19,7 @@ const Footer = () => {
   const [s, setS] = useState(null);
 
   useEffect(() => {
-    getSettings().then((data) => {
+    return subscribeSettings((data) => {
       if (data && Object.keys(data).length > 0) setS(data);
     });
   }, []);

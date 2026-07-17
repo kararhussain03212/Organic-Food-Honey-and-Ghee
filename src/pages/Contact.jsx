@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import "../styles/Contact.css";
 import { AiFillTikTok } from "react-icons/ai";
 import { IoLogoYoutube } from "react-icons/io5";
-import { getContactPage, getSettings, isSectionActive } from "../api/apiClient";
+import { getContactPage, subscribeSettings, isSectionActive } from "../api/apiClient";
 import { Helmet } from "react-helmet-async";
 import { getSEOData } from "../seo/seoData";
 
@@ -276,7 +276,7 @@ export default function Contact() {
     getContactPage().then((d) => {
       if (d && d.hero_heading) setSettings(d);
     }).catch(() => {});
-    getSettings().then((s) => setPageActive(isSectionActive(s, "contact"))).catch(() => {});
+    return subscribeSettings((s) => setPageActive(isSectionActive(s, "contact")));
   }, []);
 
   const headingParts = useMemo(() => {

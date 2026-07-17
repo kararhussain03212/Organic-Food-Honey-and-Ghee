@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { getSettings, getCommitmentItems, isSectionActive } from "../api/apiClient";
+import { subscribeSettings, getCommitmentItems, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
 const COLORS = [
@@ -56,7 +56,7 @@ export default function PurityPromise() {
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
   useEffect(() => {
-    Promise.all([getSettings(), getCommitmentItems()]).then(([s, items]) => {
+    const unsubscribe = subscribeSettings((s) => {
       setActive(isSectionActive(s, "home_commitment"));
       if (s && s.home_commitment_heading) {
         setHeader({
@@ -68,7 +68,9 @@ export default function PurityPromise() {
           btnLink: s.home_commitment_btn_link,
         });
       }
+    });
 
+    getCommitmentItems().then((items) => {
       if (Array.isArray(items) && items.length > 0) {
         setPromises(
           items.map((item, i) => ({
@@ -82,6 +84,8 @@ export default function PurityPromise() {
         );
       }
     }).catch(() => {});
+
+    return unsubscribe;
   }, [apiRoot]);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Pagination, Autoplay } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
-import { getProducts, getSettings, isSectionActive } from "../api/apiClient";
+import { getProducts, subscribeSettings, isSectionActive } from "../api/apiClient";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
@@ -114,7 +114,7 @@ export default function Products() {
       setLoading(false);
     });
 
-    getSettings().then((s) => {
+    const unsubscribe = subscribeSettings((s) => {
       if (!s) return;
       setActive(isSectionActive(s, "home_company"));
       setHeader({
@@ -126,6 +126,7 @@ export default function Products() {
         btnLink: s.home_collection_btn_link,
       });
     });
+    return unsubscribe;
   }, []);
 
   if (!active || !header || !header.heading) return null;

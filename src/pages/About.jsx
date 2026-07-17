@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getSettings, isSectionActive } from "../api/apiClient";
+import { subscribeSettings, isSectionActive } from "../api/apiClient";
 import { SEOHelmet } from "../seo/SEOHelmet";
 import { getSEOData } from "../seo/seoData";
 import "../styles/About.css";
@@ -253,7 +253,7 @@ export default function About() {
   const [pageActive, setPageActive] = useState(true);
 
   useEffect(() => {
-    getSettings().then((s) => setPageActive(isSectionActive(s, "about"))).catch(() => {});
+    const unsubscribe = subscribeSettings((s) => setPageActive(isSectionActive(s, "about")));
     fetchAboutPage().then((d) => {
       if (!d || !d.hero) return;
       setData({
@@ -267,6 +267,7 @@ export default function About() {
         cta:         d.cta || {},
       });
     }).catch(() => {});
+    return unsubscribe;
   }, []);
 
   if (!pageActive || !data) return null;

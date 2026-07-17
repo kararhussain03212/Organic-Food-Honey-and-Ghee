@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
+import { subscribeSettings, parseJsonField, isSectionActive } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
 
@@ -24,7 +24,7 @@ export default function OurStory() {
   };
 
   useEffect(() => {
-    getSettings().then((s) => {
+    return subscribeSettings((s) => {
       setActive(isSectionActive(s, "home_about"));
       if (s && s.home_story_heading) {
         setData({

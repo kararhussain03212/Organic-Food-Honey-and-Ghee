@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getBlogs, getBlogSettings, getSettings, parseJsonField, isSectionActive } from "../api/apiClient";
+import { getBlogs, getBlogSettings, subscribeSettings, parseJsonField, isSectionActive } from "../api/apiClient";
 import { SEOHelmet } from "../seo/SEOHelmet";
 import { getSEOData } from "../seo/seoData";
 import "../styles/Blog.css";
@@ -197,7 +197,7 @@ export default function Blog() {
   useEffect(() => { setVisible(true); }, []);
 
   useEffect(() => {
-    getSettings().then((s) => setPageActive(isSectionActive(s, "blog"))).catch(() => {});
+    return subscribeSettings((s) => setPageActive(isSectionActive(s, "blog")));
   }, []);
 
   useEffect(() => {

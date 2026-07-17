@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getProducts, getProductPage, getSettings, isSectionActive } from "../api/apiClient";
+import { getProducts, getProductPage, subscribeSettings, isSectionActive } from "../api/apiClient";
 import { Helmet } from "react-helmet-async";
 import { getSEOData } from "../seo/seoData";
 import { addToCart } from "../utils/cart";
@@ -123,7 +123,7 @@ export default function Products() {
         setProductPageSettings(data);
       }
     });
-    getSettings().then((s) => setPageActive(isSectionActive(s, "product")));
+    return subscribeSettings((s) => setPageActive(isSectionActive(s, "product")));
   }, []);
 
   const categories = useMemo(() => {

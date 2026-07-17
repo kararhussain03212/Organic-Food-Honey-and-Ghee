@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getSettings, isSectionActive } from "../api/apiClient";
+import { subscribeSettings, isSectionActive } from "../api/apiClient";
 
 const floatingLeaves = [
   { id: 1, emoji: "🌿", style: { top: "8%", left: "5%", fontSize: "2.2rem", animationDelay: "0s", animationDuration: "6s" } },
@@ -18,7 +18,7 @@ export default function CTASection() {
   const [active, setActive] = useState(true);
 
   useEffect(() => {
-    getSettings().then((s) => {
+    return subscribeSettings((s) => {
       setActive(isSectionActive(s, "home_authentic"));
       if (s && s.home_cta_heading) {
         setData({

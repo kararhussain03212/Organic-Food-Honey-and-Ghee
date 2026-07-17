@@ -10,7 +10,7 @@ import { IoCall } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import { getSettings, getContactPage, parseJsonField, isSectionActive, postOrder } from "../api/apiClient";
+import { subscribeSettings, getContactPage, parseJsonField, isSectionActive, postOrder } from "../api/apiClient";
 import { getBackendRoot } from "../api/runtimeApi";
 
 const DELIVERY_KEY = "delivery_location";
@@ -52,12 +52,13 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getSettings().then((data) => {
+    const unsubscribe = subscribeSettings((data) => {
       if (data && Object.keys(data).length > 0) setSettings(data);
     });
     getContactPage().then((data) => {
       if (data && Object.keys(data).length > 0) setContactPage(data);
     });
+    return unsubscribe;
   }, []);
 
   const brandTitle    = settings.navbar_brand_title;

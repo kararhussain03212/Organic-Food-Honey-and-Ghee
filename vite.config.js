@@ -37,6 +37,18 @@ const assetFileNamesConfig = (assetInfo) => {
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    watch: {
+      // PHP backend writes cache/upload files inside the project root on
+      // every request; watching them makes the dev server full-reload the
+      // site whenever the API is hit. Only src/public/index.html matter.
+      ignored: [
+        "**/backend/**",
+        "**/admin/**",
+        "**/dist/**",
+        "**/vendor/**",
+        "**/database/**",
+      ],
+    },
     proxy: {
       "/api": {
         target: "https://arionorganicfood.com",

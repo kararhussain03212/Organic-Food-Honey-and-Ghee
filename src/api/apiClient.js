@@ -114,6 +114,63 @@ export async function getSettings() {
   }
 }
 
+// ── Live settings store ─────────────────────────────────────────────────────
+// All components share one settings fetch and get pushed updates while the
+// page is open, so admin edits show up without a manual refresh.
+const SETTINGS_POLL_MS = 10000;
+let settingsCache = null;
+let settingsInflight = null;
+let settingsPollTimer = null;
+const settingsListeners = new Set();
+
+async function refreshSettings() {
+  if (settingsInflight) return settingsInflight;
+  settingsInflight = getSettings()
+    .then((next) => {
+      settingsInflight = null;
+      if (!next || !Object.keys(next).length) return settingsCache;
+      if (JSON.stringify(next) !== JSON.stringify(settingsCache)) {
+        settingsCache = next;
+        settingsListeners.forEach((listener) => {
+          try { listener(settingsCache); } catch { /* listener error must not break others */ }
+        });
+      }
+      return settingsCache;
+    })
+    .catch(() => {
+      settingsInflight = null;
+      return settingsCache;
+    });
+  return settingsInflight;
+}
+
+function startSettingsPolling() {
+  if (settingsPollTimer || typeof window === "undefined") return;
+  settingsPollTimer = setInterval(() => {
+    if (typeof document !== "undefined" && document.hidden) return;
+    refreshSettings();
+  }, SETTINGS_POLL_MS);
+  // Catch up immediately when the tab becomes visible again.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refreshSettings();
+  });
+}
+
+// Calls `listener` with the settings map as soon as it's available, and again
+// whenever a poll detects the settings changed. Returns an unsubscribe fn.
+export function subscribeSettings(listener) {
+  settingsListeners.add(listener);
+  if (settingsCache) {
+    listener(settingsCache);
+  } else {
+    refreshSettings().then((s) => {
+      if (s && settingsListeners.has(listener)) listener(s);
+    });
+  }
+  startSettingsPolling();
+  return () => settingsListeners.delete(listener);
+}
+
 export async function getHeroSlides() {
   try {
     const result = await fetchApi("/api/public/hero?paginate=0");
