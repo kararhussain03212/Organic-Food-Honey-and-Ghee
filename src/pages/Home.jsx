@@ -6,6 +6,7 @@ import OurStory from "../components/OurStory";
 import Products from "../components/Products";
 import Testimonials from "../components/Testimonials";
 import CTASection from "../components/CTASection";
+import InstagramFeed from "../components/InstagramFeed";
 
 const Home = () => {
   const seo = getSEOData("home");
@@ -22,6 +23,7 @@ const Home = () => {
       <Products />
       <Testimonials />
       <CTASection />
+      <InstagramFeed />
     </>
   );
 };

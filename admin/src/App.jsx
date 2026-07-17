@@ -311,6 +311,14 @@ export default function App() {
             }
           />
           <Route
+            path="/settings/home-social"
+            element={
+              <ProtectedPage>
+                <SiteSettings forcedMainSection="home" forcedHomeSection="social" />
+              </ProtectedPage>
+            }
+          />
+          <Route
             path="/settings/footer"
             element={
               <ProtectedPage>

@@ -289,6 +289,13 @@ $settings = [
     'home_story_image'   => '',
     'home_story_bullets' => '["100% Natural","No Preservatives","Ethically Sourced","Lab Tested"]',
 
+    // Home — social feed (Instagram reels section)
+    'home_social_eyebrow' => 'Social Feed',
+    'home_social_heading' => 'Follow us on social media',
+    'home_social_subtext' => 'Get a behind-the-scenes look at our organic honey harvesting, pure ghee production, and healthy recipes.',
+    'home_social_icons'   => '[{"label":"Instagram","url":"https://www.instagram.com/ssarionorganicfood/","icon":"instagram"},{"label":"Facebook","url":"https://www.facebook.com/SSgeneraltradinguae","icon":"facebook"},{"label":"TikTok","url":"https://www.tiktok.com/@ssarionorganicfood","icon":"tiktok"},{"label":"YouTube","url":"https://www.youtube.com/channel/UCv62oVoa-UmP8ePbMPuHydw","icon":"youtube"}]',
+    'home_social_videos'  => '[{"src":"/images/instagram_1.mp4","likes":"1.8k","comments":"142","link":"https://www.instagram.com/ssarionorganicfood/"},{"src":"/images/instagram_2.mp4","likes":"2.4k","comments":"198","link":"https://www.instagram.com/ssarionorganicfood/"},{"src":"/images/instagram_3.mp4","likes":"1.5k","comments":"87","link":"https://www.instagram.com/ssarionorganicfood/"},{"src":"/images/instagram_4.mp4","likes":"3.2k","comments":"256","link":"https://www.instagram.com/ssarionorganicfood/"}]',
+
     // Home — purity promise
     'home_purity_items' => '[{"icon":"🌿","title":"100% Natural","desc":"Free from chemicals and preservatives"},{"icon":"🔬","title":"Lab Tested","desc":"Verified for purity and quality"},{"icon":"🌍","title":"Ethically Sourced","desc":"Sustainable farming practices"}]',
 

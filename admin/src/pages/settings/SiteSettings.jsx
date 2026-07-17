@@ -9,6 +9,7 @@ import HomeCommitmentSettingsSection from "./sections/HomeCommitmentSettingsSect
 import HomeTestimonialsSettingsSection from "./sections/HomeTestimonialsSettingsSection";
 import HomeAuthenticSettingsSection from "./sections/HomeAuthenticSettingsSection";
 import HomeBlogSettingsSection from "./sections/HomeBlogSettingsSection";
+import HomeSocialSettingsSection from "./sections/HomeSocialSettingsSection";
 import FooterSettingsSection from "./sections/FooterSettingsSection";
 import ProductSettingsSection from "./sections/ProductSettingsSection";
 import ContactSettingsSection from "./sections/ContactSettingsSection";
@@ -23,6 +24,7 @@ const homeSectionTabs = [
   { key: "commitment",   label: "Commitment"   },
   { key: "testimonials", label: "Testimonials" },
   { key: "authentic",    label: "Authentic"    },
+  { key: "social",       label: "Social Feed"  },
   // { key: "blog",         label: "Blog"         },
 ];
 
@@ -149,6 +151,10 @@ const textFieldConfig = [
   { key: "home_cta_btn2_text",      section: "home.authentic" },
   { key: "home_cta_btn2_link",      section: "home.authentic" },
   { key: "home_cta_badge_text",     section: "home.authentic" },
+  // Home — Social Feed section
+  { key: "home_social_eyebrow",     section: "home.social" },
+  { key: "home_social_heading",     section: "home.social" },
+  { key: "home_social_subtext",     section: "home.social" },
   // Navbar/Footer (Arion)
   { key: "navbar_logo",               section: "navbar" },
   { key: "footer_brand_title",        section: "footer" },
@@ -240,6 +246,7 @@ const defaultSectionStatus = {
   home_offer: "active",
   home_testimonials: "active",
   home_authentic: "active",
+  home_social: "active",
   home_blog: "active",
   footer: "active",
   product: "active",
@@ -267,6 +274,8 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
     { icon_url: "", title: "", description: "" },
   ]);
   const [storyBullets, setStoryBullets] = useState([""]);
+  const [socialIcons, setSocialIcons] = useState([{ label: "", url: "", icon: "instagram" }]);
+  const [socialVideos, setSocialVideos] = useState([{ src: "", likes: "", comments: "", link: "" }]);
   const [loading, setLoading] = useState(true);
   const [loadedOk, setLoadedOk] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -291,6 +300,7 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
       if (activeHomeSection === "offer")       return "Home - Purity Promise Settings";
       if (activeHomeSection === "testimonials") return "Home - Testimonials Settings";
       if (activeHomeSection === "authentic")   return "Home - Authentic / CTA Settings";
+      if (activeHomeSection === "social")      return "Home - Social Feed Settings";
       if (activeHomeSection === "blog")        return "Home - Blog Settings";
     }
     if (activeMainSection === "navbar") return "Navbar Settings";
@@ -359,6 +369,8 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         let nextAboutPageCategories = [{ icon: "", icon_url: "", title: "", description: "" }];
         let nextAboutPageProcessCards = [{ icon_url: "", title: "", description: "" }];
         let nextStoryBullets = [""];
+        let nextSocialIcons = [{ label: "", url: "", icon: "instagram" }];
+        let nextSocialVideos = [{ src: "", likes: "", comments: "", link: "" }];
         const nextSectionStatus = { ...defaultSectionStatus };
 
         // PHP's BaseModel::normalizeUploadColumns auto-decodes JSON arrays/objects,
@@ -526,6 +538,33 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
             return;
           }
 
+          if (key === "home_social_icons") {
+            const parsed = asArray(rawValue);
+            const normalized = parsed
+              .map((item) => ({
+                label: String(item?.label || ""),
+                url: String(item?.url || ""),
+                icon: String(item?.icon || "instagram"),
+              }))
+              .filter((item) => item.url || item.label);
+            if (normalized.length) nextSocialIcons = normalized;
+            return;
+          }
+
+          if (key === "home_social_videos") {
+            const parsed = asArray(rawValue);
+            const normalized = parsed
+              .map((item) => ({
+                src: String(item?.src || ""),
+                likes: String(item?.likes || ""),
+                comments: String(item?.comments || ""),
+                link: String(item?.link || ""),
+              }))
+              .filter((item) => item.src || item.link);
+            if (normalized.length) nextSocialVideos = normalized;
+            return;
+          }
+
           // JSON-typed settings arrive auto-decoded as arrays/objects; re-serialize
           // them for text inputs instead of blanking them (blank would get saved back).
           if (Object.prototype.hasOwnProperty.call(next, key)) {
@@ -544,6 +583,8 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         setAboutPageCategories(nextAboutPageCategories);
         setAboutPageProcessCards(nextAboutPageProcessCards);
         setStoryBullets(nextStoryBullets);
+        setSocialIcons(nextSocialIcons);
+        setSocialVideos(nextSocialVideos);
         setSectionStatus(nextSectionStatus);
         setLoadedOk(true);
       } catch (err) {
@@ -573,6 +614,86 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
     } catch (err) {
       console.error(err);
       setError("Image upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const serializeSocialIcons = (list) =>
+    JSON.stringify(
+      list
+        .map((item) => ({
+          label: String(item.label || "").trim(),
+          url: String(item.url || "").trim(),
+          icon: String(item.icon || "instagram").trim(),
+        }))
+        .filter((item) => item.url),
+    );
+
+  const serializeSocialVideos = (list) =>
+    JSON.stringify(
+      list
+        .map((item) => ({
+          src: String(item.src || "").trim(),
+          likes: String(item.likes || "").trim(),
+          comments: String(item.comments || "").trim(),
+          link: String(item.link || "").trim(),
+        }))
+        .filter((item) => item.src),
+    );
+
+  // Removals persist immediately (unlike text edits) so a page refresh
+  // right after clicking Remove doesn't resurrect the deleted item.
+  const removeSocialIcon = async (index) => {
+    const previous = socialIcons;
+    const next = socialIcons.filter((_, i) => i !== index);
+    setSocialIcons(next.length ? next : [{ label: "", url: "", icon: "instagram" }]);
+    if (!loadedOk) return;
+    try {
+      setSavingStatus(true);
+      await updateSettings({ home_social_icons: serializeSocialIcons(next) });
+      setSuccess("Social icon removed.");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to remove social icon.");
+      setSocialIcons(previous);
+    } finally {
+      setSavingStatus(false);
+    }
+  };
+
+  const removeSocialVideo = async (index) => {
+    const previous = socialVideos;
+    const next = socialVideos.filter((_, i) => i !== index);
+    setSocialVideos(next.length ? next : [{ src: "", likes: "", comments: "", link: "" }]);
+    if (!loadedOk) return;
+    try {
+      setSavingStatus(true);
+      await updateSettings({ home_social_videos: serializeSocialVideos(next) });
+      setSuccess("Video removed.");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to remove video.");
+      setSocialVideos(previous);
+    } finally {
+      setSavingStatus(false);
+    }
+  };
+
+  const uploadSocialVideo = async (index, file) => {
+    try {
+      setUploading(true);
+      const oldPath = String(socialVideos[index]?.src || "");
+      // Only pass an old path that lives in /uploads/ so local frontend assets
+      // (e.g. /images/instagram_1.mp4) are never deleted from the backend.
+      const path = await uploadImage(file, "settings", oldPath.startsWith("/uploads/") ? oldPath : "");
+      if (!path) return;
+      setSocialVideos((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, src: path } : item)),
+      );
+    } catch (err) {
+      console.error(err);
+      setError("Video upload failed.");
     } finally {
       setUploading(false);
     }
@@ -705,6 +826,8 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
       payload.home_story_bullets = JSON.stringify(
         storyBullets.map((item) => String(item || "").trim()).filter(Boolean),
       );
+      payload.home_social_icons = serializeSocialIcons(socialIcons);
+      payload.home_social_videos = serializeSocialVideos(socialVideos);
       Object.entries(sectionStatus).forEach(([statusKey, statusValue]) => {
         payload[`section_status_${statusKey}`] = statusValue;
       });
@@ -753,6 +876,8 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
     aboutPageCategories,
     aboutPageProcessCards,
     storyBullets,
+    socialIcons,
+    socialVideos,
     sectionStatus,
   ]);
 
@@ -802,6 +927,8 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
     aboutPageCategories,
     aboutPageProcessCards,
     storyBullets,
+    socialIcons,
+    socialVideos,
     handleSave,
   ]);
 
@@ -955,6 +1082,20 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
           />
         ) : null}
 
+        {activeMainSection === "home" && activeHomeSection === "social" ? (
+          <HomeSocialSettingsSection
+            form={form}
+            setField={setField}
+            socialIcons={socialIcons}
+            setSocialIcons={setSocialIcons}
+            socialVideos={socialVideos}
+            setSocialVideos={setSocialVideos}
+            uploadSocialVideo={uploadSocialVideo}
+            removeSocialIcon={removeSocialIcon}
+            removeSocialVideo={removeSocialVideo}
+          />
+        ) : null}
+
         {activeMainSection === "home" && activeHomeSection === "newsletter" ? (
           <FieldRows 
             keys={getKeysFor("home.newsletter")} 
@@ -1083,12 +1224,12 @@ export default function SiteSettings({ forcedMainSection = "", forcedHomeSection
         ) : null}
       </article>
 
-      <div className="sticky bottom-4 z-10 flex justify-end">
+      <div className="pointer-events-none sticky bottom-4 z-10 flex justify-end">
         <button
           type="button"
           onClick={handleSave}
           disabled={saving || uploading || loading || !loadedOk}
-          className="rounded-xl bg-[var(--admin-primary)] px-5 py-2.5 text-white shadow-sm hover:bg-[var(--admin-primary-strong)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="pointer-events-auto rounded-xl bg-[var(--admin-primary)] px-5 py-2.5 text-white shadow-sm hover:bg-[var(--admin-primary-strong)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {saving ? "Saving..." : uploading ? "Uploading..." : loading ? "Loading..." : !loadedOk ? "Save Disabled" : "Save Settings"}
         </button>

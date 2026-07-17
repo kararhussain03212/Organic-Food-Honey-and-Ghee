@@ -10,32 +10,34 @@ const VideoUpload = ({
   required = false,
 }) => {
   const [objectUrl, setObjectUrl] = useState("");
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
+  const [candidateIdx, setCandidateIdx] = useState(0);
   const apiRoot = useMemo(() => getBackendRoot(), []);
 
-  const resolveVideoUrl = (url) => {
-    if (!url) return "";
-    if (url.startsWith("blob:")) return url;
-    if (url.startsWith("http")) return url;
-    if (url.startsWith("/uploads/")) return apiRoot + url;
-    if (url.startsWith("/")) return url;
-    return `${apiRoot}/uploads/${url}`;
-  };
+  // A stored src can be a backend upload (/uploads/...), a full URL, or a
+  // frontend public asset (e.g. /images/reel.mp4). Frontend assets live at
+  // the site root in production but under /dist locally, so we try both.
+  const candidates = useMemo(() => {
+    const url = objectUrl || value;
+    if (!url) return [];
+    if (url.startsWith("blob:") || url.startsWith("http")) return [url];
+    if (url.startsWith("/uploads/")) return [apiRoot + url];
+    const siteRoot = apiRoot.replace(/\/backend$/i, "");
+    if (url.startsWith("/")) return [siteRoot + "/dist" + url, siteRoot + url];
+    return [`${apiRoot}/uploads/${url}`];
+  }, [objectUrl, value, apiRoot]);
 
-  const preview = objectUrl || resolveVideoUrl(value) || "";
+  const preview = candidates[candidateIdx] || "";
+  const videoError = candidates.length > 0 && candidateIdx >= candidates.length;
+
+  useEffect(() => {
+    setCandidateIdx(0);
+  }, [candidates]);
 
   useEffect(() => {
     return () => {
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [objectUrl]);
-
-  useEffect(() => {
-    if (preview) {
-      console.log("VideoUpload preview URL:", preview);
-    }
-  }, [preview]);
 
   const handleChange = (event) => {
     const file = event.target.files?.[0];
@@ -69,19 +71,18 @@ const VideoUpload = ({
         className="mt-3 block w-full text-sm text-white file:mr-3 file:rounded-md file:border-0 file:bg-[var(--admin-primary)] file:px-3 file:py-2 file:text-black hover:file:bg-[var(--admin-primary-strong)]"
       />
 
-      {preview && !videoError ? (
+      {preview ? (
         <video
+          key={preview}
           src={preview}
           controls
           className="mt-4 h-36 w-full rounded-lg object-cover"
-          onLoadedMetadata={() => setVideoLoaded(true)}
-          onError={() => setVideoError(true)}
-          style={{ display: videoLoaded ? "block" : "block" }}
+          onError={() => setCandidateIdx((i) => i + 1)}
         />
       ) : null}
-      {videoError && preview ? (
+      {videoError ? (
         <div className="mt-4 flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-red-500/50 bg-red-500/10 text-sm text-red-400">
-          Failed to load video: {preview.slice(0, 50)}...
+          Video preview unavailable: {String(value).slice(0, 50)}
         </div>
       ) : null}
     </label>

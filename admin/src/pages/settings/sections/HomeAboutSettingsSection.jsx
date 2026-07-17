@@ -88,8 +88,9 @@ export default function HomeAboutSettingsSection({
         <ImageUpload
           value={toImageUrl(form.home_story_image)}
           onFileSelect={(file) => uploadToSetting("home_story_image", file, "settings")}
-          label="Upload Story Image"
-          helperText="Recommended: square or portrait, min 600 px wide"
+          label="Upload Story Image or Video"
+          helperText="Image: square or portrait, min 600px wide. Video: MP4, WebM, MOV, etc."
+          accept="image/*,video/*"
         />
       </div>
 

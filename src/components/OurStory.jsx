@@ -17,6 +17,12 @@ export default function OurStory() {
     return val; // local frontend asset (e.g. /story_farm.png)
   };
 
+  const VIDEO_EXTENSIONS = ["mp4", "webm", "mov", "avi", "mkv", "flv", "m4v"];
+  const isVideoUrl = (val) => {
+    const ext = String(val || "").split(/[?#]/)[0].split(".").pop()?.toLowerCase();
+    return !!ext && VIDEO_EXTENSIONS.includes(ext);
+  };
+
   useEffect(() => {
     getSettings().then((s) => {
       setActive(isSectionActive(s, "home_about"));
@@ -55,7 +61,20 @@ export default function OurStory() {
 
         {/* LEFT — Single image */}
         <div className={`story2-hex-wrap ${visible ? "story2-fade-left" : "story2-hidden"}`}>
-          {data.image && <img src={toImageUrl(data.image)} alt="Our Story" className="story2-single-img" />}
+          {data.image && (
+            isVideoUrl(data.image) ? (
+              <video
+                src={toImageUrl(data.image)}
+                className="story2-single-img"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            ) : (
+              <img src={toImageUrl(data.image)} alt="Our Story" className="story2-single-img" />
+            )
+          )}
         </div>
 
         {/* RIGHT — Content */}

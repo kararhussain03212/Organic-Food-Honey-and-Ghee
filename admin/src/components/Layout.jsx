@@ -33,6 +33,7 @@ const NAV = [
   { path: "/settings/home-commitment",   label: "Home - Commitment",   child: true, childGroup: "home" },
   { path: "/settings/home-testimonials", label: "Home - Testimonials", child: true, childGroup: "home" },
   { path: "/settings/home-authentic",    label: "Home - Authentic",    child: true, childGroup: "home" },
+  { path: "/settings/home-social",       label: "Home - Social Feed",  child: true, childGroup: "home" },
   // Other Settings
   { path: "/settings/product",  label: "Product Page" },
   { path: "/settings/blog",     label: "Blog Page" },
@@ -73,6 +74,7 @@ const PAGE_TITLES = {
   "/settings/home-commitment":       "Home - Commitment",
   "/settings/home-testimonials":     "Home - Testimonials",
   "/settings/home-authentic":        "Home - Authentic",
+  "/settings/home-social":           "Home - Social Feed",
   "/settings/footer":                "Footer Settings",
   "/settings/product":               "Product Page Settings",
   "/settings/blog":                  "Blog Page Settings",

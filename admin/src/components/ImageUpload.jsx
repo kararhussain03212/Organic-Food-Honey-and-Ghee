@@ -13,6 +13,7 @@ const ImageUpload = ({
   includeAltText = false,
 }) => {
   const [objectUrl, setObjectUrl] = useState("");
+  const [objectUrlIsVideo, setObjectUrlIsVideo] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const apiRoot = useMemo(() => getBackendRoot(), []);
@@ -27,6 +28,14 @@ const ImageUpload = ({
   };
 
   const preview = objectUrl || resolveImageUrl(value) || "";
+
+  const VIDEO_EXTENSIONS = ["mp4", "webm", "mov", "avi", "mkv", "flv", "m4v"];
+  const isVideoUrl = (url) => {
+    const ext = String(url || "").split(/[?#]/)[0].split(".").pop()?.toLowerCase();
+    return !!ext && VIDEO_EXTENSIONS.includes(ext);
+  };
+  // blob: previews have no extension, so rely on the picked file's MIME type.
+  const isVideo = objectUrl ? objectUrlIsVideo : isVideoUrl(preview);
 
   // prevents memory leaks when user changes image many times
   useEffect(() => {
@@ -50,6 +59,12 @@ const ImageUpload = ({
 
     const nextUrl = URL.createObjectURL(file);
     setObjectUrl(nextUrl);
+    setObjectUrlIsVideo(
+      String(file.type || "").startsWith("video/") ||
+        isVideoUrl(file.name || ""),
+    );
+    setImageLoaded(false);
+    setImageError(false);
 
     // parent form needs file for FormData submit to backend
     if (typeof onFileSelect === "function") {
@@ -75,7 +90,16 @@ const ImageUpload = ({
         className="mt-3 block w-full text-sm text-white file:mr-3 file:rounded-md file:border-0 file:bg-[var(--admin-primary)] file:px-3 file:py-2 file:text-black hover:file:bg-[var(--admin-primary-strong)]"
       />
 
-      {preview && !imageError ? (
+      {preview && !imageError && isVideo ? (
+        <video
+          src={preview}
+          controls
+          className="mt-4 h-36 w-full rounded-lg object-cover"
+          onLoadedMetadata={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+        />
+      ) : null}
+      {preview && !imageError && !isVideo ? (
         <img
           src={preview}
           alt="Preview"
@@ -87,7 +111,7 @@ const ImageUpload = ({
       ) : null}
       {imageError && preview ? (
         <div className="mt-4 flex h-36 w-full items-center justify-center rounded-lg border border-dashed border-red-500/50 bg-red-500/10 text-sm text-red-400">
-          Failed to load image: {preview.slice(0, 50)}...
+          Failed to load {isVideo ? "video" : "image"}: {preview.slice(0, 50)}...
         </div>
       ) : null}
 
